@@ -1,0 +1,52 @@
+# -*- coding: utf-8 -*-
+
+import os
+import unittest
+import meta
+import mock
+from bs4 import BeautifulSoup
+
+class FakeResponse(object): pass
+
+def mocked_get(url):
+    print url
+    path = './test_fixtures/'+url.replace('/', ':')
+    res = FakeResponse()
+    with open(path, 'r') as f:
+        res.text = f.read()
+    return res
+
+class TestOfficeMeta(unittest.TestCase):
+    def assertItemsEqual(self, items, data):
+        xml_items = BeautifulSoup(data, 'xml').find_all('item')
+        self.assertEqual(len(items), len(xml_items))
+        for i, xml_item in enumerate(xml_items):
+            self.assertEqual(items[i][0], xml_item.title.text.strip())
+            self.assertEqual(items[i][1], xml_item.description.text.strip())
+
+    def assertMetaEqual(self, date, meta):
+        resp = self.app.get('/v0/office/meta/'+date)
+        self.assertEqual(200, resp.status_code)
+        return self.assertItemsEqual([(u"Jour liturgique", meta)], resp.data)
+
+    def setUp(self):
+        self.app = meta.app.test_client()
+
+    @mock.patch('meta.requests.get')
+    def test_get_meta(self, m_get):
+        m_get.side_effect = mocked_get
+
+        # Nominal tests
+        self.assertMetaEqual("2015-12-25", u"Nativité du Seigneur, année A. La couleur liturgique est le Blanc.")
+        self.assertMetaEqual("2016-03-27", u"Dimanche, Résurrection du Seigneur, année C. La couleur liturgique est le Blanc.")
+        self.assertMetaEqual("2016-05-08", u"Dimanche, 7ème Semaine du Temps Pascal de l'année C. La couleur liturgique est le Blanc.")
+        self.assertMetaEqual("2016-05-15", u"Dimanche de la Pentecôte, année C. La couleur liturgique est le Rouge.")
+        self.assertMetaEqual("2016-05-25", u"Mercredi, S. Bède le Vénérable, prêtre et docteur de l'Eglise, S. Grégoire VII, pape, Ste Marie-Madeleine de Pazzi, vierge, 8ème Semaine du Temps Ordinaire de l'année Paire. La couleur liturgique est le Vert.")
+        self.assertMetaEqual("2016-08-15", u"Assomption de la Vierge Marie. La couleur liturgique est le Blanc.")
+
+        # Error: obviously invalid date
+        resp = self.app.get('/v0/office/meta/2016-42')
+        self.assertEqual(400, resp.status_code)
+        resp = self.app.get('/v0/office/meta/2016-42-17')
+        self.assertItemsEqual([(u"Cette date n\\est pas dans notre calendrier", u"La date n'a pas été renseignée dans le calendrier")], resp.data)
+

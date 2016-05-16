@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <atom:link rel="self" type="application/rss+xml" href="http://rss.aelf.org/rss.php/messe"/>
+        <title>AELF</title>
+        <description><![CDATA[(c) Association Épiscopale Liturgique pour les pays francophones - 2016]]></description>
+        <link>http://aelf.org</link>
+        <pubDate>Mon, 16 May 2016 23:09:21 +0200</pubDate>
+        <lastBuildDate>Mon, 16 May 2016 23:09:21 +0200</lastBuildDate>
+        <image>
+            <title>AELF</title>
+            <url>http://aelf.org/images/logo.jpg</url>
+            <link>http://aelf.org</link>
+        </image>
+        <language>fr</language>
+        <copyright>Copyright AELF - Tout droits réservés</copyright>
+        <item>
+            <title>Cette date n\est pas dans notre calendrier</title>
+            <description><![CDATA[La date n'a pas été renseignée dans le calendrier]]></description>
+        </item>
+    </channel>
+</rss>

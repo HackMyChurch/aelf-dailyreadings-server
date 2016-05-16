@@ -1,0 +1,7 @@
+# Credentials
+keys.py
+
+# Generated files
+*.swp
+*.pyc
+
