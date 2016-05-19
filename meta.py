@@ -1,23 +1,12 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, Response, abort
-app = Flask(__name__)
-
 import re
-import requests
 from bs4 import BeautifulSoup
-from keys import KEYS
 
-AELF_URL="http://rss.aelf.org/{day}/{month}/{year}/{key}"
-
-# TODO: error handling
-# TODO: memoization
-def get_office_for_day(office, day, month, year):
-    return requests.get(AELF_URL.format(day=day, month=month, year=year, key=KEYS[office])).text
+from utils import get_office_for_day
 
 # TODO: memoization
-def office_meta_postprocess(data):
+def postprocess(data):
     soup = BeautifulSoup(data, 'xml')
     items = soup.find_all('item')
     kv = {}
@@ -72,34 +61,4 @@ def office_meta_postprocess(data):
     # Inject template
     soup.channel.append(template)
     return soup.prettify()
-
-POST_PROCESSORS = {
-    "meta": office_meta_postprocess,
-}
-
-def parse_date_or_abort(date):
-    try:
-        year, month, day = date.split('-')
-        return int(year), int(month), int(day)
-    except:
-        abort(400)
-
-@app.route('/v0/office/<office>/<date>')
-def get_office(office, date):
-    year, month, day = parse_date_or_abort(date)
-    data = get_office_for_day(office, day, month, year)
-
-    # Don't want to cache these BUT don't want to break the app either. Should be a 404 though...
-    if 'pas dans notre calendrier' in data:
-        return Response(data, mimetype='application/rss+xml')
-
-    # Do we have a secret way to enhance this ?
-    if office in POST_PROCESSORS:
-        data = office_meta_postprocess(data)
-
-    # Return
-    return Response(data, mimetype='application/rss+xml')
-
-if __name__ == "__main__":
-    app.run()
 

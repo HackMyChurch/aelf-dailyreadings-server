@@ -1,40 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import os
-import unittest
-import meta
+import server
 import mock
 from bs4 import BeautifulSoup
 
-class FakeResponse(object): pass
+from base import TestBase
 
-def mocked_get(url):
-    print url
-    path = './test_fixtures/'+url.replace('/', ':')
-    res = FakeResponse()
-    with open(path, 'r') as f:
-        res.text = f.read()
-    return res
-
-class TestOfficeMeta(unittest.TestCase):
-    def assertItemsEqual(self, items, data):
-        xml_items = BeautifulSoup(data, 'xml').find_all('item')
-        self.assertEqual(len(items), len(xml_items))
-        for i, xml_item in enumerate(xml_items):
-            self.assertEqual(items[i][0], xml_item.title.text.strip())
-            self.assertEqual(items[i][1], xml_item.description.text.strip())
-
-    def assertMetaEqual(self, date, meta):
-        resp = self.app.get('/v0/office/meta/'+date)
-        self.assertEqual(200, resp.status_code)
-        return self.assertItemsEqual([(u"Jour liturgique", meta)], resp.data)
-
-    def setUp(self):
-        self.app = meta.app.test_client()
-
-    @mock.patch('meta.requests.get')
+class TestOfficeMeta(TestBase):
+    @mock.patch('utils.requests.get')
     def test_get_meta(self, m_get):
-        m_get.side_effect = mocked_get
+        m_get.side_effect = self.m_get
 
         # Nominal tests
         self.assertMetaEqual("2015-12-25", u"Nativité du Seigneur, année A. La couleur liturgique est le Blanc.")
