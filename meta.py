@@ -3,7 +3,7 @@
 import re
 from bs4 import BeautifulSoup
 
-from utils import get_office_for_day
+from utils import get_office_for_day, get_pronoun_for_letter
 
 # TODO: memoization
 def postprocess(data):
@@ -26,23 +26,30 @@ def postprocess(data):
     template.description.string = ""
 
     description = u""
+    has_fete = False
     if 'jour' in kv:
         description += kv['jour']
     if 'fete' in kv and ('jour' not in kv or kv['jour'] not in kv['fete']):
         fete = re.sub(r'(\w)(S\.|Ste) ', r'\1, \2 ', kv['fete']) # Fix word splitting when multiple Saints
+        fete = fete.replace("S.", "Saint").replace("Ste", "Sainte")
         if description:
             if ' ' not in fete:
-                if kv['fete'][0].lower() in [u'a', u'e', u'ê', u'é', u'è', u'i', u'o', u'u', u'y']:
-                    description += " de l'"
-                else:
-                    description += " de la " # FIXME: masculin ?
+                pronoun = get_pronoun_for_letter(kv['fete'][0].lower())
+                description += " de %s " % pronoun
             elif u'férie' in fete:
                 description += u" "
             else:
-                description += u", "
+                description += u". Nous fêtons "
+                if kv['fete'][0] != 'S':
+                    pronoun = get_pronoun_for_letter(kv['fete'][0].lower())
+                    description += "%s " % pronoun
+
+        has_fete = True
         description += fete
     if 'semaine' in kv:
-        if description:
+        if has_fete:
+            description += u'. '
+        elif description:
             description += u', '
         description += kv['semaine']
     if 'annee' in kv:

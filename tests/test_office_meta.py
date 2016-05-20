@@ -19,10 +19,10 @@ class TestOfficeMeta(TestBase):
 
         # Nominal tests
         self.assertMetaEqual("2015-12-25", u"Nativité du Seigneur, année A. La couleur liturgique est le Blanc.")
-        self.assertMetaEqual("2016-03-27", u"Dimanche, Résurrection du Seigneur, année C. La couleur liturgique est le Blanc.")
+        self.assertMetaEqual("2016-03-27", u"Dimanche. Nous fêtons la Résurrection du Seigneur, année C. La couleur liturgique est le Blanc.")
         self.assertMetaEqual("2016-05-08", u"Dimanche, 7ème Semaine du Temps Pascal de l'année C. La couleur liturgique est le Blanc.")
         self.assertMetaEqual("2016-05-15", u"Dimanche de la Pentecôte, année C. La couleur liturgique est le Rouge.")
-        self.assertMetaEqual("2016-05-25", u"Mercredi, S. Bède le Vénérable, prêtre et docteur de l'Eglise, S. Grégoire VII, pape, Ste Marie-Madeleine de Pazzi, vierge, 8ème Semaine du Temps Ordinaire de l'année Paire. La couleur liturgique est le Vert.")
+        self.assertMetaEqual("2016-05-25", u"Mercredi. Nous fêtons Saint Bède le Vénérable, prêtre et docteur de l'Eglise, Saint Grégoire VII, pape, Sainte Marie-Madeleine de Pazzi, vierge. 8ème Semaine du Temps Ordinaire de l'année Paire. La couleur liturgique est le Vert.")
         self.assertMetaEqual("2016-08-15", u"Assomption de la Vierge Marie. La couleur liturgique est le Blanc.")
 
         # Error: obviously invalid date
