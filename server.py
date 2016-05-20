@@ -10,7 +10,9 @@ from utils import get_office_for_day
 from keys import KEY_TO_OFFICE
 
 POST_PROCESSORS = {
-    "meta": meta.postprocess,
+    "19-beta": {
+        "meta": meta.postprocess,
+    },
 }
 
 def parse_date_or_abort(date):
@@ -37,8 +39,10 @@ def do_get_office(version, office, day, month, year):
         return Response(data, mimetype='application/rss+xml')
 
     # Do we have a secret way to enhance this ?
-    if office in POST_PROCESSORS:
-        data = POST_PROCESSORS[office](data)
+    variant = "beta" if request.args.get('beta', 0) else "prod"
+    version = "%s-%s" % (version, variant)
+    if office in POST_PROCESSORS.get(version, {}):
+        data = POST_PROCESSORS[version][office](data)
 
     # Return
     return Response(data, mimetype='application/rss+xml')
@@ -53,7 +57,7 @@ def get_office_legacy(day, month, year, key):
         abort(404)
     office = KEY_TO_OFFICE[key]
     version = int(request.args.get('version', 0))
-    return do_get_office(0, KEY_TO_OFFICE[key], day, month, year)
+    return do_get_office(version, KEY_TO_OFFICE[key], day, month, year)
 
 if __name__ == "__main__":
     if os.environ.get('AELF_DEBUG', False):

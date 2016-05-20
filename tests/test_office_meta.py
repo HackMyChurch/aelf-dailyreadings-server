@@ -9,7 +9,7 @@ from base import TestBase
 
 class TestOfficeMeta(TestBase):
     def assertMetaEqual(self, date, meta):
-        resp = self.app.get('/0/office/meta/'+date)
+        resp = self.app.get('/19/office/meta/%s?beta=enabled' % date)
         self.assertEqual(200, resp.status_code)
         return self.assertItemsEqual([(u"Jour liturgique", meta)], resp.data)
 
