@@ -8,6 +8,11 @@ from bs4 import BeautifulSoup
 from base import TestBase
 
 class TestOfficeMeta(TestBase):
+    def assertMetaEqual(self, date, meta):
+        resp = self.app.get('/0/office/meta/'+date)
+        self.assertEqual(200, resp.status_code)
+        return self.assertItemsEqual([(u"Jour liturgique", meta)], resp.data)
+
     @mock.patch('utils.requests.get')
     def test_get_meta(self, m_get):
         m_get.side_effect = self.m_get
@@ -21,8 +26,8 @@ class TestOfficeMeta(TestBase):
         self.assertMetaEqual("2016-08-15", u"Assomption de la Vierge Marie. La couleur liturgique est le Blanc.")
 
         # Error: obviously invalid date
-        resp = self.app.get('/v0/office/meta/2016-42')
+        resp = self.app.get('/0/office/meta/2016-42')
         self.assertEqual(400, resp.status_code)
-        resp = self.app.get('/v0/office/meta/2016-42-17')
+        resp = self.app.get('/0/office/meta/2016-42-17')
         self.assertItemsEqual([(u"Cette date n\\est pas dans notre calendrier", u"La date n'a pas été renseignée dans le calendrier")], resp.data)
 
