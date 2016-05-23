@@ -40,7 +40,7 @@ def postprocess(data):
                 description += u" "
             else:
                 description += u". Nous fêtons "
-                if kv['fete'][0] != 'S':
+                if kv['fete'][0] != 'S' and u"Trinité" not in kv['fete']:
                     pronoun = get_pronoun_for_letter(kv['fete'][0].lower())
                     description += "%s " % pronoun
 
