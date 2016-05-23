@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os
-import server
 import mock
-from bs4 import BeautifulSoup
 
 from base import TestBase
 

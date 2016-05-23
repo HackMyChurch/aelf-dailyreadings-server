@@ -9,12 +9,18 @@ from bs4 import BeautifulSoup
 class FakeResponse(object): pass
 
 class TestBase(unittest.TestCase):
+    def parseItems(self, data):
+        items = []
+        for item in BeautifulSoup(data, 'xml').find_all('item'):
+            items.append((
+                item.title.text.strip(),
+                item.description.text.strip(),
+            ))
+        return items
+
     def assertItemsEqual(self, items, data):
-        xml_items = BeautifulSoup(data, 'xml').find_all('item')
-        self.assertEqual(len(items), len(xml_items))
-        for i, xml_item in enumerate(xml_items):
-            self.assertEqual(items[i][0], xml_item.title.text.strip())
-            self.assertEqual(items[i][1], xml_item.description.text.strip())
+        expected = self.parseItems(data)
+        self.assertEqual(expected, items)
 
     def m_get(self, url):
         url = url.replace('/', ':')

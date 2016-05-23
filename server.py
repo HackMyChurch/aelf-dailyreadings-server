@@ -6,12 +6,14 @@ app = Flask(__name__)
 
 import os
 import meta
+import vepres
 from utils import get_office_for_day
 from keys import KEY_TO_OFFICE
 
 POST_PROCESSORS = {
     "19-beta": {
         "meta": meta.postprocess,
+        "vepres": vepres.postprocess, # TODO: could be enabled for older versions too
     },
 }
 
