@@ -5,14 +5,18 @@ import requests
 import yaml
 from keys import KEYS
 
-AELF_URL="http://rss.aelf.org/{day}/{month}/{year}/{key}"
+AELF_RSS="http://rss.aelf.org/{day}/{month}/{year}/{key}"
+AELF_SITE="http://www.aelf.org/office-{office}?date_my={day}/{month}/{year}"
 ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets")
 
 # TODO: error handling
 # TODO: memoization
 
 def get_office_for_day(office, day, month, year):
-    return requests.get(AELF_URL.format(day=day, month=month, year=year, key=KEYS[office])).text
+    return requests.get(AELF_RSS.format(day=day, month=month, year=year, key=KEYS[office])).text
+
+def get_office_for_day_aelf(office, day, month, year):
+    return requests.get(AELF_SITE.format(office=office, day=day, month=month, year=year)).text
 
 ASSET_CACHE={}
 def get_asset(path):

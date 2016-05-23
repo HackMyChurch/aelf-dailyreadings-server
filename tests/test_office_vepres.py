@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 from base import TestBase
 
-class TestOfficeMeta(TestBase):
+class TestOfficeVepres(TestBase):
     @mock.patch('utils.requests.get')
     def test_get_vepres(self, m_get):
         m_get.side_effect = self.m_get

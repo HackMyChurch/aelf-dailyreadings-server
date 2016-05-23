@@ -7,6 +7,7 @@ app = Flask(__name__)
 import os
 import meta
 import vepres
+import complies
 from utils import get_office_for_day
 from keys import KEY_TO_OFFICE
 
@@ -14,6 +15,7 @@ POST_PROCESSORS = {
     "19-beta": {
         "meta": meta.postprocess,
         "vepres": vepres.postprocess, # TODO: could be enabled for older versions too
+        "complies": complies.postprocess, # TODO: could be enabled for older versions too
     },
 }
 
@@ -44,7 +46,7 @@ def do_get_office(version, office, day, month, year):
     variant = "beta" if request.args.get('beta', 0) else "prod"
     version = "%s-%s" % (version, variant)
     if office in POST_PROCESSORS.get(version, {}):
-        data = POST_PROCESSORS[version][office](data)
+        data = POST_PROCESSORS[version][office](data, day, month, year)
 
     # Return
     return Response(data, mimetype='application/rss+xml')
