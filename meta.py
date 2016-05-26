@@ -30,46 +30,57 @@ def postprocess(version, variant, data, day, month, year):
     template.description.string = ""
 
     description = u""
-    has_fete = False
+    fete_done = False
     if 'jour' in kv:
         description += kv['jour']
-    if 'fete' in kv and ('jour' not in kv or kv['jour'] not in kv['fete']):
-        fete = re.sub(r'(\w)(S\.|Ste) ', r'\1, \2 ', kv['fete']) # Fix word splitting when multiple Saints
-        fete = fete.replace("S.", "Saint").replace("Ste", "Sainte")
-        if description:
-            if ' ' not in fete:
-                pronoun = get_pronoun_for_letter(kv['fete'][0].lower())
-                description += " de %s " % pronoun
-            elif u'férie' in fete:
-                description += u" "
-            else:
-                description += u". Nous fêtons "
-                if kv['fete'][0] != 'S' and u"Trinité" not in kv['fete']:
-                    pronoun = get_pronoun_for_letter(kv['fete'][0].lower())
-                    description += "%s " % pronoun
+        if 'fete' in kv:
+            fete = kv['fete']
 
-        has_fete = True
-        description += fete
+            # Single word (paque, ascension, noel, ...)
+            if ' ' not in fete:
+                pronoun = get_pronoun_for_letter(fete[0].lower())
+                description += u" de %s%s" % (pronoun, fete)
+                fete_done = True
+            # De la férie
+            elif u'férie' in fete:
+                description += u" " + fete
+                fete_done = True
     if 'semaine' in kv:
-        if has_fete:
-            description += u'. '
-        elif description:
+        if description:
             description += u', '
         description += kv['semaine']
     if 'annee' in kv:
-        if kv.get("degre", u"") == u'Solennité du Seigneur':
-            description += u", année %s" % kv['annee']
-        elif description:
-            description += u" de l'année %s" % kv['annee']
+        if description:
+            if fete_done:
+                description += u", année %s" % kv['annee']
+            else:
+                description += u" de l'année %s" % kv['annee']
         else:
             description += u"Année %s" % kv['annee']
+
+    if description:
+        description += "."
+
+    if not fete_done and 'fete' in kv and ('jour' not in kv or kv['jour'] not in kv['fete']):
+        fete = re.sub(r'(\w)(S\.|Ste) ', r'\1, \2 ', kv['fete']) # Fix word splitting when multiple Saints
+        fete = fete.replace("S.", "Saint").replace("Ste", "Sainte")
+
+        # Single word (paque, ascension, noel, ...)
+        if ' ' not in fete:
+            description += u" Nous fêtons %s." % fete
+        # Standard fete
+        if u'férie' not in fete:
+            description += u" Nous fêtons "
+            if kv['fete'][0] not in ['L', 'S'] and u"Trinité" not in kv['fete']:
+                pronoun = get_pronoun_for_letter(kv['fete'][0].lower())
+                description += "%s" % pronoun
+            description += fete + u"."
+
     if 'couleur' in kv:
-        if description:
-            description += u". "
-        description += u"La couleur liturgique est le %s." % kv['couleur']
-    template.description.string += u"\n"+description
+        description += u" La couleur liturgique est le %s." % kv['couleur']
 
     # Inject template
+    template.description.string += u"\n"+description
     soup.channel.append(template)
     return soup.prettify()
 

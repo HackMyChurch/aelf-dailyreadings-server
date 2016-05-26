@@ -33,7 +33,7 @@ def get_pronoun_for_letter(l):
     if l.lower() in [u'a', u'e', u'ê', u'é', u'è', u'i', u'o', u'u', u'y']:
         return "l'"
     else:
-        return "la" # FIXME: masculin ?
+        return "la " # FIXME: masculin ?
 
 def get_item_by_title_internal(items, title, normalize):
     '''Get first item containing 'title' in its title if any. Normalize input.'''
