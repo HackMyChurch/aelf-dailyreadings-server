@@ -12,11 +12,9 @@ from utils import get_office_for_day
 from keys import KEY_TO_OFFICE
 
 POST_PROCESSORS = {
-    "19-beta": {
-        "meta": meta.postprocess,
-        "vepres": vepres.postprocess, # TODO: could be enabled for older versions too
-        "complies": complies.postprocess, # TODO: could be enabled for older versions too
-    },
+    "meta": meta.postprocess,
+    "vepres": vepres.postprocess, # TODO: could be enabled for older versions too
+    "complies": complies.postprocess, # TODO: could be enabled for older versions too
 }
 
 def parse_date_or_abort(date):
@@ -44,9 +42,8 @@ def do_get_office(version, office, day, month, year):
 
     # Do we have a secret way to enhance this ?
     variant = "beta" if request.args.get('beta', 0) else "prod"
-    version = "%s-%s" % (version, variant)
-    if office in POST_PROCESSORS.get(version, {}):
-        data = POST_PROCESSORS[version][office](data, day, month, year)
+    if office in POST_PROCESSORS:
+        data = POST_PROCESSORS[office](version, variant, data, day, month, year)
 
     # Return
     return Response(data, mimetype='application/rss+xml')

@@ -6,7 +6,11 @@ from bs4 import BeautifulSoup
 from utils import get_office_for_day, get_pronoun_for_letter
 
 # TODO: memoization
-def postprocess(data, day, month, year):
+def postprocess(version, variant, data, day, month, year):
+    # Do not enable postprocessing for versions before 20, unless beta mode
+    if variant != "beta" and version < 20:
+        return data
+
     soup = BeautifulSoup(data, 'xml')
     items = soup.find_all('item')
     kv = {}
