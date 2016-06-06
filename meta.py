@@ -3,7 +3,7 @@
 import re
 from bs4 import BeautifulSoup
 
-from utils import get_office_for_day, get_pronoun_for_letter
+from utils import get_office_for_day, get_pronoun_for_sentence
 
 def _filter_fete(fete):
     '''fete can be proceesed from 2 places. Share common filtering code'''
@@ -45,7 +45,7 @@ def postprocess(version, variant, data, day, month, year):
 
             # Single word (paque, ascension, noel, ...)
             if ' ' not in fete:
-                pronoun = get_pronoun_for_letter(fete[0].lower())
+                pronoun = get_pronoun_for_sentence(fete)
                 description += u" de %s%s" % (pronoun, fete)
                 fete_done = True
             # De la férie
@@ -76,11 +76,8 @@ def postprocess(version, variant, data, day, month, year):
             description += u" Nous fêtons %s." % fete
         # Standard fete
         if u'férie' not in fete:
-            description += u" Nous fêtons "
-            if kv['fete'][0] not in ['L', 'S'] and u"Trinité" not in kv['fete']:
-                pronoun = get_pronoun_for_letter(kv['fete'][0].lower())
-                description += "%s" % pronoun
-            description += fete + u"."
+            pronoun = get_pronoun_for_sentence(fete)
+            description += u' Nous fêtons %s%s.' % (pronoun, fete)
 
     if 'couleur' in kv:
         description += u" La couleur liturgique est le %s." % kv['couleur']

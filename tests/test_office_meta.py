@@ -13,6 +13,7 @@ class TestOfficeMeta(TestBase):
     @mock.patch('utils.requests.get')
     def test_get_meta(self, m_get):
         m_get.side_effect = self.m_get
+        self.maxDiff = None
 
         # Nominal tests
         self.assertMetaEqual("2015-12-25", u"Année A. Nous fêtons la Nativité du Seigneur. La couleur liturgique est le Blanc.")
@@ -20,6 +21,7 @@ class TestOfficeMeta(TestBase):
         self.assertMetaEqual("2016-05-08", u"Dimanche, 7<sup>ème</sup> Semaine du Temps Pascal de l'année C. La couleur liturgique est le Blanc.")
         self.assertMetaEqual("2016-05-15", u"Dimanche de la Pentecôte, année C. La couleur liturgique est le Rouge.")
         self.assertMetaEqual("2016-05-25", u"Mercredi, 8<sup>ème</sup> Semaine du Temps Ordinaire de l'année Paire. Nous fêtons Saint Bède le Vénérable, prêtre et docteur de l'Eglise, Saint Grégoire VII, pape, Sainte Marie-Madeleine de Pazzi, vierge. La couleur liturgique est le Vert.")
+        self.assertMetaEqual("2016-06-03", u"Vendredi de l'année C. Nous fêtons le Sacré-C\u0153ur de Jésus. La couleur liturgique est le Blanc.")
         self.assertMetaEqual("2016-06-11", u"Samedi, 10<sup>ème</sup> Semaine du Temps Ordinaire de l'année Paire. Nous fêtons Saint Barnabé. La couleur liturgique est le Rouge.")
         self.assertMetaEqual("2016-08-15", u"Nous fêtons l'Assomption de la Vierge Marie. La couleur liturgique est le Blanc.")
 

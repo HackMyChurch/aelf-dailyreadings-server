@@ -29,11 +29,26 @@ def get_asset(path):
     with open(path) as f:
         return yaml.load(f)
 
-def get_pronoun_for_letter(l):
-    if l.lower() in [u'a', u'e', u'ê', u'é', u'è', u'i', u'o', u'u', u'y']:
+def get_pronoun_for_sentence(sentence):
+    words = [w.lower() for w in sentence.split(" ")]
+
+    # Argh, hard coded exception
+    if words[0] in ['saint', 'sainte'] and u"trinité" not in sentence:
+        return ''
+
+    # Already a determinant or equivalent
+    if words[0] in ['l\'', 'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'd\'']:
+        return ''
+
+    # If it starts by a vowel, that's easy, don't care about M/F
+    if words[0][0] in [u'a', u'e', u'ê', u'é', u'è', u'i', u'o', u'u', u'y']:
         return "l'"
-    else:
-        return "la " # FIXME: masculin ?
+
+    # Attempt to guess M/F by checking if 1st words ends with 'e'. Default on F
+    if words[0] in [u'sacré-c\u0153ur']:
+        return u"le "
+
+    return u"la "
 
 def get_item_by_title_internal(items, title, normalize):
     '''Get first item containing 'title' in its title if any. Normalize input.'''
