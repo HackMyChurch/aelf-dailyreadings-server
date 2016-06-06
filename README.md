@@ -55,6 +55,13 @@ pip install -r requirements-dev.txt
 nosetests
 ```
 
+Les tests fonctionnent avec une copie des données. Si vous ajoutez un nouveau test et avez besoin de nouvelles données, vous pouvez les télécharger automatiquement
+en activant la variable d'environnement ``AELF_DEBUG=1``:
+
+```console
+AELF_DEBUG=1 nosetests
+```
+
 ## Licence
 
 MIT, 2016 Jean-Tiare Le Bigot <jt@yadutaf.fr>
