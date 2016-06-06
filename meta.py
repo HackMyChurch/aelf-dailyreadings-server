@@ -85,6 +85,9 @@ def postprocess(version, variant, data, day, month, year):
     if 'couleur' in kv:
         description += u" La couleur liturgique est le %s." % kv['couleur']
 
+    # Final cleanup: 1er, 1ère, 2ème, 2nd, ... --> exposant
+    description = re.sub(ur'([0-9])(er|nd|ère|ème) ', r'\1<sup>\2</sup> ', description)
+
     # Inject template
     template.description.string += u"\n"+description
     soup.channel.append(template)
