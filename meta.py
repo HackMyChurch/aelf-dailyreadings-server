@@ -5,6 +5,13 @@ from bs4 import BeautifulSoup
 
 from utils import get_office_for_day, get_pronoun_for_letter
 
+def _filter_fete(fete):
+    '''fete can be proceesed from 2 places. Share common filtering code'''
+    fete = re.sub(r'(\w)(S\.|St|Ste) ', r'\1, \2 ', fete) # Fix word splitting when multiple Saints
+    return fete.replace("S. ", "Saint ")\
+               .replace("St ", "Saint ")\
+               .replace("Ste ", "Sainte ")
+
 # TODO: memoization
 def postprocess(version, variant, data, day, month, year):
     # Do not enable postprocessing for versions before 20, unless beta mode
@@ -34,7 +41,7 @@ def postprocess(version, variant, data, day, month, year):
     if 'jour' in kv:
         description += kv['jour']
         if 'fete' in kv:
-            fete = kv['fete']
+            fete = _filter_fete(kv['fete'])
 
             # Single word (paque, ascension, noel, ...)
             if ' ' not in fete:
@@ -62,8 +69,7 @@ def postprocess(version, variant, data, day, month, year):
         description += "."
 
     if not fete_done and 'fete' in kv and ('jour' not in kv or kv['jour'] not in kv['fete']):
-        fete = re.sub(r'(\w)(S\.|Ste) ', r'\1, \2 ', kv['fete']) # Fix word splitting when multiple Saints
-        fete = fete.replace("S.", "Saint").replace("Ste", "Sainte")
+        fete = _filter_fete(kv['fete'])
 
         # Single word (paque, ascension, noel, ...)
         if ' ' not in fete:
