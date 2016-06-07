@@ -25,21 +25,22 @@ def postprocess(version, variant, data, day, month, year):
         return soup.prettify()
 
     # Insert "Bénédiction" after "Oraison et Bénédiction" and fix it to only mention "Oraison"
-    oraison = get_item_by_title(items, u"oraison")
-    benediction = get_item_by_title(items, u"bénédiction")
+    oraison_item = get_item_by_title(items, u"oraison")
+    benediction_item = get_item_by_title(items, u"bénédiction")
+
     html_benediction = u"".join([unicode(l).strip() for l in benediction_aelf.children])
-    html_oraison = benediction.description.string.strip()
+    html_oraison = benediction_item.description.string.strip()
 
     # This is "Oraison et bénédiction": append bénédiction
-    if benediction == oraison or oraison is None:
-        oraison.title.string = u"Oraison et bénédiction"
+    if benediction_item == oraison_item or benediction_item is None:
+        oraison_item.title.string = u"Oraison"
 
-        if not '<p' in html_benediction:
-            html_benediction = "<p>%s</p>" % html_benediction
-        if not '<p' in html_oraison:
-            html_oraison = "<p>%s</p>" % html_oraison
+        benediction_item = copy.copy(items[-1])
+        benediction_item.title.string = u"Bénédiction"
+        benediction_item.description.string = html_benediction
 
-        benediction.description.string = html_oraison+html_benediction
+        oraison_item.title.string = "Oraison"
+        oraison_item.insert_after(benediction_item)
 
     # All done
     return soup.prettify()
