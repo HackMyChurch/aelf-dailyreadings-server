@@ -15,10 +15,11 @@ def postprocess(version, variant, data, day, month, year):
     soup = BeautifulSoup(data, 'xml')
     items = soup.find_all('item')
 
-    # Fix empty "Te Deum"
     te_deum_item = get_item_by_title(items, u"te deum")
     oraison_item = get_item_by_title(items, u"oraison")
+    envoi_item = get_item_by_title(items, u"envoi")
 
+    # Fix empty "Te Deum"
     if te_deum_item is not None:
         te_deum = get_asset('prayers/te-deum')
         te_deum_item.description.string = te_deum['body']
@@ -29,6 +30,15 @@ def postprocess(version, variant, data, day, month, year):
 
     # Fix oraison slide title: there is no benediction
     oraison_item.title.string = "Oraison"
+
+    # Fix missing envoi part
+    if envoi_item is not None:
+        envoi = get_asset('prayers/lectures-envoi')
+
+        if not u'<p' in envoi_item.description.string:
+            envoi_item.description.string = u"<p>%s</p>" % envoi_item.description.string
+
+        envoi_item.description.string += envoi['body']
 
     # All done
     return soup.prettify()
