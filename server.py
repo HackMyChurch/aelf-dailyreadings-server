@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 import os
 import meta
+import laudes
 import vepres
 import complies
 import lectures
@@ -14,6 +15,7 @@ from keys import KEY_TO_OFFICE
 
 POST_PROCESSORS = {
     "meta": meta.postprocess,
+    "laudes": laudes.postprocess,
     "vepres": vepres.postprocess, # TODO: could be enabled for older versions too
     "complies": complies.postprocess, # TODO: could be enabled for older versions too
     "lectures": lectures.postprocess,
