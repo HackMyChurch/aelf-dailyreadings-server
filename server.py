@@ -8,6 +8,7 @@ import os
 import meta
 import vepres
 import complies
+import lectures
 from utils import get_office_for_day
 from keys import KEY_TO_OFFICE
 
@@ -15,6 +16,7 @@ POST_PROCESSORS = {
     "meta": meta.postprocess,
     "vepres": vepres.postprocess, # TODO: could be enabled for older versions too
     "complies": complies.postprocess, # TODO: could be enabled for older versions too
+    "lectures": lectures.postprocess,
 }
 
 def parse_date_or_abort(date):

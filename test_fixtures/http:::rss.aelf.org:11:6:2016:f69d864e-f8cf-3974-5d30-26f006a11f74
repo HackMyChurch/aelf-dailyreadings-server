@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <atom:link rel="self" type="application/rss+xml" href="http://rss.aelf.org/rss.php/messe"/>
+        <title>AELF</title>
+        <description><![CDATA[(c) Association Épiscopale Liturgique pour les pays francophones - 2016]]></description>
+        <link>http://aelf.org</link>
+        <pubDate>Tue, 07 Jun 2016 23:54:29 +0200</pubDate>
+        <lastBuildDate>Tue, 07 Jun 2016 23:54:29 +0200</lastBuildDate>
+        <image>
+            <title>AELF</title>
+            <url>http://aelf.org/images/logo.jpg</url>
+            <link>http://aelf.org</link>
+        </image>
+        <language>fr</language>
+        <copyright>Copyright AELF - Tout droits réservés</copyright>
+        <item>
+            <title>Intro</title>
+            <description><![CDATA[V/ Dieu, viens à mon aide, R/ Seigneur, à notre secours. <br/> Gloire au Père, et au Fils et au Saint-Esprit,<br/>
+            au Dieu qui est, qui était et qui vient,<br/>
+            pour les siècles des siècles.<br/>
+            AMEN ALLELUIA]]></description>
+            <guid>1</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Hymne : Comment es-tu foyer de feu</title>
+            <description><![CDATA[Comment es-tu foyer de feu <br>et fraîcheur de la fontaine,<br>une brûlure, une douceur <br>qui rend saines nos souillures ?<br><br>Comment fais-tu de l'homme un dieu, <br>de la nuit une lumière,<br>et des abîmes de la mort <br>tires-tu la vie nouvelle?<br><br>Comment la nuit vient-elle au jour ? <br>Peux-tu vaincre les ténèbres,<br>porter ta flamme jusqu'au coeur <br>et changer le fond de l'être ?<br><br>Comment n'es-tu qu'un avec nous, <br>nous rends-tu fils de Dieu même ?<br>Comment nous brûles-tu d'amour <br>et nous blesses-tu sans glaive ?<br><br>Comment peux-tu nous supporter, <br>rester lent à la colère,<br>et de l'ailleurs où tu te tiens <br>voir ici nos moindres gestes ?<br><br>Comment de si haut et de si loin <br>ton regard suit-il nos actes ?<br>Ton serviteur attend la paix, <br>le courage dans les larmes !<br>]]></description>
+            <guid>2</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Antienne</title>
+            <description><![CDATA[]]></description>
+            <guid>3</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Psaume : 135 - I</title>
+            <description><![CDATA[<font size="1" color="#FF0000">1</font>Rendez grâce au Seigne<u>u</u>r : il est bon,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">2</font>Rendez gr<u>â</u>ce au Dieu des dieux,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">3</font>Rendez grâce au Seigne<u>u</u>r des seigneurs,<br>étern<u>e</u>l est son amour !<br><br><font size="1" color="#FF0000">4</font>Lui seul a fait de gr<u>a</u>ndes merveilles,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">5</font>lui qui fit les cie<u>u</u>x avec sagesse,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">6</font>qui affermit la t<u>e</u>rre sur les eaux,<br>étern<u>e</u>l est son amour !<br><br><font size="1" color="#FF0000">7</font>Lui qui a fait les gr<u>a</u>nds luminaires,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">8</font>le soleil qui r<u>è</u>gne sur le jour,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">9</font>la lune et les ét<u>o</u>iles, sur la nuit,<br>étern<u>e</u>l est son amour !<br>]]></description>
+            <guid>4</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Antienne</title>
+            <description><![CDATA[]]></description>
+            <guid>5</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Psaume : 135 - II</title>
+            <description><![CDATA[<font size="1" color="#FF0000">10</font>Lui qui frappa les Égypti<u>e</u>ns dans leurs aînés,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">11</font>et fit sortir Israël de leur pays,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">12</font>d’une main forte et d’un br<u>a</u>s vigoureux,<br>étern<u>e</u>l est son amour !<br><br><font size="1" color="#FF0000">13</font>Lui qui fendit la mer Ro<u>u</u>ge en deux parts,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">14</font>et fit passer Israël en son milieu,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">15</font>y rejetant Phara<u>o</u>n et ses armées,<br>étern<u>e</u>l est son amour !<br>]]></description>
+            <guid>6</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Psaume : 135 - III</title>
+            <description><![CDATA[<font size="1" color="#FF0000">16</font>Lui qui mena son pe<u>u</u>ple au désert,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">17</font>qui frappa des pr<u>i</u>nces fameux,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">18</font>et fit périr des r<u>o</u>is redoutables,<br>étern<u>e</u>l est son amour !<br><br><font size="1" color="#FF0000">19</font>Séhon, le r<u>o</u>i des Amorites,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">20</font>et Og, le r<u>o</u>i de Basan,<br>étern<u>e</u>l est son amour !<br><br><font size="1" color="#FF0000">21</font>pour donner leur pays en héritage,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">22</font>en héritage à Israël, son serviteur,<br>étern<u>e</u>l est son amour !<br><br><font size="1" color="#FF0000">23</font>Il se souvient de no<u>u</u>s, les humiliés,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">24</font>il nous tira de la m<u>a</u>in des oppresseurs,<br>étern<u>e</u>l est son amour !<br><br><font size="1" color="#FF0000">25</font>A toute chair, il d<u>o</u>nne le pain,<br>étern<u>e</u>l est son amour !<br><font size="1" color="#FF0000">26</font>Rendez gr<u>â</u>ce au Dieu du ciel,<br>étern<u>e</u>l est son amour !<br>]]></description>
+            <guid>7</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Verset : </title>
+            <description><![CDATA[V/ Fais-moi conna&icirc;tre, Seigneur, tes voies.<br />Enseigne-moi tes sentiers.]]></description>
+            <guid>8</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Lecture : Renouvellement de l'Alliance(Jos 24, 1-7.13-28)</title>
+            <description><![CDATA[Josué réunit toutes les tribus d’Israël à Sichem ; puis il appela les anciens d’Israël, avec les chefs, les juges et les scribes ; ils se présentèrent devant Dieu.<br/>Josué dit alors à tout le peuple : « Ainsi parle le Seigneur, le Dieu d’Israël : Vos ancêtres habitaient au-delà de l’Euphrate depuis toujours, jusqu’à Tèrah, père d’Abraham et de Nahor, et ils servaient d’autres dieux.<br/>Alors j’ai pris votre père Abraham au-delà de l’Euphrate, et je lui ai fait traverser toute la terre de Canaan ; j’ai multiplié sa descendance, et je lui ai donné Isaac.<br/>À Isaac, j’ai donné Jacob et Ésaü. À Ésaü, j’ai donné en possession la montagne de Séïr. Jacob et ses fils sont descendus en Égypte.<br/>J’ai envoyé ensuite Moïse et Aaron, et j’ai frappé l’Égypte par tout ce que j’ai accompli au milieu d’elle. Ensuite, je vous en ai fait sortir.<br/>Donc, j’ai fait sortir vos pères de l’Égypte, et vous êtes arrivés à la mer ; les Égyptiens poursuivaient vos pères avec des chars et des guerriers jusqu’à la mer des Roseaux.<br/>Vos pères crièrent alors vers le Seigneur, qui étendit un brouillard épais entre vous et les Égyptiens, et fit revenir sur eux la mer, qui les recouvrit. Vous avez vu de vos propres yeux ce que j’ai fait en Égypte, puis vous avez séjourné longtemps dans le désert.<br/>Je vous ai donné une terre qui ne vous a coûté aucune peine, des villes dans lesquelles vous vous êtes installés sans les avoir bâties, des vignes et des oliveraies dont vous profitez aujourd’hui sans les avoir plantées.<br/>Et maintenant craignez le Seigneur ; servez-le dans l’intégrité et la fidélité. Écartez les dieux que vos pères ont servis au-delà de l’Euphrate et en Égypte ; servez le Seigneur.<br/>S’il ne vous plaît pas de servir le Seigneur, choisissez aujourd’hui qui vous voulez servir : les dieux que vos pères servaient au-delà de l’Euphrate, ou les dieux des Amorites dont vous habitez le pays. Moi et les miens, nous voulons servir le Seigneur. » <br/>Le peuple répondit : « Plutôt mourir que d’abandonner le Seigneur pour servir d’autres dieux !<br/>C’est le Seigneur notre Dieu qui nous a fait monter, nous et nos pères, du pays d’Égypte, cette maison d’esclavage ; c’est lui qui, sous nos yeux, a accompli tous ces signes et nous a protégés tout le long du chemin que nous avons parcouru, chez tous les peuples au milieu desquels nous sommes passés.<br/>Et même le Seigneur a chassé devant nous tous ces peuples, ainsi que les Amorites qui habitaient le pays. Nous aussi, nous voulons servir le Seigneur, car c’est lui notre Dieu. »<br/>Alors Josué dit au peuple : « Vous ne pouvez pas servir le Seigneur, car il est un Dieu saint, il est un Dieu jaloux, qui ne pardonnera ni vos révoltes ni vos péchés.<br/>Si vous abandonnez le Seigneur pour servir les dieux étrangers, il se retournera contre vous, il vous fera du mal, il vous anéantira, lui qui vous a fait tant de bien. »<br/>Le peuple répondit à Josué : « Mais si ! Nous voulons servir le Seigneur. »<br/>Alors Josué dit au peuple : « Vous en êtes les témoins contre vous-mêmes : c’est vous qui avez choisi de servir le Seigneur. » Ils répondirent : « Nous en sommes témoins. »<br/>Josué reprit : « Alors, enlevez les dieux étrangers qui sont au milieu de vous, et tournez votre cœur vers le Seigneur, le Dieu d’Israël. »<br/>Le peuple répondit à Josué : « C’est le Seigneur notre Dieu que nous voulons servir, c’est à sa voix que nous voulons obéir. »<br/>En ce jour-là, Josué conclut une Alliance pour le peuple. C’est dans la ville de Sichem qu’il lui donna un statut et un droit.<br/>Josué inscrivit tout cela dans le livre de la loi de Dieu. Il prit une grande pierre et la dressa sous le chêne qui était dans le sanctuaire du Seigneur.<br/>Il dit à tout le peuple : « Voici une pierre qui servira de témoin contre nous, car elle a entendu toutes les paroles que le Seigneur nous a dites ; elle servira de témoin contre vous, pour vous empêcher de renier votre Dieu. »<br/>Puis Josué renvoya le peuple, chacun dans la part de territoire qui était son héritage.<br/>]]></description>
+            <guid>9</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Repons </title>
+            <description><![CDATA[<br><br>R/ Nul ne peut servir deux maîtres !<br><br>C'est le Seigneur notre Dieu<br>que nous voulons servir,<br>c'est à sa voix que nous voulons obéir !<br><br>Il n'y a pour nous qu'un seul Dieu, le Père,<br>et un seul Seigneur, Jésus Christ !]]></description>
+            <guid>10</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>HOMÉLIE DE S. CHROMAGE D'AQUILÉE</title>
+            <description><![CDATA[<p><em>Vous êtes la lumière du monde. Une ville située sur une montagne ne peut être cachée. Et l'on n'allume pas une lampe pour la mettre sous le boisseau ; on la met sur le lampadaire, et elle brille pour tous ceux qui sont dans la maison</em>. Le Seigneur avait appelé ses disciples sel de la terre parce qu'ils ont relevé par la saveur de la sagesse céleste les cœurs humains affadis par le démon. Et maintenant il les appelle <em>lumière du monde</em> parce que, éclairés par lui, qui est la lumière éternelle et véritable, ils sont devenus à leur tour une lumière dans les ténèbres. <br /><br />Parce qu'il est lui-même le <em>Soleil de justice</em> il peut aussi appeler ses disciples <em>lumière du monde </em>; c'est par eux, comme par des rayons étincelants, qu'il déverse la lumière de sa connaissance sur la terre entière ; en effet, ils ont chassé les ténèbres de l'erreur loin du cœur des hommes, en montrant la lumière de la vérité.<br /><br />Éclairés par eux, nous-mêmes, de ténèbres que nous étions, sommes devenus lumière, comme dit saint Paul : <em>Autrefois, vous n'étiez que ténèbres ; maintenant, dans le Seigneur, vous êtes devenus lumière ; vivez comme des fils de la lumière</em>. Et encore : <em>Vous n'appartenez pas à la nuit ni aux ténèbres ; vous êtes tous des fils de la lumière, des fils du jour</em>. Saint Jean a eu raison d'affirmer dans sa lettre : <em>Dieu est lumière</em>, et : <em>Celui qui demeure en Dieu est dans la lumière comme il est lui-même dans la lumière</em>. Aussi, puisque nous avons la joie d'être délivrés des ténèbres de l'erreur, nous devons vivre dans la lumière, comme des fils de lumière. ~ Ce qui fait dire à l'Apôtre : <em>Parmi eux, vous apparaissez comme des sources de lumière dans le monde, vous qui portez la parole de vie</em>. <br /><br />Si nous n'agissons pas ainsi, on verra que, pour notre malheur comme pour celui des autres, nous couvrons et nous cachons par notre manque de foi comme par un voile les bienfaits de cette lumière si nécessaire. Aussi savons-nous, pour l'avoir lu dans l'Évangile, que nous encourons le châtiment mérité par celui qui avait reçu un talent pour lui faire gagner le ciel, et qui a mieux aimé le cacher que de le confier à la banque. <br /><br />C'est pourquoi cette lampe resplendissante, qui a été allumée pour servir à notre salut, doit toujours briller en nous. Nous avons en effet la lampe du commandement céleste et de la grâce spirituelle, ce dont David a témoigné ainsi : <em>Ta parole est une lampe pour mes pas, une lumière pour ma route</em>. Et Salomon a dit : <em>Le précepte de la loi est une lampe</em>. ~<br /><br />Cette lampe de la loi et de la foi, nous ne devons donc pas la cacher, mais l'installer toujours dans l'Église comme sur le lampadaire, pour le salut d'un grand nombre, afin de jouir nous-mêmes de la lumière de sa vérité, et d'en éclairer tous les croyants.</p><p><font color="#ff0000"><br /><br />R/</font><img src="/admin.php/o_lectures/edit/jour_liturgique_id/blanc.gif" border="0" alt="blanc" width="7" height="10" />Christ est notre lumière, <br />notre soleil levant ! <br /><br />Qui regarde vers lui resplendira, <br />point d'ombre sur son visage. <br /><br />Il vient nous visiter, <br />en lui la joie de notre cœur.</p>]]></description>
+            <guid>11</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Oraison et bénédiction</title>
+            <description><![CDATA[Dieu qui as dit de mettre à part saint Barnabé, cet homme plein de foi et l'Esprit Saint, pour qu'il porte aux païens le message du salut ; fais que l'Évangile du Christ, dont il fut l'Apôtre courageux, soit encore annoncé fidèlement en paroles et en actes.]]></description>
+            <guid>12</guid>
+            <category>Office des Lectures</category>
+        </item>
+        <item>
+            <title>Envoi</title>
+            <description><![CDATA[	Que le Seigneur nous bénisse,<br/>
+    qu'il nous garde de tout mal,<br/>
+    et nous conduise à la vie éternelle. Amen.<br/>]]></description>
+            <guid>13</guid>
+            <category>Office des Lectures</category>
+        </item>
+    </channel>
+</rss>
