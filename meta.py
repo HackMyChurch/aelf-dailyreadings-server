@@ -38,9 +38,15 @@ def postprocess(version, variant, data, day, month, year):
 
     description = u""
     fete_done = False
+    fete_skip = False
+
+    # Never print fete if this is the semaine
+    if kv.get('fete', '').split(' ')[0] == kv.get('semaine', '').split(' ')[0]:
+        fete_skip = True
+
     if 'jour' in kv:
         description += kv['jour']
-        if 'fete' in kv:
+        if not fete_skip and 'fete' in kv:
             fete = _filter_fete(kv['fete'])
 
             # Single word (paque, ascension, noel, ...)
@@ -68,7 +74,7 @@ def postprocess(version, variant, data, day, month, year):
     if description:
         description += "."
 
-    if not fete_done and 'fete' in kv and ('jour' not in kv or kv['jour'] not in kv['fete']):
+    if not fete_skip and not fete_done and 'fete' in kv and ('jour' not in kv or kv['jour'] not in kv['fete']):
         fete = _filter_fete(kv['fete'])
 
         # Single word (paque, ascension, noel, ...)
