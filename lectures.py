@@ -38,7 +38,7 @@ def postprocess(version, variant, data, day, month, year):
         if not u'<p' in envoi_item.description.string:
             envoi_item.description.string = u"<p>%s</p>" % envoi_item.description.string
 
-        envoi_item.description.string += envoi['body']
+        envoi_item.description.string += "<blockquote>%s</blockquote>" % envoi['body']
 
     # All done
     return soup.prettify()
