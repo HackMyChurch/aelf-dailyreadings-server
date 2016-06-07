@@ -27,6 +27,9 @@ def postprocess(version, variant, data, day, month, year):
         te_deum_item.extract()
         oraison_item.insert_before(te_deum_item)
 
+    # Fix oraison slide title: there is no benediction
+    oraison_item.title.string = "Oraison"
+
     # All done
     return soup.prettify()
 

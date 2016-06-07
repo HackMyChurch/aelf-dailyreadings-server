@@ -18,7 +18,7 @@ class TestOfficeLectures(TestBase):
         # Validate: Once, before the Oraison
         self.assertEqual(15, len(items))
         self.assertEqual(u"Envoi", items[-1][0])
-        self.assertEqual(u"Oraison et bénédiction", items[-2][0])
+        self.assertEqual(u"Oraison", items[-2][0])
         self.assertEqual(u"Te Deum", items[-3][0])
         self.assertIn("Devant toi se prosternent les archanges,", items[-3][1])
 
