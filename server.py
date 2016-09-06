@@ -5,6 +5,8 @@ from flask import Flask, Response, abort, request
 app = Flask(__name__)
 
 import os
+import time
+import json
 import meta
 import laudes
 import vepres
@@ -27,6 +29,14 @@ def parse_date_or_abort(date):
         return int(year), int(month), int(day)
     except:
         abort(400)
+
+#
+# Internal API
+#
+
+@app.route('/status')
+def get_status():
+    return Response(json.dumps(int(time.time())), mimetype='application/json')
 
 #
 # Modern API (beta)
