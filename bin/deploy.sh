@@ -9,7 +9,7 @@ eval $(docker-machine env aelf)
 # Deploy
 docker build -t aelf-api .
 
-if docker ps | grep -q aelf-api
+if docker ps --all | grep -q aelf-api
 then
     docker stop aelf-api
     docker rm aelf-api

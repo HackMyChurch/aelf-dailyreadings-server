@@ -15,6 +15,8 @@ import lectures
 from utils import get_office_for_day
 from keys import KEY_TO_OFFICE
 
+CURRENT_VERSION = 23
+
 POST_PROCESSORS = {
     "meta": meta.postprocess,
     "laudes": laudes.postprocess,
@@ -36,6 +38,16 @@ def parse_date_or_abort(date):
 
 @app.route('/status')
 def get_status():
+    # Attempt to get the mass for today. If we can't, we are in trouble
+    try:
+        mass = do_get_office(CURRENT_VERSION, "messe", *(time.strftime("%d:%m:%Y").split(':')))
+    except:
+        return "Can not load mass", 500
+
+    if '<category>Messe</category>' not in mass.data:
+        return "Does not look like mass", 500
+
+    # All good !
     return Response(json.dumps(int(time.time())), mimetype='application/json')
 
 #

@@ -30,8 +30,8 @@ Tout d'abord, assurez vous de bien avoir ``git`` et ``docker`` sur votre machine
 ```console
 git clone https://github.com/HackMyChurch/aelf-dailyreadings-server.git
 cd aelf-dailyreadings-server
-docker build aelf-api .
-docker run --name aelf-api -d -p 4000 --restart always aelf-api
+docker -t build aelf-api .
+docker run -e AELF_DEBUG=1 --name aelf-api -d -p 4000 --restart always aelf-api
 ``` 
 
 Votre serveur tourne à présent sur le port 4000 de votre machine. Pour voir une belle page d'erreur, vous pouvez à présent visiter http://localhost:4000/
