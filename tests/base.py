@@ -23,7 +23,7 @@ class TestBase(unittest.TestCase):
         expected = self.parseItems(data)
         self.assertEqual(expected, items)
 
-    def m_get(self, url):
+    def m_get(self, url, **kwargs):
         '''
         Get a resource from fixtures. If AELF_DEBUG is defined and the resource can not be
         found, load it from the Internet and save it for future use. An existing resource
@@ -37,7 +37,7 @@ class TestBase(unittest.TestCase):
         except:
             if 'AELF_DEBUG' not in os.environ:
                 raise
-            res.text = request_get(url).text
+            res.text = request_get(url, **kwargs).text
             with open(path, 'w') as f:
                 f.write(res.text.encode('utf8'))
 

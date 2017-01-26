@@ -5,7 +5,7 @@ import requests
 import yaml
 from keys import KEYS
 
-AELF_RSS="http://rss.aelf.org/{day}/{month}/{year}/{key}"
+AELF_RSS="https://rss.aelf.org/{day:02d}/{month:02d}/{year:02d}/{key}"
 AELF_SITE="http://www.aelf.org/office-{office}?date_my={day}/{month}/{year}"
 ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets")
 
