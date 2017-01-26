@@ -7,5 +7,5 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
-CMD ["python2", "server.py"]
+CMD ["python2", "start-production-server.py"]
 
