@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from base import TestBase
 
 class TestOfficeComplies(TestBase):
-    @mock.patch('utils.requests.get')
+    @mock.patch('utils.requests.Session.get')
     def test_get_complies(self, m_get):
         m_get.side_effect = self.m_get
 

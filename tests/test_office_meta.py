@@ -10,7 +10,7 @@ class TestOfficeMeta(TestBase):
         self.assertEqual(200, resp.status_code)
         return self.assertItemsEqual([(u"Jour liturgique", meta)], resp.data)
 
-    @mock.patch('utils.requests.get')
+    @mock.patch('utils.requests.Session.get')
     def test_get_meta(self, m_get):
         m_get.side_effect = self.m_get
         self.maxDiff = None

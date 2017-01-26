@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from base import TestBase
 
 class TestOfficeLectures(TestBase):
-    @mock.patch('utils.requests.get')
+    @mock.patch('utils.requests.Session.get')
     def test_get_lectures_sunday(self, m_get):
         m_get.side_effect = self.m_get
 
@@ -24,7 +24,7 @@ class TestOfficeLectures(TestBase):
         self.assertIn(u"Devant toi se prosternent les archanges,", items[-3][1])
         self.assertIn(u"<strong>V/</strong> B\xe9nissons le Seigneur.", items[-1][1])
 
-    @mock.patch('utils.requests.get')
+    @mock.patch('utils.requests.Session.get')
     def test_get_lectures_other_day(self, m_get):
         m_get.side_effect = self.m_get
 
