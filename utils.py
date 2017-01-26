@@ -12,8 +12,12 @@ ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets
 HEADERS={'User-Agent': 'AELF - Lectures du jour - API - cathogeek@epitre.co'}
 HTTP_TIMEOUT = 2 # seconds
 
-# TODO: error handling
 # TODO: memoization
+
+class AelfHttpError(Exception):
+    def __init__(self, status, message=None):
+        super(AelfHttpError, self).__init__(message)
+        self.status = status
 
 # Create a connection pool
 session = requests.Session()
@@ -21,7 +25,8 @@ session.headers.update(HEADERS)
 
 def _do_get_request(url):
     r = session.get(url, timeout=HTTP_TIMEOUT)
-    r.raise_for_status()
+    if r.status_code != 200:
+        raise AelfHttpError(r.status_code)
     return r.text
 
 def get_office_for_day(office, day, month, year):

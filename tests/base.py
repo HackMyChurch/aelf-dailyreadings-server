@@ -8,8 +8,7 @@ from requests import get as request_get
 from bs4 import BeautifulSoup
 
 class FakeResponse(object):
-    def raise_for_status(self):
-        pass
+    status_code = 200
 
 class TestBase(unittest.TestCase):
     def parseItems(self, data):

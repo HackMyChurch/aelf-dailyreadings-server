@@ -12,7 +12,7 @@ import laudes
 import vepres
 import complies
 import lectures
-from utils import get_office_for_day
+from utils import get_office_for_day, AelfHttpError
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 23
@@ -60,7 +60,10 @@ def get_office(version, office, date):
     return do_get_office(version, office, day, month, year)
 
 def do_get_office(version, office, day, month, year):
-    data = get_office_for_day(office, day, month, year)
+    try:
+        data = get_office_for_day(office, day, month, year)
+    except AelfHttpError as http_err:
+        return "Failed to load reading", http_err.status
 
     # Don't want to cache these BUT don't want to break the app either. Should be a 404 though...
     if 'pas dans notre calendrier' in data:
