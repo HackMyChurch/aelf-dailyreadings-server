@@ -40,11 +40,11 @@ def parse_date_or_abort(date):
 def get_status():
     # Attempt to get the mass for today. If we can't, we are in trouble
     try:
-        mass = do_get_office(CURRENT_VERSION, "messe", *(time.strftime("%d:%m:%Y").split(':')))
+        mass = do_get_office(CURRENT_VERSION, "messe", *[int(c) for c in (time.strftime("%d:%m:%Y").split(':'))])
     except:
         return "Can not load mass", 500
 
-    if '<category>Messe</category>' not in mass.data:
+    if '<title>Messe</title>' not in mass.data:
         return "Does not look like mass", 500
 
     # All good !
