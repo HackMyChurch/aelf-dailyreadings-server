@@ -23,12 +23,14 @@ class TestRouteCompat(TestBase):
         # 404
         FakeResponse.status_code = 404
         resp = self.app.get('/19/office/complies/2016-05-23?beta=enabled')
-        self.assertEqual(404, resp.status_code)
+        self.assertEqual(200, resp.status_code)
+        self.assertIn("(404)", resp.data)
 
         # Teapot
         FakeResponse.status_code = 419
         resp = self.app.get('/19/office/complies/2016-05-23?beta=enabled')
-        self.assertEqual(419, resp.status_code)
+        self.assertEqual(200, resp.status_code)
+        self.assertIn("(419)", resp.data)
 
     @mock.patch('server.do_get_office')
     def test_get_meta(self, m_do_get_office):
