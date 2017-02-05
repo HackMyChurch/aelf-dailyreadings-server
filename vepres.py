@@ -17,14 +17,16 @@ def postprocess(version, variant, data, day, month, year):
 
     oraison_item = get_item_by_title(items, u"oraison")
 
-    # Missing "Notre Père" ?
-    if get_item_by_title(items, u"Notre Père") is None:
-        notre_pere = get_asset('prayers/notre-pere')
+    # "Notre Père"
+    notre_pere_item = get_item_by_title(items, u"Notre Père")
+    if notre_pere_item is None:
         notre_pere_item = copy.copy(items[-1])
-        notre_pere_item.title.string = notre_pere['title']
-        notre_pere_item.description.string = notre_pere['body']
 
-        oraison_item.insert_before(notre_pere_item)
+    notre_pere = get_asset('prayers/notre-pere')
+    notre_pere_item.title.string = notre_pere['title']
+    notre_pere_item.description.string = notre_pere['body']
+
+    oraison_item.insert_before(notre_pere_item)
 
     # Append dedicated "Bénédiction" slide
     benediction = get_asset('prayers/vepres-benediction')
