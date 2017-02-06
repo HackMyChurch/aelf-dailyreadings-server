@@ -61,7 +61,15 @@ def postprocess(version, variant, data, day, month, year):
     if 'semaine' in kv:
         if description:
             description += u', '
-        description += kv['semaine']
+        semaine =  kv['semaine']
+        description += semaine
+
+        numero = re.match('^[0-9]*', semaine).group()
+        numero = ((int(numero)-1) % 4) + 1 if numero else ""
+        semaines = {1: 'I', 2: 'II', 3: 'III', 4: 'IV'}
+        if numero in semaines:
+            description += " (semaine %s du psautier)" % semaines[numero]
+
     if 'annee' in kv:
         if description:
             if fete_done:
