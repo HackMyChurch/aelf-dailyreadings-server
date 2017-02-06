@@ -76,20 +76,22 @@ def postprocess(version, variant, data, day, month, year):
 
     if not fete_skip and not fete_done and 'fete' in kv and ('jour' not in kv or kv['jour'] not in kv['fete']):
         fete = _filter_fete(kv['fete'])
+        verbe = u"fêtons" if u'saint' in fete.lower() else u"célèbrons"
 
         # Single word (paque, ascension, noel, ...)
         if ' ' not in fete:
-            description += u" Nous fêtons %s." % fete
+            description += u" Nous %s %s." % (verbe, fete)
         # Standard fete
         if u'férie' not in fete:
             pronoun = get_pronoun_for_sentence(fete)
-            description += u' Nous fêtons %s%s.' % (pronoun, fete)
+            description += u' Nous %s %s%s.' % (verbe, pronoun, fete)
 
     if 'couleur' in kv:
         description += u" La couleur liturgique est le %s." % kv['couleur']
 
     # Final cleanup: 1er, 1ère, 2ème, 2nd, ... --> exposant
     description = re.sub(ur'([0-9])(er|nd|ère|ème) ', r'\1<sup>\2</sup> ', description)
+    description = description[:1].upper() + description[1:]
 
     # Inject template
     template.description.string += u"\n"+description

@@ -62,7 +62,7 @@ def get_pronoun_for_sentence(sentence):
         return "l'"
 
     # Attempt to guess M/F by checking if 1st words ends with 'e'. Default on F
-    if words[0] in [u'sacré-c\u0153ur']:
+    if words[0] in [u'sacré-c\u0153ur', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']:
         return u"le "
 
     return u"la "
