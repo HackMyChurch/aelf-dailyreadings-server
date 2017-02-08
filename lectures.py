@@ -20,7 +20,7 @@ def postprocess(version, variant, data, day, month, year):
     envoi_item = get_item_by_title(items, u"envoi")
 
     # Fix empty "Te Deum"
-    if te_deum_item is not None:
+    if te_deum_item is not None and oraison_item:
         te_deum = get_asset('prayers/te-deum')
         te_deum_item.description.string = te_deum['body']
 
@@ -29,7 +29,8 @@ def postprocess(version, variant, data, day, month, year):
         oraison_item.insert_before(te_deum_item)
 
     # Fix oraison slide title: there is no benediction
-    oraison_item.title.string = "Oraison"
+    if oraison_item is not None:
+        oraison_item.title.string = "Oraison"
 
     # Fix missing envoi part
     if envoi_item is not None:
