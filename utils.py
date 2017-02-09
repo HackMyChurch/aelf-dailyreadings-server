@@ -5,7 +5,9 @@ import requests
 import yaml
 from bs4 import BeautifulSoup
 from keys import KEYS
+from collections import OrderedDict
 
+AELF_JSON="https://api.aelf.org/v1/{office}/{year:04d}-{month:02d}-{day:02d}"
 AELF_RSS="https://rss.aelf.org/{day:02d}/{month:02d}/{year:02d}/{key}"
 AELF_SITE="http://www.aelf.org/{year:04d}-{month:02d}-{day:02d}/romain/{office}"
 ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets")
@@ -25,16 +27,110 @@ session = requests.Session()
 session.headers.update(HEADERS)
 
 def _do_get_request(url):
+    print url
     r = session.get(url, timeout=HTTP_TIMEOUT)
     if r.status_code != 200:
         raise AelfHttpError(r.status_code)
-    return r.text
+    return r
 
 def get_office_for_day(office, day, month, year):
-    return _do_get_request(AELF_RSS.format(day=day, month=month, year=year, key=KEYS[office]))
+    # Canary test new API on non-critical office
+    if office in ["lectures"]:
+        return get_office_for_day_api_rss(office, day, month, year)
+    return _do_get_request(AELF_RSS.format(day=day, month=month, year=year, key=KEYS[office])).text
 
 def get_office_for_day_aelf(office, day, month, year):
-    return _do_get_request(AELF_SITE.format(office=office, day=day, month=month, year=year))
+    return _do_get_request(AELF_SITE.format(office=office, day=day, month=month, year=year)).text
+
+def get_office_for_day_api(office, day, month, year):
+    return _do_get_request(AELF_JSON.format(office=office, day=day, month=month, year=year)).json(object_pairs_hook=OrderedDict)
+
+def get_office_for_day_api_rss(office, day, month, year):
+    '''
+    Get office from new API but return it as RSS so that we do not need to change the full stack at once
+    '''
+    data = get_office_for_day_api(office, day, month, year)
+    if office not in data:
+        return ''
+
+    output = []
+    output.append(u'''<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <atom:link rel="self" type="application/rss+xml" href="https://rss.aelf.org/office_lectures"/>
+        <title>Office des lectures</title>
+        <description><![CDATA[(c) Association Épiscopale Liturgique pour les pays francophones - 2017]]></description>
+        <link>https://www.aelf.org/</link>
+        <pubDate>Wed, 08 Feb 2017 23:01:23 +0100</pubDate>
+        <lastBuildDate>Wed, 08 Feb 2017 23:01:23 +0100</lastBuildDate>
+        <image>
+            <title>AELF</title>
+            <url>https://rss.aelf.org/bundles/front/images/logo.svg</url>
+            <link>https://www.aelf.org/</link>
+        </image>
+        <language>fr</language>
+        <copyright>Copyright AELF - Tout droits réservés</copyright>
+    ''')
+
+    # In the lectures office, the patristique text is... broken
+    patristique = {
+        'titre': '',
+        'texte': '',
+    }
+
+    for name, value in data[office].iteritems():
+        if name in ['te_deum']:
+            # Ignore: it's broken AND we'll re-inject if after
+            continue
+
+        # Value may not be a dict
+        if isinstance(value, basestring):
+            # Re-assemble patristique text...
+            if name == 'titre_patristique':
+                patristique['titre'] = value
+                continue
+            elif name == 'texte_patristique':
+                patristique['texte'] = value
+                value = patristique
+            else:
+                # Broken, general case...
+                name = name.split('_', 1)[0].capitalize()
+                value = {
+                    'titre': name,
+                    'texte': value,
+                    'reference': '',
+                }
+
+        # Get data
+        titre = value.get('titre', '')
+        if not titre:
+            titre = name.split('_', 1)[0]
+
+        reference = value.get('reference', '')
+        if reference:
+            if titre.lower() in ['cantique', 'psaume']:
+                titre = "%s %s" % (titre, reference)
+            elif titre:
+                titre = "%s (%s)" % (titre, reference)
+
+        texte = value.get('texte', '')
+
+        # Value is now guaranteed to be a dict \o/
+        output.append('\n\n')
+        output.append(u"<item><title>")
+        output.append(titre)
+        output.append(u"</title>")
+        output.append(u"<description><![CDATA[")
+
+        import codecs
+        texte = codecs.decode(codecs.encode(texte, "utf-8", "replace"), "utf-8")
+
+        output.append(texte)
+        output.append(u"]]></description></item>")
+
+    output.append(u"</channel></rss>")
+    return u"".join(output)
+
 
 def get_office_for_day_aelf_to_rss(office, day, month, year):
     '''
