@@ -18,7 +18,7 @@ def postprocess(version, variant, data, day, month, year):
     if variant != "beta" and version < 20:
         return data
 
-    soup = BeautifulSoup(data, 'xml')
+    soup = BeautifulSoup(data, 'html.parser')
     items = soup.find_all('item')
     kv = {}
 

@@ -12,7 +12,7 @@ def postprocess(version, variant, data, day, month, year):
     if variant != "beta" and version < 20:
         return data
 
-    soup = BeautifulSoup(data, 'xml')
+    soup = BeautifulSoup(data, 'html.parser')
     items = soup.find_all('item')
 
     te_deum_item = get_item_by_title(items, u"te deum")

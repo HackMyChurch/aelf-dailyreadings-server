@@ -12,12 +12,12 @@ def postprocess(version, variant, data, day, month, year):
     if variant != "beta" and version < 20:
         return data
 
-    soup = BeautifulSoup(data, 'xml')
+    soup = BeautifulSoup(data, 'html.parser')
     items = soup.find_all('item')
 
     # Scrap bénédiction from website
     complies = get_office_for_day_aelf("complies", day, month, year)
-    soup_aelf = BeautifulSoup(complies, 'xml')
+    soup_aelf = BeautifulSoup(complies, 'html.parser')
     benediction_aelf = soup_aelf.find("div", **{"class":"envoi"})
 
     # Early exit: we have nothing to mashup with
