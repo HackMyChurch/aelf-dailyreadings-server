@@ -63,7 +63,7 @@ def get_office_for_day_aelf_to_rss(office, day, month, year):
         for balise in lecture.contents + [None]:
             if balise is None or balise.name == 'h4':
                 # Flush reading IF there is some content (title or text)
-                if l['title'] or l['text']:
+                if l['title'].strip() or l['text'].strip():
                     out.append(u'''
                     <item>
                         <title>{title}</title>
@@ -128,4 +128,30 @@ def get_item_by_title_internal(items, title, normalize):
 def get_item_by_title(items, title):
     '''Get first item containing 'title' in its title if any. Case insensitive.'''
     return get_item_by_title_internal(items, title, lambda x: x.strip().lower())
+
+def lectures_soup_common_cleanup(data):
+    soup = BeautifulSoup(data, 'html.parser')
+    items = soup.find_all('item')
+
+    # Fix titles for compat with older applications
+    for item in items:
+        # FIXME: this hack is plain Ugly and there only to make newer API regress enough to be compatible with deployed applications
+        title = item.title
+        title_sig = title.string.strip().lower()
+        if title_sig.split(u' ')[0] in [u'antienne']:
+            title.string = 'antienne'
+        elif title_sig.split(u' ')[0] in [u'repons', u'répons']:
+            title.string = 'repons'
+        elif title_sig.startswith('parole de dieu'):
+            reference = title.string.rsplit(':', 1)
+            if len(reference) > 1:
+                title.string = 'Pericope : (%s)' % reference[1]
+            else:
+                title.string = 'Pericope'
+
+        # Argh, another ugly hack to WA my own app :(
+        # Replace any unbreakable space by a regular space
+        title.string = title.string.replace(u'\xa0', u' ');
+
+    return soup.prettify()
 

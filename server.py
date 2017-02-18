@@ -13,6 +13,7 @@ import vepres
 import complies
 import lectures
 from utils import get_office_for_day, get_office_for_day_aelf_to_rss, AelfHttpError
+from utils import lectures_soup_common_cleanup
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 23
@@ -76,8 +77,8 @@ def get_status():
     except:
         return "Can not load mass", 500
 
-    if '<title>Messe</title>' not in mass.data:
-        return "Does not look like mass", 500
+    if 'https://rss.aelf.org/messe' not in mass.data:
+        return "Does not look like mass\n"+mass.data, 500
 
     # All good !
     return Response(json.dumps(int(time.time())), mimetype='application/json')
@@ -106,6 +107,13 @@ def do_get_office(version, office, day, month, year):
             data = get_office_for_day_aelf_to_rss(office, day, month, year)
         except AelfHttpError as http_err:
 	    return return_error(http_err.status, "Une erreur s'est produite en chargeant la lecture.")
+
+    # Attempt common cleanup
+    try:
+        data = lectures_soup_common_cleanup(data)
+    except:
+        raise
+        pass
 
     # Don't want to cache these BUT don't want to break the app either. Should be a 404 though...
     if 'pas dans notre calendrier' in data:
