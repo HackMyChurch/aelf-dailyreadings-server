@@ -39,17 +39,6 @@ def return_error(status, message):
     data = """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <item>
-            <description><![CDATA[
-<p>Ooops, {message}... Si le problème persiste, vous pouvez envoyer un mail à cathogeek@epitre.co ;)</p>
-<p>Saviez-vous que cette application est développée complètement bénévolement. Elle est construite en lien et avec le soutien de l'AELF, mais elle reste une projet indépendant, soutenue par <em>votre</em> prière&nbsp!</p>
-	    ]]></description>
-        </item>
-    </channel>
-</rss>"""
-    data = """<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
         <atom:link rel="self" type="application/rss+xml" href="http://rss.aelf.org/rss.php/messe"/>
 	<title>Erreur {status} {message}</title>
         <description><![CDATA[(c) Association Épiscopale Liturgique pour les pays francophones - 2016]]></description>
@@ -64,7 +53,7 @@ def return_error(status, message):
         <language>fr</language>
         <copyright>Copyright AELF - Tout droits réservés</copyright>
         <item>
-            <title>Ooops... Cette lecture n'est pas dans notre calendrier ({status})</title>
+            <title>Oups... Cette lecture n'est pas dans notre calendrier ({status})</title>
             <description><![CDATA[
 <p>Saviez-vous que cette application est développée complètement bénévolement&nbsp;? Elle est construite en lien et avec le soutien de l'AELF, mais elle reste un projet indépendant, soutenue par <em>votre</em> prière&nbsp!</p>
 <p>Si vous pensez qu'il s'agit d'une erreur, vous pouvez envoyer un mail à <a href="mailto:cathogeek@epitre.co">cathogeek@epitre.co</a>.<p>
