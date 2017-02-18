@@ -12,7 +12,7 @@ import laudes
 import vepres
 import complies
 import lectures
-from utils import get_office_for_day, AelfHttpError
+from utils import get_office_for_day, get_office_for_day_aelf_to_rss, AelfHttpError
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 23
@@ -92,10 +92,20 @@ def get_office(version, office, date):
     return do_get_office(version, office, day, month, year)
 
 def do_get_office(version, office, day, month, year):
+    data = None
+    error = None
     try:
         data = get_office_for_day(office, day, month, year)
     except AelfHttpError as http_err:
-	return return_error(http_err.status, "Une erreur s'est produite en chargeant la lecture.")
+        error = http_err
+
+    # Yet another ugly heuristic + fallback
+    if data is None or len(data) < 3000:
+        try:
+            print "[WARN][{office}][{date}] Fallback to scrapping".format(date='%d-%02d-%02d' % (year, month, day), office=office)
+            data = get_office_for_day_aelf_to_rss(office, day, month, year)
+        except AelfHttpError as http_err:
+	    return return_error(http_err.status, "Une erreur s'est produite en chargeant la lecture.")
 
     # Don't want to cache these BUT don't want to break the app either. Should be a 404 though...
     if 'pas dans notre calendrier' in data:

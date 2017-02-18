@@ -16,6 +16,9 @@ def postprocess(version, variant, data, day, month, year):
     items = soup.find_all('item')
 
     oraison_item = get_item_by_title(items, u"oraison")
+    if oraison_item is None:
+        # Fallback
+        return data
 
     # "Notre Père"
     notre_pere_item = get_item_by_title(items, u"Notre Père")

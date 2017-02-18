@@ -3,6 +3,7 @@
 import os
 import requests
 import yaml
+from bs4 import BeautifulSoup
 from keys import KEYS
 
 AELF_RSS="https://rss.aelf.org/{day:02d}/{month:02d}/{year:02d}/{key}"
@@ -10,7 +11,7 @@ AELF_SITE="http://www.aelf.org/office-{office}?date_my={day}/{month}/{year}"
 ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets")
 
 HEADERS={'User-Agent': 'AELF - Lectures du jour - API - cathogeek@epitre.co'}
-HTTP_TIMEOUT = 2 # seconds
+HTTP_TIMEOUT = 10 # seconds
 
 # TODO: memoization
 
@@ -34,6 +35,55 @@ def get_office_for_day(office, day, month, year):
 
 def get_office_for_day_aelf(office, day, month, year):
     return _do_get_request(AELF_SITE.format(office=office, day=day, month=month, year=year))
+
+def get_office_for_day_aelf_to_rss(office, day, month, year):
+    '''
+    AELF has a strog tradition of being broken in creative ways. This method is yet another
+    fallback on top of their unreliable RSS. It works by scrapping the web version which,
+    hopefuly has a better SLA, and reformat it as RSS so that the code just does not notice.
+    '''
+    out = []
+    data = get_office_for_day_aelf(office, day, month, year)
+    soup = BeautifulSoup(data, 'html.parser')
+    lectures = soup.find_all("div", class_="lecture")
+
+    out.append(u'''<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <language>fr</language>
+        <copyright>Copyright AELF - Tout droits réservés</copyright>
+''')
+
+    for lecture in lectures:
+        # Lectures can be composed of sub-lectures. De-aggregate them
+        l = {
+            'title': u'',
+            'text': u'',
+        }
+        for balise in lecture.contents + [None]:
+            if balise is None or balise.name == 'h4':
+                # Flush reading IF there is some content (title or text)
+                if l['title'] or l['text']:
+                    out.append(u'''
+                    <item>
+                        <title>{title}</title>
+                        <description><![CDATA[{text}]]></description>
+                    </item>'''.format(**l))
+
+            if balise is None:
+                # This is a hack to share flush path. I'm in a hurry. AELF is one again broken.
+                break
+
+            if balise.name == 'h4':
+                # Next reading
+                l['title'] = lecture.h4.extract().text.strip()
+                l['text'] = u''
+            else:
+                # Reading content
+                l['text'] += unicode(balise)
+
+    out.append(u'''</channel></rss>''')
+    return u''.join(out)
 
 ASSET_CACHE={}
 def get_asset(path):
