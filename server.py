@@ -16,14 +16,48 @@ from utils import get_office_for_day, get_office_for_day_aelf_to_rss, AelfHttpEr
 from utils import lectures_soup_common_cleanup
 from keys import KEY_TO_OFFICE
 
-CURRENT_VERSION = 23
+CURRENT_VERSION = 28
 
-POST_PROCESSORS = {
-    "meta": meta.postprocess,
-    "laudes": laudes.postprocess,
-    "vepres": vepres.postprocess, # TODO: could be enabled for older versions too
-    "complies": complies.postprocess, # TODO: could be enabled for older versions too
-    "lectures": lectures.postprocess,
+def noop_postprocess(version, variant, data, day, month, year):
+    return data
+
+OFFICES = {
+    "meta": {
+        'postprocess': meta.postprocess,
+        'fallback_len_treshold': -1, # There is no fallback for meta
+    },
+    "lectures": {
+        'postprocess': lectures.postprocess,
+        'fallback_len_treshold': 3000,
+    },
+    "tierces": {
+        'postprocess': noop_postprocess,
+        'fallback_len_treshold': 3000,
+    },
+    "sextes": {
+        'postprocess': noop_postprocess,
+        'fallback_len_treshold': 3000,
+    },
+    "none": {
+        'postprocess': noop_postprocess,
+        'fallback_len_treshold': 3000,
+    },
+    "laudes": {
+        'postprocess': laudes.postprocess,
+        'fallback_len_treshold': 3000,
+    },
+    "vepres": {
+        'postprocess': vepres.postprocess,
+        'fallback_len_treshold': 3000,
+    },
+    "complies": {
+        'postprocess': complies.postprocess,
+        'fallback_len_treshold': 3000,
+    },
+    "messe": {
+        'postprocess': noop_postprocess,
+        'fallback_len_treshold': 3000,
+    },
 }
 
 def parse_date_or_abort(date):
@@ -101,28 +135,26 @@ def do_get_office(version, office, day, month, year):
         error = http_err
 
     # Yet another ugly heuristic + fallback
-    if data is None or len(data) < 3000:
+    if data is None or len(data) < OFFICES[office]['fallback_len_treshold']:
         try:
             print "[WARN][{office}][{date}] Fallback to scrapping".format(date='%d-%02d-%02d' % (year, month, day), office=office)
             data = get_office_for_day_aelf_to_rss(office, day, month, year)
         except AelfHttpError as http_err:
 	    return return_error(http_err.status, "Une erreur s'est produite en chargeant la lecture.")
 
-    # Attempt common cleanup
-    try:
-        data = lectures_soup_common_cleanup(data)
-    except:
-        raise
-        pass
-
     # Don't want to cache these BUT don't want to break the app either. Should be a 404 though...
     if 'pas dans notre calendrier' in data:
 	return return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
 
-    # Do we have a secret way to enhance this ?
+    # Apply common postprocessor
+    try:
+        data = lectures_soup_common_cleanup(data)
+    except Exception as e:
+        print e # TODO: log
+
+    # Apply office specific postprocessor
     variant = "beta" if request.args.get('beta', 0) else "prod"
-    if office in POST_PROCESSORS:
-        data = POST_PROCESSORS[office](version, variant, data, day, month, year)
+    data = OFFICES[office]['postprocess'](version, variant, data, day, month, year)
 
     # Return
     return Response(data, mimetype='application/rss+xml')
