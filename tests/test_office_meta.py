@@ -30,5 +30,5 @@ class TestOfficeMeta(TestBase):
         resp = self.app.get('/0/office/meta/2016-42')
         self.assertEqual(400, resp.status_code)
         resp = self.app.get('/0/office/meta/2016-42-17')
-        self.assertItemsEqual([(u"Ooops... Cette lecture n'est pas dans notre calendrier (404)", u"<p>Saviez-vous que cette application est d\xe9velopp\xe9e compl\xe8tement b\xe9n\xe9volement&nbsp;? Elle est construite en lien et avec le soutien de l\'AELF, mais elle reste un projet ind\xe9pendant, soutenue par <em>votre</em> pri\xe8re&nbsp!</p>\n<p>Si vous pensez qu\'il s\'agit d\'une erreur, vous pouvez envoyer un mail \xe0 <a href=\"mailto:cathogeek@epitre.co\">cathogeek@epitre.co</a>.<p>")], resp.data)
+        self.assertItemsEqual([(u"Oups... Cette lecture n'est pas dans notre calendrier (404)", u"<p>Saviez-vous que cette application est d\xe9velopp\xe9e compl\xe8tement b\xe9n\xe9volement&nbsp;? Elle est construite en lien et avec le soutien de l\'AELF, mais elle reste un projet ind\xe9pendant, soutenue par <em>votre</em> pri\xe8re&nbsp!</p>\n<p>Si vous pensez qu\'il s\'agit d\'une erreur, vous pouvez envoyer un mail \xe0 <a href=\"mailto:cathogeek@epitre.co\">cathogeek@epitre.co</a>.<p>")], resp.data)
 

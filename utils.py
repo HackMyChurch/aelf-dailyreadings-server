@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from keys import KEYS
 
 AELF_RSS="https://rss.aelf.org/{day:02d}/{month:02d}/{year:02d}/{key}"
-AELF_SITE="http://www.aelf.org/office-{office}?date_my={day}/{month}/{year}"
+AELF_SITE="http://www.aelf.org/{year:04d}-{month:02d}-{day:02d}/romain/{office}"
 ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets")
 
 HEADERS={'User-Agent': 'AELF - Lectures du jour - API - cathogeek@epitre.co'}
