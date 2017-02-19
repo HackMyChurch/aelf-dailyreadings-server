@@ -134,9 +134,18 @@ def do_get_office(version, office, day, month, year):
         error = http_err
 
     # Yet another ugly heuristic + fallback
-    if data is None or len(data) < OFFICES[office]['fallback_len_treshold']:
+    need_fallback = False
+    fallback_reason = ""
+    if data is None:
+        need_fallback = True
+        fallback_reason = "Failed to load office %s from api" % office
+    elif len(data) < OFFICES[office]['fallback_len_treshold']:
+        need_fallback = True
+        fallback_reason = "Failed to load office %s from api, len=%s is below treshold=%s" % (office, len(data), OFFICES[office]['fallback_len_treshold'])
+
+    if need_fallback:
         try:
-            print "[WARN][{office}][{date}] Fallback to scrapping".format(date='%d-%02d-%02d' % (year, month, day), office=office)
+            print "[WARN][{office}][{date}] Fallback to scrapping: {reason}".format(date='%d-%02d-%02d' % (year, month, day), office=office, reason=fallback_reason)
             data = get_office_for_day_aelf_to_rss(office, day, month, year)
         except AelfHttpError as http_err:
 	    return return_error(http_err.status, "Une erreur s'est produite en chargeant la lecture.")

@@ -17,7 +17,6 @@ def postprocess(version, variant, data, day, month, year):
 
     te_deum_item = get_item_by_title(items, u"te deum")
     oraison_item = get_item_by_title(items, u"oraison")
-    envoi_item = get_item_by_title(items, u"envoi")
 
     # Fix empty "Te Deum"
     if te_deum_item is not None and oraison_item:
@@ -31,15 +30,6 @@ def postprocess(version, variant, data, day, month, year):
     # Fix oraison slide title: there is no benediction
     if oraison_item is not None:
         oraison_item.title.string = "Oraison"
-
-    # Fix missing envoi part
-    if envoi_item is not None:
-        envoi = get_asset('prayers/lectures-envoi')
-
-        if not u'<p' in envoi_item.description.string:
-            envoi_item.description.string = u"<p>%s</p>" % envoi_item.description.string
-
-        envoi_item.description.string += "<blockquote>%s</blockquote>" % envoi['body']
 
     # All done
     return soup.prettify()
