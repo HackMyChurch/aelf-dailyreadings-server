@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <atom:link rel="self" type="application/rss+xml" href="https://rss.aelf.org/office_complies"/>
+        <title>Office des complies</title>
+        <description><![CDATA[(c) Association Épiscopale Liturgique pour les pays francophones - 2017]]></description>
+        <link>https://www.aelf.org/</link>
+        <pubDate>Sun, 19 Feb 2017 12:28:26 +0100</pubDate>
+        <lastBuildDate>Sun, 19 Feb 2017 12:28:26 +0100</lastBuildDate>
+        <image>
+            <title>AELF</title>
+            <url>https://rss.aelf.org/bundles/front/images/logo.svg</url>
+            <link>https://www.aelf.org/</link>
+        </image>
+        <language>fr</language>
+        <copyright>Copyright AELF - Tout droits réservés</copyright>
+        <item>
+            <title>Introduction</title>
+            <description><![CDATA[]]></description>
+        </item>
+        <item>
+            <title>Hymne : </title>
+            <description><![CDATA[]]></description>
+        </item>
+        <item>
+            <title>Antienne</title>
+            <description><![CDATA[]]></description>
+        </item>
+        <item>
+            <title>Antienne</title>
+            <description><![CDATA[]]></description>
+        </item>
+        <item>
+            <title>Répons</title>
+            <description><![CDATA[
+
+
+
+
+]]></description>
+        </item>
+        <item>
+            <title>Antienne de Syméon</title>
+            <description><![CDATA[]]></description>
+        </item>
+        <item>
+            <title>Cantique de Syméon (Lc 2)</title>
+            <description><![CDATA[]]></description>
+        </item>
+        <item>
+            <title>Oraison</title>
+            <description><![CDATA[]]></description>
+        </item>
+        <item>
+            <title>Bénédiction</title>
+            <description><![CDATA[]]></description>
+        </item>
+        <item>
+            <title>Hymne : </title>
+            <description><![CDATA[]]></description>
+        </item>
+    </channel>
+</rss>

@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html lang="fr-FR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="Office des complies du 19 février 2017 pour la zone « Calendrier romain » sur le site de l'Association Épiscopale Liturgique pour les pays Francophones."/>
+        <meta name="keywords" content="AELF, liturgie, catholique, rite, romain, laudes, tierce, sexte, none, vêpres, complies, office des lectures, évangile, traduction française, messe, Noël, Pâques, Pentecôte, Toussaint, Vierge, saints, apôtres, martyrs"/>
+                <title>AELF > Office des complies - 19 février 2017</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+                <link href="/assets/adf2597.front.css" type="text/css" rel="stylesheet" media="screen" />
+        
+                    </head>
+    <body class="front_offices">
+                                            <div class="menu-secondary-mobile">
+                <ul>
+                    <li class="menu-aelf">
+                        <a href="/page/les-missions-de-laelf" class="" title="Accéder aux contenus de l'AELF">
+                            L'AELF
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/abonnement" title="Accéder à la page d'abonnement">
+                            S'abonner
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/calendrier/romain/2017/02" class="" title="Accéder au calendrier">Calendrier</a>
+                    </li>
+                    <li>
+                        <a href="/contact" class="" title="Accéder à la page de contact">Contact</a>
+                    </li>
+                </ul>
+                <button class="btn btn-default">
+                    <div class="span-img">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+            </div>
+            <header id="header_background">
+                <div class="container">
+                    <div id="header">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <a href="/" title="Accéder à la page d'accueil"><img src="/bundles/front/images/logo-aelf-2016.svg" alt="Logo de l'AELF" /></a>
+                                <h2>Association Épiscopale Liturgique<br class="only-desktop only-tablet"/> pour les pays Francophones</h2>
+                            </div>
+                            <div class="col-sm-5 text-right">
+                                <p class="light">Recevez gratuitement<br> les lectures du jour par courriel</p>
+                                <a href="/abonnement" class="btn btn-default btn-aelf" title="Accéder à la page d'abonnement">S'abonner</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <ul id="menu-mobile" class="clearfix">
+                <li>
+                    <a href="/2017-02-19/romain/messe" class="" title="Accéder aux messes">La messe</a>
+                </li>
+                <li>
+                    <a href="/2017-02-19/romain/lectures" class="active" title="Accéder à la liturgie des heures">Les heures</a>
+                </li>
+                <li>
+                    <a href="/bible" class="" title="Accéder à la Bible">La Bible</a>
+                </li>
+            </ul>
+
+            <div class="container" id="content">
+                <div class="row">
+                    <div class="col-sm-3 col-md-2">
+                        <div class="sidebar-nav" id="menu">
+                            <div class="navbar navbar-default" role="navigation">
+                                <ul class="nav navbar-nav" id="sidenav01">
+                                    <li><a href="/2017-02-19/romain/messe" class="" title="Accéder aux messes">La messe</a></li>
+                                    <li><a href="/2017-02-19/romain/lectures" class="active" title="Accéder aux heures">Les heures</a></li>
+                                    <li><a href="/bible" class="" title="Accéder à la Bible">La Bible</a></li>
+                                    <li id="menu-aelf">
+                                        <a href="/page/les-missions-de-laelf" class="" title="Accéder à la page AELF">
+                                            <div class="span-img">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            L'AELF
+                                        </a>
+                                    </li>
+                                    <li id="menu-calendrier"><a href="/calendrier/romain/2017/02" class="" title="Accéder au calendrier">Calendrier</a></li>
+                                    <li id="menu-contact"><a href="/contact" class="" title="Accéder à la page de contact">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                                                                                        <div class="col-sm-9 col-md-5">
+        <div class="block-summary" id="middle-col">
+                            <div class="heading-day">
+                        <h4 class="date">19 février 2017</h4>
+    <p class="m-b-0">
+                                            <span class="span-color color-vert" title="Couleur liturgique : vert"></span>
+                        <strong>7ème dimanche du Temps Ordinaire — Année A</strong><br />
+                            </p>
+                                            <a href="/2017-02-26/romain/messe" class="btn btn-default btn-aelf btn-red m-t-10">Dimanche prochain</a>
+                                        <div class="aelf-date-picker m-t-10">
+                        <div id="myDatePicker"></div>
+                        <a href="#" class="btn btn-default btn-aelf myDatePicker" id="myDatePickerButton">Autres dates</a>
+                    </div>
+                    <div class="dropdown m-t-10">
+                        <a href="#" class="dropdown-toggle" id="drop6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Calendrier romain <span class="bold">|</span> <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> </a>
+                        <ul class="dropdown-menu" id="menu3" aria-labelledby="drop6">
+                                                                                                <li><a href="/2017-02-19/afrique/complies">Afrique du Nord</a></li>
+                                                                                                                                <li><a href="/2017-02-19/belgique/complies">Belgique</a></li>
+                                                                                                                                <li><a href="/2017-02-19/canada/complies">Canada</a></li>
+                                                                                                                                <li><a href="/2017-02-19/france/complies">France</a></li>
+                                                                                                                                <li><a href="/2017-02-19/luxembourg/complies">Luxembourg</a></li>
+                                                                                                                                                                                            <li><a href="/2017-02-19/suisse/complies">Suisse</a></li>
+                                                                                    </ul>
+                    </div>
+                    <div class="block-buttons-navigation only-tablet m-t-10">
+                                                    <a href="/2017-02-18/romain/complies" title="Accéder aux offices de la veille" class="btn btn-default btn-aelf" style="margin-right: 3px;"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>&nbsp;veille</a>
+                                                                            <a href="/2017-02-20/romain/complies" title="Accéder aux offices du lendemain" class="btn btn-default btn-aelf">lendemain&nbsp;<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
+                                            </div>
+                </div>
+                <div class="heading-day-mobile">
+                    <div class="aelf-date-picker">
+                        <div id="myDatePickerMobile"></div>
+                        <a href="#" class="btn btn-default btn-aelf myDatePicker" id="myDatePickerButtonMobile"><div class="pull-right"><span class="bold">|</span> <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></div><span class="light">Le</span> 19 février 2017</a>
+                    </div>
+                    <div class="dropdown hours-dropdown">
+                        <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><div class="pull-right"><span class="bold">|</span> <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></div>Office des complies</button>
+                        <ul class="dropdown-menu" aria-labelledby="dLabel">
+                            <li>
+                                <a href="/2017-02-19/romain/lectures" title="Accéder à l'office des lectures">Lectures</a>
+                            </li>
+                            <li>
+                                <a href="/2017-02-19/romain/laudes" title="Accéder à l'office des laudes">Laudes</a>
+                            </li>
+                            <li>
+                                <a href="/2017-02-19/romain/tierce" title="Accéder à l'office de tierce">Tierce</a>
+                            </li>
+                            <li>
+                                <a href="/2017-02-19/romain/sexte" title="Accéder à l'office de sexte">Sexte</a>
+                            </li>
+                            <li>
+                                <a href="/2017-02-19/romain/none" title="Accéder à l'office de none">None</a>
+                            </li>
+                            <li>
+                                <a href="/2017-02-19/romain/vepres" title="Accéder à l'office des vêpres">Vêpres</a>
+                            </li>
+                            <li>
+                                <a href="/2017-02-19/romain/complies" title="Accéder à l'office des complies">Complies</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                        <ul class="hours-menu">
+                <li>                        <a href="/2017-02-19/romain/lectures" title="Accéder à l'office des lectures">Lectures</a>
+                                    </li>
+                <li>                        <a href="/2017-02-19/romain/laudes" title="Accéder à l'office des laudes">Laudes</a>
+                                    </li>
+                <li>                        <a href="/2017-02-19/romain/tierce" title="Accéder à l'office de tierce">Tierce</a>
+                                    </li>
+                <li>                        <a href="/2017-02-19/romain/sexte" title="Accéder à l'office de sexte">Sexte</a>
+                                    </li>
+                <li>                        <a href="/2017-02-19/romain/none" title="Accéder à l'office de none">None</a>
+                                    </li>
+                <li>                        <a href="/2017-02-19/romain/vepres" title="Accéder à l'office des vêpres">Vêpres</a>
+                                    </li>
+                <li>                        <span>Complies</span>
+                                    </li>
+            </ul>
+                            
+    <ul class="blocks readings hours">
+        <li>
+            <a class="lecture_link clearfix" href="#office_introduction" title="Accéder à la lecture">
+                <span class="subhead single-line">Introduction</span>
+                <span class="title"><p>V/ Dieu, viens à mon aide,
+        <br />R/ Seigneur, à notre secours.</p>...</span>
+            </a>
+        </li>
+        <li>
+            <a class="lecture_link clearfix" href="#office_hymne" title="Accéder à la lecture">
+                <span class="subhead single-line">Hymne</span>
+                <span class="title">Avant la fin de la lumière, </span>
+            </a>
+        </li>
+                    <li>
+                <a class="lecture_link clearfix" href="#office_psaume1" title="Accéder à la lecture">
+                    <span class="subhead single-line">Psaume</span>
+                    <span class="title">90 — Le Seigneur te couvre de ses ailes, rien à craindre des terreurs de la nuit.</span>
+                </a>
+            </li>
+                                    <li>
+                <a class="lecture_link clearfix" href="#office_pericope" title="Accéder à la lecture">
+                    <span class="subhead single-line">Péricope</span>
+                    <span class="title">Ap 22, 4-5</span>
+                </a>
+            </li>
+                <li>
+            <a class="lecture_link clearfix" href="#office_cantique" title="Accéder à la lecture">
+                <span class="subhead">Cantique de Syméon</span>
+                <span class="title">Sauve-nous, Seigneur, quand nous veillons ; garde-nous quand nous dormons : nous veillerons avec le Christ, et...</span>
+            </a>
+        </li>
+        <li>
+            <a class="lecture_link clearfix" href="#office_conclusion" title="Accéder à la lecture">
+                <span class="subhead single-line">Conclusion</span>
+                <span class="title">Nous te saluons, Vierge Marie</span>
+            </a>
+        </li>
+    </ul>                    </div>
+        <div class="block-buttons-navigation pull-right">
+                            <a href="/2017-02-18/romain/complies" title="Accéder aux offices de la veille" class="btn btn-default btn-aelf"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>&nbsp;veille</a>
+                                        <a href="/2017-02-20/romain/complies" title="Accéder aux offices du lendemain" class="btn btn-default btn-aelf">lendemain&nbsp;<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
+                    </div>
+            </div>
+    <div class="col-sm-9 col-md-5 container-reading">
+        <div class="container-toolbar">
+            <div class="toolbar"></div>
+        </div>
+        <div class="block-single-reading" id="right-col">
+            <h1>Office des complies</h1>
+                            
+<div class="lecture" id="office_introduction">
+    <h4>Introduction</h4>
+    <p>V/ Dieu, viens à mon aide,
+        <br />R/ Seigneur, à notre secours.</p>
+        <p>Gloire au Père, et au Fils et au Saint-Esprit,
+        <br/>au Dieu qui est, qui était et qui vient,
+        <br/>pour les siècles des siècles.
+        <br/>Amen. (Alléluia.)</p>
+</div>
+
+    
+<div class="lecture" id="office_hymne">
+    <h4>Hymne : Avant la fin de la lumière, </h4>
+    <p><small>DP — AELF</small></p>
+    Avant la fin de la lumière, <br>Nous te prions, Dieu créateur, <br>Pour que, fidèle à ta bonté, <br>Tu nous protèges, tu nous gardes.<br><br>Que loin de nous s'enfuient les songes, <br>Et les angoisses de la nuit. <br>Préserve-nous de l'ennemi : <br>Que ton amour sans fin nous garde.<br><br>Exauce-nous, Dieu, notre Père,<br>Par Jésus Christ, notre Seigneur,<br>Dans l'unité du Saint-Esprit,<br>Régnant sans fin dans tous les siècles.<br>
+</div>
+    <div class="lecture" id="office_psaume1">
+        <h4>Antienne</h4>
+        Le Seigneur te couvre de ses ailes, rien à craindre des terreurs de la nuit.
+
+        <h4>Psaume : 90</h4>
+        <font size="1" color="#ff0000">1</font>Quand je me tiens sous l'abr<u>i</u> du Très-Haut<br>et repose à l'<u>o</u>mbre du Puissant,<br><font size="1" color="#FF0000">2</font>je dis au Seigne<u>u</u>r : &laquo; Mon refuge,<br>mon rempart, mon Die<u>u</u>, dont je suis sûr ! &raquo;<br><br><font color="#FF0000" size="1">3</font>C'est lui qui te sauve des filets du chasseur<br>et de la p<u>e</u>ste maléfique ; *<br><font color="#FF0000" size="1">4</font>il te co<u>u</u>vre et te protège.<br>Tu trouves sous son <u>a</u>ile un refuge :<br>sa fidélité est une arm<u>u</u>re, un bouclier. <br><br><font size="1" color="#FF0000">5</font>Tu ne craindras ni les terre<u>u</u>rs de la nuit,<br>ni la flèche qui v<u>o</u>le au grand jour,<br><font size="1" color="#FF0000">6</font>ni la peste qui rôde dans le noir,<br>ni le fléau qui fr<u>a</u>ppe à midi. <br><br><font size="1" color="#FF0000">7</font>Qu'il en tombe m<u>i</u>lle à tes côtés, +<br>qu'il en tombe dix m<u>i</u>lle à ta droite, *<br>toi, tu r<u>e</u>stes hors d'atteinte. <br><br><font size="1" color="#FF0000">8</font>Il suffit que tu o<u>u</u>vres les yeux,<br>tu verras le sal<u>a</u>ire du méchant.<br><font color="#FF0000" size="1">9</font>Oui, le Seigne<u>u</u>r est ton refuge ;<br>tu as fait du Très-Ha<u>u</u>t ta forteresse.<br><font color="#FF0000" size="1">10</font>Le malheur ne pourr<u>a</u> te toucher,<br>ni le danger, approch<u>e</u>r de ta demeure :<br><font size="1" color="#FF0000">11</font>il donne missi<u>o</u>n à ses anges<br>de te garder sur to<u>u</u>s tes chemins. <br><br><font size="1" color="#FF0000">12</font>Ils te porter<u>o</u>nt sur leurs mains<br>pour que ton pied ne he<u>u</u>rte les pierres ;<br><font size="1" color="#FF0000">13</font>tu marcheras sur la vip<u>è</u>re et le scorpion,<br>tu écraseras le li<u>o</u>n et le Dragon. <br><br><font size="1" color="#FF0000">14</font>&laquo; Puisqu'il s'attache à m<u>o</u>i, je le délivre ;<br>je le défends, car il conn<u>a</u>ît mon nom.<br><font size="1" color="#FF0000">15</font>Il m'appelle, et m<u>o</u>i, je lui réponds ;<br>je suis avec lu<u>i</u> dans son épreuve. <br><br>&laquo; Je veux le libér<u>e</u>r, le glorifier ; +<br><font color="#FF0000" size="1">16</font>de longs jours, je ve<u>u</u>x le rassasier, *<br>et je ferai qu'il v<u>o</u>ie mon salut. &raquo;<br>
+    </div>
+
+
+    <div class="lecture" id="office_pericope">
+        <h4 id="office_pericope">Parole de Dieu : Ap 22, 4-5</h4>
+        Les serviteurs de Dieu verront son visage, et son nom sera écrit sur leur front. La nuit n’existera plus, ils n’auront plus besoin de la lumière d’une lampe ni de la lumière du soleil, parce que le Seigneur Dieu les illuminera, et ils régneront pour les siècles des siècles.
+    </div>
+
+    <h4>Répons</h4>
+R/ En tes mains, Seigneur, je remets mon esprit.<br />
+V/ Sur ton serviteur, que s'illumine ta face. R/<br />
+
+Gloire au Père et au Fils et au Saint-Esprit. R/<br />
+
+<div class="lecture" id="office_cantique">
+    <h4>Antienne de Syméon</h4>
+    Sauve-nous, Seigneur, quand nous veillons ; garde-nous quand nous dormons : nous veillerons avec le Christ, et nous reposerons en paix.
+
+    <h4>Cantique de Syméon (Lc 2)</h4>
+    <font size="1" color="#FF0000">29</font>Maintenant, ô Maître souverain, +<br>tu peux laisser ton servite<u>u</u>r s'en aller<br>en paix, sel<u>o</u>n ta parole.<br><br><font size="1" color="#FF0000">30</font>Car mes yeux ont v<u>u</u> le salut<br><font size="1" color="#FF0000">31</font>que tu préparais à la f<u>a</u>ce des peuples :<br><br><font size="1" color="#FF0000">32</font>lumière qui se rév<u>&egrave;</u>le aux nations<br>et donne gloire à ton pe<u>u</u>ple Israël.<br>
+</div>
+
+<div class="lecture" id="office_conclusion">
+    <h4>Oraison</h4>
+    Notre Seigneur et notre Dieu, tu nous as fait entendre ton amour au matin de la Résurrection ; quand viendra pour nous le moment de mourir, que ton souffle de vie nous conduise en ta présence. Par Jésus, le Christ, notre Seigneur. Amen.
+
+    <h4>Bénédiction</h4>
+    Que le Seigneur nous bénisse et nous garde,<br />
+le Père, le Fils, et le Saint-Esprit. Amen.
+
+    <h4>Hymne : Nous te saluons, Vierge Marie</h4>
+    Nous te saluons, Vierge Marie, <br>servante du Seigneur. <br>Ta foi nous a donné <br>l'Enfant de la promesse, <br>la source de la vie. <br>Ève nouvelle, <br>montre-nous le Sauveur, <br>Jésus Christ, notre frère, <br>Sainte Mère de Dieu.<br>
+</div>                    </div>
+    </div>
+                </div>
+            </div>
+        
+<!--
+        <footer id="footer" class="footer">
+            <div class="container">
+                <p class="text-center">© 2017 Association Épiscopale Liturgique pour les pays Francophones — <a href="/page/mentions-legales" title="Accéder aux mentions légales">Mentions légales</a> —  Réalisé par <a target="_blank" title="Cliquer-ici pour accéder au site de Spyrit" href="http://www.spyrit.net/" title="Accéder au site de SPYRIT">Spyrit</a>.</p>
+            </div>
+        </footer>
+-->
+
+                <script type="text/javascript" src="/assets/c503ab9.front.js"></script>
+        
+            <script type="text/javascript">
+    $(document).ready(function() {
+        $('#myDatePickerButton').click(function() {
+            if (!$('#myDatePicker').hasClass('hasDatepicker')) {
+                $('#myDatePicker').datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    defaultDate: new Date(2017, 2 - 1, 19),
+                    duration: 'fast',
+                    maxDate: new Date(2017, 5 - 1, 7),
+                    minDate: new Date(2016, 1 - 1, 2),
+                    onSelect: function(dateText) {
+                        window.location = '/2001-01-01/romain/complies'.replace('2001-01-01', dateText);
+                    },
+                }).datepicker('show');
+                return;
+            }
+            if ($('#myDatePicker').is(':visible')) {
+                $('#myDatePicker').hide().datepicker('hide');
+            } else {
+                $('#myDatePicker').show().datepicker('show');
+            }
+        });
+
+
+        if($(window).width() < 768)
+        {
+            $('#myDatePickerButtonMobile').click(function() {
+                if (!$('#myDatePickerMobile').hasClass('hasDatepicker')) {
+                    $('#myDatePickerMobile').datepicker({
+                        dateFormat: 'yy-mm-dd',
+                        defaultDate: new Date(2017, 2 - 1, 19),
+                        duration: 'fast',
+                        maxDate: new Date(2017, 5 - 1, 7),
+                        minDate: new Date(2016, 1 - 1, 2),
+                        onSelect: function(dateText) {
+                            window.location = '/2001-01-01/romain/complies'.replace('2001-01-01', dateText);
+                        },
+                    }).datepicker('show');
+                    return;
+                }
+                if ($('#myDatePickerMobile').is(':visible')) {
+                    $('#myDatePickerMobile').hide().datepicker('hide');
+                } else {
+                    $('#myDatePickerMobile').show().datepicker('show');
+                }
+            });
+        }
+    });
+</script>
+                    <script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+              ga('create', 'UA-6492186-1', 'auto');
+              ga('send', 'pageview');
+            </script>
+            </body>
+</html>
