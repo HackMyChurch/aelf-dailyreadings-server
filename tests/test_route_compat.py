@@ -20,6 +20,12 @@ class TestRouteCompat(TestBase):
         resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
         self.assertEqual(200, resp.status_code)
 
+        # Fallback path (was completely broken on 2017-02-18)
+        FakeResponse.status_code = 200
+        resp = self.app.get('/28/office/complies/2017-02-18?beta=enabled')
+        self.assertEqual(200, resp.status_code)
+        self.assertIn("<source>\n   website\n  </source>", resp.data)
+
         # 404
         FakeResponse.status_code = 404
         resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
