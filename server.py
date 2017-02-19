@@ -10,7 +10,6 @@ import json
 import meta
 import laudes
 import vepres
-import complies
 import lectures
 from utils import get_office_for_day, get_office_for_day_aelf_to_rss, AelfHttpError
 from utils import lectures_soup_common_cleanup
@@ -51,7 +50,7 @@ OFFICES = {
         'fallback_len_treshold': 3000,
     },
     "complies": {
-        'postprocess': complies.postprocess,
+        'postprocess': noop_postprocess,
         'fallback_len_treshold': 3000,
     },
     "messe": {

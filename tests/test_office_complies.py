@@ -11,21 +11,21 @@ class TestOfficeComplies(TestBase):
         m_get.side_effect = self.m_get
 
         # Get vepres, make sure we have the Notre Pere
-        resp = self.app.get('/19/office/complies/2016-05-23?beta=enabled')
+        resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
         self.assertEqual(200, resp.status_code)
         items = self.parseItems(resp.data)
 
         # Validate: Once, before the Intercession
-        self.assertEqual(13, len(items))
-        self.assertEqual(u"Hymne Salut, Reine des cieux ! Salut, Reine des anges !", items[-1][0])
+        self.assertEqual(12, len(items))
+        self.assertEqual(u"Hymne : Nous te saluons, Vierge Marie", items[-1][0])
         self.assertEqual(u"Bénédiction", items[-2][0])
         self.assertEqual(u"Oraison", items[-3][0])
         self.assertEqual(
-            u"Que le Seigneur fasse resplendir sur nous son visage et nous accorde sa grâce. Amen.",
-            items[-2][1]
+            u"Que le Seigneur nous b\xe9nisse et nous garde,<br />le P\xe8re, le Fils, et le Saint-Esprit. Amen.",
+            items[-2][1].replace('\r\n', '')
         )
         self.assertEqual(
-            u"Seigneur, tandis que nous dormirons en paix, fais germer et grandir jusqu&rsquo;&agrave; la moisson la semence du Royaume des cieux que nous avons jet&eacute;e en terre par le travail de cette journ&eacute;e. Par J&eacute;sus, le Christ, notre Seigneur. Amen.",
+            u"Notre Seigneur et notre Dieu, tu nous as fait entendre ton amour au matin de la R\xe9surrection ; quand viendra pour nous le moment de mourir, que ton souffle de vie nous conduise en ta pr\xe9sence. Par J\xe9sus, le Christ, notre Seigneur. Amen.",
             items[-3][1]
         )
 

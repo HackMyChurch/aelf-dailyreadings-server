@@ -17,18 +17,18 @@ class TestRouteCompat(TestBase):
         m_get.side_effect = self.m_get
 
         # Nominal, should return 200
-        resp = self.app.get('/19/office/complies/2016-05-23?beta=enabled')
+        resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
         self.assertEqual(200, resp.status_code)
 
         # 404
         FakeResponse.status_code = 404
-        resp = self.app.get('/19/office/complies/2016-05-23?beta=enabled')
+        resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
         self.assertEqual(200, resp.status_code)
         self.assertIn("(404)", resp.data)
 
         # Teapot
         FakeResponse.status_code = 419
-        resp = self.app.get('/19/office/complies/2016-05-23?beta=enabled')
+        resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
         self.assertEqual(200, resp.status_code)
         self.assertIn("(419)", resp.data)
 
