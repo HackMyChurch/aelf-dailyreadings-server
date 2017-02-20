@@ -11,7 +11,7 @@ import meta
 import laudes
 import vepres
 import lectures
-from utils import get_office_for_day, get_office_for_day_aelf_to_rss, AelfHttpError
+from utils import get_office_for_day, get_office_for_day_api, get_office_for_day_api_rss, get_office_for_day_aelf_rss, AelfHttpError
 from utils import lectures_soup_common_cleanup
 from keys import KEY_TO_OFFICE
 
@@ -20,42 +20,52 @@ CURRENT_VERSION = 28
 def noop_postprocess(version, variant, data, day, month, year):
     return data
 
+# List of APIs engines + fallback path
+APIS = {
+    'rss':       [get_office_for_day,         get_office_for_day_aelf_rss],
+    'json_rss' : [get_office_for_day_api_rss, get_office_for_day_aelf_rss],
+    'json':      [get_office_for_day_api],
+}
+
+# Office configuration, including API engine and postprocessor
+DEFAULT_FALLBACK_LEN_TRESHOLD = 3000
 OFFICES = {
-    "meta": {
+    "informations": {
         'postprocess': meta.postprocess,
         'fallback_len_treshold': -1, # There is no fallback for meta
+        'api': 'json',
     },
     "lectures": {
         'postprocess': lectures.postprocess,
-        'fallback_len_treshold': 3000,
+        'api': 'json_rss',
     },
-    "tierces": {
+    "tierce": {
         'postprocess': noop_postprocess,
-        'fallback_len_treshold': 3000,
+        'api': 'json_rss',
     },
-    "sextes": {
+    "sexte": {
         'postprocess': noop_postprocess,
-        'fallback_len_treshold': 3000,
+        'api': 'json_rss',
     },
     "none": {
         'postprocess': noop_postprocess,
-        'fallback_len_treshold': 3000,
+        'api': 'json_rss',
     },
     "laudes": {
         'postprocess': laudes.postprocess,
-        'fallback_len_treshold': 3000,
+        'api': 'json_rss',
     },
     "vepres": {
         'postprocess': vepres.postprocess,
-        'fallback_len_treshold': 3000,
+        'api': 'json_rss',
     },
     "complies": {
         'postprocess': noop_postprocess,
-        'fallback_len_treshold': 3000,
+        'api': 'json_rss',
     },
-    "messe": {
+    "messes": {
         'postprocess': noop_postprocess,
-        'fallback_len_treshold': 3000,
+        'api': 'rss', # FIXME
     },
 }
 
@@ -70,7 +80,7 @@ def return_error(status, message):
     '''
     AELF app does not support codes != 200 (yet), work around this but still keep the intent clear
     '''
-    data = """<?xml version="1.0" encoding="UTF-8"?>
+    data = u"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <atom:link rel="self" type="application/rss+xml" href="http://rss.aelf.org/rss.php/messe"/>
@@ -89,6 +99,7 @@ def return_error(status, message):
         <item>
             <title>Oups... Cette lecture n'est pas dans notre calendrier ({status})</title>
             <description><![CDATA[
+<p>{message}</p>
 <p>Saviez-vous que cette application est développée complètement bénévolement&nbsp;? Elle est construite en lien et avec le soutien de l'AELF, mais elle reste un projet indépendant, soutenue par <em>votre</em> prière&nbsp!</p>
 <p>Si vous pensez qu'il s'agit d'une erreur, vous pouvez envoyer un mail à <a href="mailto:cathogeek@epitre.co">cathogeek@epitre.co</a>.<p>
 	    ]]></description>
@@ -106,7 +117,7 @@ def return_error(status, message):
 def get_status():
     # Attempt to get the mass for today. If we can't, we are in trouble
     try:
-        mass = do_get_office(CURRENT_VERSION, "messe", *[int(c) for c in (time.strftime("%d:%m:%Y").split(':'))])
+        mass = do_get_office(CURRENT_VERSION, "messes", *[int(c) for c in (time.strftime("%d:%m:%Y").split(':'))])
     except:
         return "Can not load mass", 500
 
@@ -128,39 +139,41 @@ def get_office(version, office, date):
 def do_get_office(version, office, day, month, year):
     data = None
     error = None
-    try:
-        data = get_office_for_day(office, day, month, year)
-    except AelfHttpError as http_err:
-        error = http_err
 
-    # Yet another ugly heuristic + fallback
-    need_fallback = False
-    fallback_reason = ""
-    if data is None:
-        need_fallback = True
-        fallback_reason = "Failed to load office %s from api" % office
-    elif len(data) < OFFICES[office]['fallback_len_treshold']:
-        need_fallback = True
-        fallback_reason = "Failed to load office %s from api, len=%s is below treshold=%s" % (office, len(data), OFFICES[office]['fallback_len_treshold'])
+    # Validate office name
+    if office not in OFFICES:
+	return return_error(404, u"Cet office (%s) est inconnu..." % office)
 
-    if need_fallback:
+    # Validate API engine
+    office_api_engine_name = OFFICES[office].get('api', 'json')
+    office_api_engines = APIS.get(office_api_engine_name, None)
+    if not office_api_engines:
+	return return_error(500, u"Hmmm, où se trouve donc l'office %s ?" % office)
+
+    # Attempt all engines until we find one that works
+    last_http_error = None
+    for office_api_engine in office_api_engines:
+        # Attempt to load
         try:
-            print "[WARN][{office}][{date}] Fallback to scrapping: {reason}".format(date='%d-%02d-%02d' % (year, month, day), office=office, reason=fallback_reason)
-            data = get_office_for_day_aelf_to_rss(office, day, month, year)
+            data = office_api_engine(office, day, month, year)
         except AelfHttpError as http_err:
-	    return return_error(http_err.status, "Une erreur s'est produite en chargeant la lecture.")
+            last_http_error = http_err
+        except:
+            pass
 
-    # Don't want to cache these BUT don't want to break the app either. Should be a 404 though...
-    if 'pas dans notre calendrier' in data:
-	return return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
-
-    # Apply common postprocessor
-    try:
-        data = lectures_soup_common_cleanup(data)
-    except Exception as e:
-        print e # TODO: log
+        # Does it look broken ?
+        if len(unicode(data)) < OFFICES[office].get('fallback_len_treshold', DEFAULT_FALLBACK_LEN_TRESHOLD):
+            last_http_error = AelfHttpError(500, u"L'office est trop court, c'est louche...")
+            continue
+        break
+    else:
+        if last_http_error.status == 404:
+	    return return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
+        return return_error(last_http_error.status, last_http_error.message)
 
     # Apply office specific postprocessor
+    # Input format is as configured. MUST output rss
+    # TODO: migrate to json
     variant = "beta" if request.args.get('beta', 0) else "prod"
     data = OFFICES[office]['postprocess'](version, variant, data, day, month, year)
 

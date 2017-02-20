@@ -23,6 +23,9 @@ def postprocess(version, variant, data, day, month, year):
     # "Notre Père"
     notre_pere_item = get_item_by_title(items, u"Notre Père")
     if notre_pere_item is None:
+        notre_pere_item = get_item_by_title(items, u"Notre pere")
+
+    if notre_pere_item is None:
         notre_pere_item = copy.copy(items[-1])
 
     notre_pere = get_asset('prayers/notre-pere')
