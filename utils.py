@@ -383,7 +383,7 @@ def postprocess_informations(informations):
             fete = _filter_fete(informations['fete'])
 
             # Single word (paque, ascension, noel, ...)
-            if ' ' not in fete:
+            if fete and ' ' not in fete:
                 pronoun = get_pronoun_for_sentence(fete)
                 text += u" de %s%s" % (pronoun, fete)
                 fete_done = True
@@ -420,10 +420,10 @@ def postprocess_informations(informations):
         verbe = u"fêtons" if u'saint' in fete.lower() else u"célèbrons"
 
         # Single word (paque, ascension, noel, ...)
-        if ' ' not in fete:
+        if fete and ' ' not in fete:
             text += u" Nous %s %s." % (verbe, fete)
         # Standard fete
-        if u'férie' not in fete:
+        if fete and u'férie' not in fete:
             pronoun = get_pronoun_for_sentence(fete)
             text += u' Nous %s %s%s.' % (verbe, pronoun, fete)
 
