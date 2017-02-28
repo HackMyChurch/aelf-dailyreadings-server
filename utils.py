@@ -51,6 +51,26 @@ def _id_to_title(data):
         chunks.pop()
     return (u' '.join(chunks)).capitalize()
 
+def clean_ref(ref):
+    ref = ref.strip()
+
+    # Remove any leading 'cf.'
+    if ref.lower().startswith('cf.'):
+        ref = ref[3:].lstrip()
+
+    # Add 'Ps' if missing
+    if not ref:
+        return ref
+
+    try:
+        int(ref[0])
+    except ValueError:
+        pass
+    else:
+        ref = 'Ps %s' % ref
+
+    return ref
+
 def _do_get_request(url):
     r = session.get(url, timeout=HTTP_TIMEOUT)
     if r.status_code != 200:
@@ -111,6 +131,7 @@ def get_office_for_day_api(office, day, month, year):
 
             if office == "messes":
                 # WIP: this is still very much broken
+                # TODO: move somewhere else. This approach downgrades the data...
                 titre = _id_to_title(name)
                 number = name.rsplit('_', 1)[-1]
                 if is_int(number):
@@ -122,11 +143,33 @@ def get_office_for_day_api(office, day, month, year):
                 if lecture['titre']:
                     titre = '%s : %s' % (titre, lecture['titre'])
 
+                texte = []
+
+                intro       = lecture.get('intro_lue',         '').strip()
+                refrain     = lecture.get('refrain_psalmique', '').strip()
+                refrain_ref = lecture.get('ref_refrain',       '').strip()
+                verset      = lecture.get('verset_evangile',   '').strip()
+                verset_ref  = lecture.get('ref_verset',        '').strip()
+                contenu     = lecture.get('contenu',           '').strip()
+
+                if intro:
+                    texte.append(u'<b><i>%s</i></b>' % intro)
+
+                if refrain:
+                    texte.append(u'<font color="#CC0000">R/ %s</font>' % refrain)
+
+                if verset:
+                    texte.append(u'<blockquote><b>Acclamation&nbsp;:</b>%s<small><i>— %s</i></small></blockquote>' % (verset, clean_ref(verset_ref)))
+
+                if contenu:
+                    texte.append(contenu)
+
                 lecture = {
                     'titre':     titre,
                     'reference': lecture['ref'],
-                    'texte':     lecture['contenu'],
+                    'texte':     ''.join(texte),
                 }
+
             # Value may not be a dict
             if isinstance(lecture, basestring):
                 # Re-assemble patristique text...
@@ -162,8 +205,7 @@ def get_office_for_day_api(office, day, month, year):
                 cleaned['title'] = _id_to_title(name)
 
             if cleaned['reference']:
-                if cleaned['reference'].lower().startswith('cf.'):
-                    cleaned['reference'] = cleaned['reference'][3:]
+                cleaned['reference'] = clean_ref(cleaned['reference'])
 
                 if 'cantique' in cleaned['reference'].lower():
                     cleaned['title'] = cleaned['reference']
@@ -227,7 +269,6 @@ def get_office_for_day_aelf_json(office, day, month, year):
         variant = out[lectures]
 
         # Lectures can be composed of sub-lectures. De-aggregate them
-        lecture_key = variant_key.rsplit('_', 1)[-1] if '_' in variant_key else u''
         l = {
             u'title':     u'',
             u'text':      u'',
@@ -294,7 +335,7 @@ def json_to_rss(data):
                 <variant>{office}</variant>
                 <title>{title}</title>
                 <reference>{reference}</reference>
-                <key>{reference}</key>
+                <key>{key}</key>
                 <description><![CDATA[{text}]]></description>
             </item>'''.format(office=office, **lecture))
 

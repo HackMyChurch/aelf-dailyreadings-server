@@ -65,7 +65,7 @@ OFFICES = {
     },
     "messes": {
         'postprocess': noop_postprocess,
-        'api': 'rss', # FIXME
+        'api': 'json_rss',
     },
 }
 
