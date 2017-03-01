@@ -34,6 +34,15 @@ def is_int(data):
         return False
     return True
 
+def is_letter(data):
+    if not data:
+        return False
+
+    for c in data.lower():
+        if ord(c) < ord('a') or ord(c) > ord('z'):
+            return False
+    return True
+
 PSALM_MATCH=re.compile('^[0-9]+(-[IV0-9]+)?$')
 def is_psalm_ref(data):
     return re.match(PSALM_MATCH, data.replace(' ', ''))
@@ -51,6 +60,7 @@ def _id_to_title(data):
         chunks.pop()
     return (u' '.join(chunks)).capitalize()
 
+# FIXME: this is very hackish. We'll need to replace this with a real parser
 def clean_ref(ref):
     ref = ref.strip()
 
@@ -58,18 +68,15 @@ def clean_ref(ref):
     if ref.lower().startswith('cf.'):
         ref = ref[3:].lstrip()
 
-    # Add 'Ps' if missing
     if not ref:
         return ref
 
-    try:
-        int(ref[0])
-    except ValueError:
-        pass
-    else:
-        ref = 'Ps %s' % ref
+    # Add 'Ps' if missing
+    chunks = ref.split(' ')
+    if is_letter(chunks[0]) or (len(chunks) > 1 and is_letter(chunks[1])):
+        return ref
 
-    return ref
+    return 'Ps %s' % ref
 
 def _do_get_request(url):
     r = session.get(url, timeout=HTTP_TIMEOUT)
