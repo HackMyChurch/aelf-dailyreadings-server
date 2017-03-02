@@ -219,7 +219,8 @@ def get_office_for_day_api(office, day, month, year):
                 cleaned['title'] = _id_to_title(name)
 
             if cleaned['reference']:
-                cleaned['reference'] = clean_ref(cleaned['reference'])
+                raw_ref = cleaned['reference']
+                cleaned['reference'] = clean_ref(raw_ref)
 
                 if 'cantique' in cleaned['reference'].lower():
                     cleaned['title'] = cleaned['reference']
@@ -227,8 +228,8 @@ def get_office_for_day_api(office, day, month, year):
                         cleaned['reference'] = cleaned['reference'].split('(')[1].split(')')[0]
                 elif cleaned['title'] in "Pericope":
                     cleaned['title'] = u"%s : %s" % (cleaned['title'], cleaned['reference'])
-                elif cleaned['title'] == "Psaume" and is_psalm_ref(cleaned['reference']):
-                    cleaned['title'] = u"%s : %s" % (cleaned['title'], cleaned['reference'].replace(' ', ''))
+                elif cleaned['title'] == "Psaume" and is_psalm_ref(raw_ref):
+                    cleaned['title'] = u"%s : %s" % (cleaned['title'], raw_ref)
                 else:
                     cleaned['title'] = u"%s (%s)" % (cleaned['title'], cleaned['reference'])
 
