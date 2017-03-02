@@ -4,11 +4,16 @@ import os
 import unittest
 import server
 import mock
+import json
 from requests import get as request_get
 from bs4 import BeautifulSoup
 
 class FakeResponse(object):
     status_code = 200
+    text = ''
+
+    def json(self, **kwargs):
+        return json.loads(self.text, **kwargs)
 
 class TestBase(unittest.TestCase):
     def parseItems(self, data):

@@ -158,8 +158,9 @@ def do_get_office(version, office, day, month, year):
             data = office_api_engine(office, day, month, year)
         except AelfHttpError as http_err:
             last_http_error = http_err
-        except:
-            pass
+            continue
+        except Exception as e:
+            continue
 
         # Does it look broken ?
         if len(unicode(data)) < OFFICES[office].get('fallback_len_treshold', DEFAULT_FALLBACK_LEN_TRESHOLD):
@@ -168,7 +169,7 @@ def do_get_office(version, office, day, month, year):
         break
     else:
         if last_http_error.status == 404:
-	    return return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
+	    return return_error(404, u"Aucune lecture n'a été trouvée pour cette date.")
         return return_error(last_http_error.status, last_http_error.message)
 
     # Apply office specific postprocessor

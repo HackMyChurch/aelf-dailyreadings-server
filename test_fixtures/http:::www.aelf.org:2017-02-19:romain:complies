@@ -100,7 +100,7 @@
                                             <span class="span-color color-vert" title="Couleur liturgique : vert"></span>
                         <strong>7ème dimanche du Temps Ordinaire — Année A</strong><br />
                             </p>
-                                            <a href="/2017-02-26/romain/messe" class="btn btn-default btn-aelf btn-red m-t-10">Dimanche prochain</a>
+                                            <a href="/2017-03-05/romain/messe" class="btn btn-default btn-aelf btn-red m-t-10">Dimanche prochain</a>
                                         <div class="aelf-date-picker m-t-10">
                         <div id="myDatePicker"></div>
                         <a href="#" class="btn btn-default btn-aelf myDatePicker" id="myDatePickerButton">Autres dates</a>
@@ -178,13 +178,13 @@
         <br />R/ Seigneur, à notre secours.</p>...</span>
             </a>
         </li>
-        <li>
-            <a class="lecture_link clearfix" href="#office_hymne" title="Accéder à la lecture">
-                <span class="subhead single-line">Hymne</span>
-                <span class="title">Avant la fin de la lumière, </span>
-            </a>
-        </li>
                     <li>
+                <a class="lecture_link clearfix" href="#office_hymne" title="Accéder à la lecture">
+                    <span class="subhead single-line">Hymne</span>
+                    <span class="title">Avant la fin de la lumière, </span>
+                </a>
+            </li>
+                            <li>
                 <a class="lecture_link clearfix" href="#office_psaume1" title="Accéder à la lecture">
                     <span class="subhead single-line">Psaume</span>
                     <span class="title">90 — Le Seigneur te couvre de ses ailes, rien à craindre des terreurs de la nuit.</span>
@@ -202,13 +202,13 @@
                 <span class="title">Sauve-nous, Seigneur, quand nous veillons ; garde-nous quand nous dormons : nous veillerons avec le Christ, et...</span>
             </a>
         </li>
-        <li>
-            <a class="lecture_link clearfix" href="#office_conclusion" title="Accéder à la lecture">
-                <span class="subhead single-line">Conclusion</span>
-                <span class="title">Nous te saluons, Vierge Marie</span>
-            </a>
-        </li>
-    </ul>                    </div>
+                    <li>
+                <a class="lecture_link clearfix" href="#office_conclusion" title="Accéder à la lecture">
+                    <span class="subhead single-line">Conclusion</span>
+                    <span class="title">Nous te saluons, Vierge Marie</span>
+                </a>
+            </li>
+            </ul>                    </div>
         <div class="block-buttons-navigation pull-right">
                             <a href="/2017-02-18/romain/complies" title="Accéder aux offices de la veille" class="btn btn-default btn-aelf"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>&nbsp;veille</a>
                                         <a href="/2017-02-20/romain/complies" title="Accéder aux offices du lendemain" class="btn btn-default btn-aelf">lendemain&nbsp;<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
@@ -273,9 +273,9 @@ Gloire au Père et au Fils et au Saint-Esprit. R/<br />
     Que le Seigneur nous bénisse et nous garde,<br />
 le Père, le Fils, et le Saint-Esprit. Amen.
 
-    <h4>Hymne : Nous te saluons, Vierge Marie</h4>
-    Nous te saluons, Vierge Marie, <br>servante du Seigneur. <br>Ta foi nous a donné <br>l'Enfant de la promesse, <br>la source de la vie. <br>Ève nouvelle, <br>montre-nous le Sauveur, <br>Jésus Christ, notre frère, <br>Sainte Mère de Dieu.<br>
-</div>                    </div>
+            <h4>Hymne : Nous te saluons, Vierge Marie</h4>
+        Nous te saluons, Vierge Marie, <br>servante du Seigneur. <br>Ta foi nous a donné <br>l'Enfant de la promesse, <br>la source de la vie. <br>Ève nouvelle, <br>montre-nous le Sauveur, <br>Jésus Christ, notre frère, <br>Sainte Mère de Dieu.<br>
+    </div>                    </div>
     </div>
                 </div>
             </div>
@@ -283,7 +283,7 @@ le Père, le Fils, et le Saint-Esprit. Amen.
 <!--
         <footer id="footer" class="footer">
             <div class="container">
-                <p class="text-center">© 2017 Association Épiscopale Liturgique pour les pays Francophones — <a href="/page/mentions-legales" title="Accéder aux mentions légales">Mentions légales</a> —  Réalisé par <a target="_blank" title="Cliquer-ici pour accéder au site de Spyrit" href="http://www.spyrit.net/" title="Accéder au site de SPYRIT">Spyrit</a>.</p>
+                <p class="text-center">© 2017 Association Épiscopale Liturgique pour les pays Francophones — <a href="/page/mentions-legales" title="Accéder aux mentions légales">Mentions légales</a> — <a href="https://twitter.com/aelf_officiel" title="Accéder au fil Twitter de l'AELF" target="_blank"><i class="fa fa-twitter"></i> Twitter</a> —  Réalisé par <a target="_blank" title="Cliquer-ici pour accéder au site de Spyrit" href="http://www.spyrit.net/" title="Accéder au site de SPYRIT">Spyrit</a>.</p>
             </div>
         </footer>
 -->

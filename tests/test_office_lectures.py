@@ -16,7 +16,7 @@ class TestOfficeLectures(TestBase):
         items = self.parseItems(resp.data)
 
         # Validate: Once, before the Oraison
-        self.assertEqual(14, len(items))
+        self.assertEqual(15, len(items))
         self.assertEqual(u"Oraison", items[-1][0])
         self.assertEqual(u"Te Deum", items[-2][0])
 
@@ -32,7 +32,7 @@ class TestOfficeLectures(TestBase):
         items = self.parseItems(resp.data)
 
         # Validate: No Te Deum
-        self.assertEqual(13, len(items))
+        self.assertEqual(14, len(items))
         for item in items:
             self.assertNotEqual(u"Te Deum", item[0])
 

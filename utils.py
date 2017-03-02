@@ -47,10 +47,17 @@ PSALM_MATCH=re.compile('^[0-9]+(-[IV0-9]+)?$')
 def is_psalm_ref(data):
     return re.match(PSALM_MATCH, data.replace(' ', ''))
 
+ID_TO_TITLE = {
+    'benediction': u'Bénédiction',
+}
+
 def _id_to_title(data):
     '''
     Forge a decent title from and ID as a fallbackd when the API does not provide a title
     '''
+    if data in ID_TO_TITLE:
+        return ID_TO_TITLE[data]
+
     chunks = data.split('_')
     try:
         int(chunks[-1])
@@ -148,7 +155,7 @@ def get_office_for_day_api(office, day, month, year):
                         titre = u"%sème %s" % (number, titre)
 
                 if lecture['titre']:
-                    titre = '%s : %s' % (titre, lecture['titre'])
+                    titre = u'%s : %s' % (titre, lecture['titre'])
 
                 texte = []
 
@@ -174,18 +181,18 @@ def get_office_for_day_api(office, day, month, year):
                 lecture = {
                     'titre':     titre,
                     'reference': lecture['ref'],
-                    'texte':     ''.join(texte),
+                    'texte':     u''.join(texte),
                 }
 
             # Value may not be a dict
             if isinstance(lecture, basestring):
                 # Re-assemble patristique text...
                 if name == 'titre_patristique':
-                    patristique['titre'] = 'Lecture patristique: %s' % lecture
+                    patristique['titre'] = u'Lecture patristique: %s' % lecture
                     continue
                 elif name == 'texte_patristique':
                     patristique['texte'] = lecture
-                    name = 'lecture_patristique'
+                    name = u'lecture_patristique'
                     lecture = patristique
                 else:
                     # Broken, general case...
@@ -219,14 +226,14 @@ def get_office_for_day_api(office, day, month, year):
                     if '(' in cleaned['reference']:
                         cleaned['reference'] = cleaned['reference'].split('(')[1].split(')')[0]
                 elif cleaned['title'] in "Pericope":
-                    cleaned['title'] = "%s : %s" % (cleaned['title'], cleaned['reference'])
+                    cleaned['title'] = u"%s : %s" % (cleaned['title'], cleaned['reference'])
                 elif cleaned['title'] == "Psaume" and is_psalm_ref(cleaned['reference']):
-                    cleaned['title'] = "%s : %s" % (cleaned['title'], cleaned['reference'].replace(' ', ''))
+                    cleaned['title'] = u"%s : %s" % (cleaned['title'], cleaned['reference'].replace(' ', ''))
                 else:
-                    cleaned['title'] = "%s (%s)" % (cleaned['title'], cleaned['reference'])
+                    cleaned['title'] = u"%s (%s)" % (cleaned['title'], cleaned['reference'])
 
             if name.split('_', 1)[0] in ['verset']:
-                cleaned['title'] = 'verset'
+                cleaned['title'] = u'verset'
 
             out['lectures'][variant_name].append(cleaned)
 
@@ -326,6 +333,7 @@ def json_to_rss(data):
     When multiple alternatives are proposed for an office (typically the mass), chain them and
     add a <variant> with the "OFFICE_NAME" key in the items
     '''
+    from xml.sax.saxutils import escape
     out = []
     out.append(u'''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -344,7 +352,13 @@ def json_to_rss(data):
                 <reference>{reference}</reference>
                 <key>{key}</key>
                 <description><![CDATA[{text}]]></description>
-            </item>'''.format(office=office, **lecture))
+            </item>'''.format(
+                office    = office,
+                title     = escape(lecture.get('title', '')),
+                reference = escape(lecture.get('reference', '')),
+                key       = escape(lecture.get('key', '')),
+                text      = lecture.get('text', ''),
+            ))
 
     out.append(u'''</channel></rss>''')
     return u''.join(out)
@@ -408,41 +422,57 @@ def get_item_by_title(items, title):
 
 def _filter_fete(fete):
     '''fete can be proceesed from 2 places. Share common filtering code'''
+    fete = fete.strip()
     fete = re.sub(r'(\w)(S\.|St|Ste) ', r'\1, \2 ', fete) # Fix word splitting when multiple Saints
-    return fete.replace("S. ", "Saint ")\
+    fete = fete.replace("S. ", "Saint ")\
                .replace("St ", "Saint ")\
                .replace("Ste ", "Sainte ")
+
+    verbe = u"fêtons" if u'saint' in fete.lower() else u"célèbrons"
+    text = ''
+
+    # Single word (paque, ascension, noel, ...)
+    if fete and ' ' not in fete and fete.lower() not in [u'ascension', u'pentecôte']:
+        text += u" Nous %s %s" % (verbe, fete)
+    # Standard fete
+    elif fete and u'férie' not in fete:
+        pronoun = get_pronoun_for_sentence(fete)
+        text += u' Nous %s %s%s' % (verbe, pronoun, fete)
+    else:
+        text += fete
+
+    return text
 
 def postprocess_informations(informations):
     '''
     Generate 'text' key in an information dict from json API
     '''
     text = u""
-    fete_done = False
     fete_skip = False
+    jour_lit_skip = False
+
+    if 'fete' not in informations:
+        informations['fete'] = u''
 
     # Never print fete if this is the semaine
-    if informations.get('fete', '').split(' ')[0] == informations.get('semaine', '').split(' ')[0]:
+    if informations.get('jour_liturgique_nom', '').split(' ')[0] == informations.get('semaine', '').split(' ')[0]:
+        jour_lit_skip = True
+    if informations.get('jour_liturgique_nom', '') == informations.get('fete', '') and u'férie' not in informations.get('fete', ''):
+        jour_lit_skip = True
+    if informations['fete'] == informations.get('degre', ''):
         fete_skip = True
 
-    if 'jour' in informations:
-        text += informations['jour']
-        if not fete_skip and 'fete' in informations:
-            fete = _filter_fete(informations['fete'])
+    if not jour_lit_skip and 'jour_liturgique_nom' in informations and u'férie' not in informations.get('jour_liturgique_nom', ''):
+        text += _filter_fete(informations['jour_liturgique_nom'])
+    elif 'jour' in informations:
+        text += informations['jour'].strip()
+        if not jour_lit_skip and 'jour_liturgique_nom' in informations:
+            text += ' %s' % _filter_fete(informations['jour_liturgique_nom'])
 
-            # Single word (paque, ascension, noel, ...)
-            if fete and ' ' not in fete:
-                pronoun = get_pronoun_for_sentence(fete)
-                text += u" de %s%s" % (pronoun, fete)
-                fete_done = True
-            # De la férie
-            elif u'férie' in fete:
-                text += u" " + fete
-                fete_done = True
     if 'semaine' in informations:
+        semaine = informations['semaine']
         if text:
             text += u', '
-        semaine =  informations['semaine']
         text += semaine
 
         numero = re.match('^[0-9]*', semaine).group()
@@ -453,27 +483,17 @@ def postprocess_informations(informations):
 
     if 'annee' in informations:
         if text:
-            if fete_done:
-                text += u", année %s" % informations['annee']
-            else:
-                text += u" de l'année %s" % informations['annee']
+            text += u" de l'année %s" % informations['annee']
         else:
             text += u"Année %s" % informations['annee']
 
     if text:
         text += "."
 
-    if not fete_skip and not fete_done and 'fete' in informations and ('jour' not in informations or informations['jour'] not in informations['fete']):
+    if not fete_skip and 'fete' in informations and ('jour' not in informations or informations['jour'] not in informations['fete']):
         fete = _filter_fete(informations['fete'])
-        verbe = u"fêtons" if u'saint' in fete.lower() else u"célèbrons"
-
-        # Single word (paque, ascension, noel, ...)
-        if fete and ' ' not in fete:
-            text += u" Nous %s %s." % (verbe, fete)
-        # Standard fete
-        if fete and u'férie' not in fete:
-            pronoun = get_pronoun_for_sentence(fete)
-            text += u' Nous %s %s%s.' % (verbe, pronoun, fete)
+        if fete and not u'férie' in fete:
+            text += "%s." % fete
 
     if 'couleur' in informations:
         text += u" La couleur liturgique est le %s." % informations['couleur']
