@@ -8,10 +8,11 @@ import os
 import time
 import json
 import meta
+import messes
 import laudes
 import vepres
 import lectures
-from utils import get_office_for_day_api, get_office_for_day_api_rss, get_office_for_day_aelf_rss, AelfHttpError
+from utils import get_office_for_day_api, get_office_for_day_api_rss, get_office_for_day_aelf_rss, get_office_for_day_aelf_json, AelfHttpError
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 28
@@ -22,7 +23,8 @@ def noop_postprocess(version, variant, data, day, month, year):
 # List of APIs engines + fallback path
 APIS = {
     'json_rss' : [get_office_for_day_api_rss, get_office_for_day_aelf_rss],
-    'json':      [get_office_for_day_api],
+    'json':      [get_office_for_day_api,     get_office_for_day_aelf_json],
+    'json_only': [get_office_for_day_api],
 }
 
 # Office configuration, including API engine and postprocessor
@@ -31,7 +33,7 @@ OFFICES = {
     "informations": {
         'postprocess': meta.postprocess,
         'fallback_len_treshold': -1, # There is no fallback for meta
-        'api': 'json',
+        'api': 'json_only',
     },
     "lectures": {
         'postprocess': lectures.postprocess,
@@ -62,8 +64,8 @@ OFFICES = {
         'api': 'json_rss',
     },
     "messes": {
-        'postprocess': noop_postprocess,
-        'api': 'json_rss',
+        'postprocess': messes.postprocess,
+        'api': 'json',
     },
 }
 

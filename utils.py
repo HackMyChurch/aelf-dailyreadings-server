@@ -119,7 +119,7 @@ def get_office_for_day_api(office, day, month, year):
     # FIXME: in the future, we'll get informations through "mass" only, and this case should move
     #        compat API should use it and postprocess informations for each office
     if not data:
-        return out
+        return lectures_common_cleanup(out)
 
     # PASS 1: Normalize data to a list of office variantes. Each variant is a list of offices with a type
     # we use lists to 1/ preserve order 2/ allow for duplicates like "short version"
@@ -240,33 +240,6 @@ def get_office_for_day_api(office, day, month, year):
                 u'key':       name,
             }
 
-            # Title cleanup / compat with current applications
-            # FIXME: move this crap to the common cleanup path once it is compatible with the dict
-            if cleaned['title']:
-                if name in ["hymne", "pericope", "lecture", "lecture_patristique"]:
-                    if not cleaned['title'][0] in [u'«', u"'", u'"']:
-                        cleaned['title'] = u"« %s »" % cleaned['title']
-                    cleaned['title'] = u"%s : %s" % (_id_to_title(name), cleaned['title'])
-            else:
-                cleaned['title'] = _id_to_title(name)
-
-            if cleaned['reference']:
-                raw_ref = cleaned['reference']
-                cleaned['reference'] = clean_ref(raw_ref)
-
-                if 'cantique' in cleaned['reference'].lower():
-                    cleaned['title'] = cleaned['reference']
-                    if '(' in cleaned['reference']:
-                        cleaned['reference'] = cleaned['reference'].split('(')[1].split(')')[0]
-                elif cleaned['title'] in "Pericope":
-                    cleaned['title'] = u"%s : %s" % (cleaned['title'], cleaned['reference'])
-                elif cleaned['title'] == "Psaume" and is_psalm_ref(raw_ref):
-                    cleaned['title'] = u"%s : %s" % (cleaned['title'], raw_ref)
-                else:
-                    cleaned['title'] = u"%s (%s)" % (cleaned['title'], cleaned['reference'])
-
-            if name.split('_', 1)[0] in ['verset']:
-                cleaned['title'] = u'verset'
             out_variant['lectures'].append(cleaned)
 
     return lectures_common_cleanup(out)
@@ -434,6 +407,21 @@ def get_asset(path):
     with open(path) as f:
         return yaml.load(f)
 
+
+DETERMINANTS = ['l\'', 'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'd\'', 'au', u'à'];
+def fix_case(sentence):
+    words = sentence.split(' ')
+    cleaned = []
+    for word in words:
+        if not word:
+            continue
+        c = word[0]
+        word = word.lower()
+        if c != word[0] and word not in DETERMINANTS:
+            word = word.capitalize()
+        cleaned.append(word)
+    return ' '.join(cleaned)
+
 def get_pronoun_for_sentence(sentence):
     words = [w.lower() for w in sentence.split(" ")]
 
@@ -442,7 +430,7 @@ def get_pronoun_for_sentence(sentence):
         return ''
 
     # Already a determinant or equivalent
-    if words[0] in ['l\'', 'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'd\'']:
+    if words[0] in DETERMINANTS:
         return ''
 
     # If it starts by a vowel, that's easy, don't care about M/F
@@ -561,8 +549,37 @@ def lectures_common_cleanup(data):
     '''
     data['informations'] = postprocess_informations(data['informations'])
 
+    # PASS 1: post-process lectures items
     for variant in data['variants']:
         for lecture in variant['lectures']:
+            # Title cleanup / compat with current applications
+            name = lecture['key']
+            if lecture['title']:
+                if name in ["hymne", "pericope", "lecture", "lecture_patristique"]:
+                    if not lecture['title'][0] in [u'«', u"'", u'"']:
+                        lecture['title'] = u"« %s »" % lecture['title']
+                    lecture['title'] = u"%s : %s" % (_id_to_title(name), lecture['title'])
+            else:
+                lecture['title'] = _id_to_title(name)
+
+            if lecture['reference']:
+                raw_ref = lecture['reference']
+                lecture['reference'] = clean_ref(raw_ref)
+
+                if 'cantique' in lecture['reference'].lower():
+                    lecture['title'] = lecture['reference']
+                    if '(' in lecture['reference']:
+                        lecture['reference'] = lecture['reference'].split('(')[1].split(')')[0]
+                elif lecture['title'] in "Pericope":
+                    lecture['title'] = u"%s : %s" % (lecture['title'], lecture['reference'])
+                elif lecture['title'] == "Psaume" and is_psalm_ref(raw_ref):
+                    lecture['title'] = u"%s : %s" % (lecture['title'], raw_ref)
+                else:
+                    lecture['title'] = u"%s (%s)" % (lecture['title'], lecture['reference'])
+
+            if name.split('_', 1)[0] in ['verset']:
+                lecture['title'] = u'verset'
+
             # FIXME: this hack is plain Ugly and there only to make newer API regress enough to be compatible with deployed applications
             title_sig = lecture['title'].strip().lower()
             if title_sig.split(u' ')[0] in [u'antienne']:
@@ -579,6 +596,8 @@ def lectures_common_cleanup(data):
             # Argh, another ugly hack to WA my own app :(
             # Replace any unbreakable space by a regular space
             lecture['title'] = lecture['title'].replace(u'\xa0', u' ');
+
+    # PASS 2: merge meargable items
 
     return data
 
