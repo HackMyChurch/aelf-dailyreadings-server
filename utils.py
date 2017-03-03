@@ -269,7 +269,7 @@ def get_office_for_day_api(office, day, month, year):
                 cleaned['title'] = u'verset'
             out_variant['lectures'].append(cleaned)
 
-    return out
+    return lectures_common_cleanup(out)
 
 LAST = object()
 def get_office_for_day_aelf_json(office, day, month, year):
@@ -350,7 +350,7 @@ def get_office_for_day_aelf_json(office, day, month, year):
                 l['text'] += unicode(balise)
 
     # All done!
-    return out
+    return lectures_common_cleanup(out)
 
 def json_to_rss(data):
     '''
@@ -417,12 +417,10 @@ def get_office_for_day_api_rss(office, day, month, year):
     Get office from new API but return it as RSS so that we do not need to change the full stack at once
     '''
     data = get_office_for_day_api(office, day, month, year)
-    data = lectures_common_cleanup(data)
     return json_to_rss(data)
 
 def get_office_for_day_aelf_rss(office, day, month, year):
     data = get_office_for_day_aelf_json(office, day, month, year)
-    data = lectures_common_cleanup(data)
     return json_to_rss(data)
 
 ASSET_CACHE={}
