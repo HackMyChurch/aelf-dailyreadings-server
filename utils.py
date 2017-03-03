@@ -110,7 +110,7 @@ def get_office_for_day_api(office, day, month, year):
 
     # Start to build our json format from API's format
     out = {
-        u'informations': postprocess_informations(dict(data.pop('informations'))),
+        u'informations': dict(data.pop('informations')),
         u'variants': [],
         u'source': 'api',
     }
@@ -559,6 +559,8 @@ def lectures_common_cleanup(data):
     most of the current application's cleanup logic will migrate. In the mean time, filter
     the json to reproduce the old RSS API bugs (YEAH!)
     '''
+    data['informations'] = postprocess_informations(data['informations'])
+
     for variant in data['variants']:
         for lecture in variant['lectures']:
             # FIXME: this hack is plain Ugly and there only to make newer API regress enough to be compatible with deployed applications
