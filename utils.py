@@ -555,7 +555,7 @@ def postprocess_informations(informations):
 
 def lectures_soup_common_cleanup(data):
     # TODO: move to json
-    soup = BeautifulSoup(data, 'html5lib')
+    soup = BeautifulSoup(data, 'html.parser')
     items = soup.find_all('item')
 
     # Fix titles for compat with older applications
