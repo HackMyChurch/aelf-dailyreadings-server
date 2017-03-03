@@ -112,6 +112,7 @@ def get_office_for_day_api(office, day, month, year):
     out = {
         u'informations': postprocess_informations(dict(data.pop('informations'))),
         u'variants': [],
+        u'source': 'api',
     }
 
     # 'information' office has no reading
@@ -291,6 +292,7 @@ def get_office_for_day_aelf_json(office, day, month, year):
     out = {
         u'informations': {}, # TODO...
         u'variants': [],
+        u'source': 'website',
     }
 
     for lecture in lectures:
@@ -384,9 +386,9 @@ def json_to_rss(data):
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <language>fr</language>
-        <source>website</source>
+        <source>%s</source>
         <copyright>Copyright AELF - Tout droits réservés</copyright>
-''')
+''' % data.get('source', 'unk'))
 
     for variant in data.get('variants', []):
         office   = variant['name']
@@ -415,13 +417,13 @@ def get_office_for_day_api_rss(office, day, month, year):
     Get office from new API but return it as RSS so that we do not need to change the full stack at once
     '''
     data = get_office_for_day_api(office, day, month, year)
-    rss = json_to_rss(data)
-    return lectures_soup_common_cleanup(rss)
+    data = lectures_common_cleanup(data)
+    return json_to_rss(data)
 
 def get_office_for_day_aelf_rss(office, day, month, year):
     data = get_office_for_day_aelf_json(office, day, month, year)
-    rss = json_to_rss(data)
-    return lectures_soup_common_cleanup(rss)
+    data = lectures_common_cleanup(data)
+    return json_to_rss(data)
 
 ASSET_CACHE={}
 def get_asset(path):
@@ -553,30 +555,30 @@ def postprocess_informations(informations):
     informations['text'] = text
     return informations
 
-def lectures_soup_common_cleanup(data):
-    # TODO: move to json
-    soup = BeautifulSoup(data, 'html.parser')
-    items = soup.find_all('item')
+def lectures_common_cleanup(data):
+    '''
+    Walk on the variants and lectures lists and apply common cleanup code. This is where
+    most of the current application's cleanup logic will migrate. In the mean time, filter
+    the json to reproduce the old RSS API bugs (YEAH!)
+    '''
+    for variant in data['variants']:
+        for lecture in variant['lectures']:
+            # FIXME: this hack is plain Ugly and there only to make newer API regress enough to be compatible with deployed applications
+            title_sig = lecture['title'].strip().lower()
+            if title_sig.split(u' ')[0] in [u'antienne']:
+                lecture['title'] = 'antienne'
+            elif title_sig.split(u' ')[0] in [u'repons', u'répons']:
+                lecture['title'] = 'repons'
+            elif title_sig.startswith('parole de dieu'):
+                reference = lecture['title'].rsplit(':', 1)
+                if len(reference) > 1:
+                    lecture['title'] = 'Pericope : (%s)' % reference[1]
+                else:
+                    lecture['title'] = 'Pericope'
 
-    # Fix titles for compat with older applications
-    for item in items:
-        # FIXME: this hack is plain Ugly and there only to make newer API regress enough to be compatible with deployed applications
-        title = item.title
-        title_sig = title.string.strip().lower()
-        if title_sig.split(u' ')[0] in [u'antienne']:
-            title.string = 'antienne'
-        elif title_sig.split(u' ')[0] in [u'repons', u'répons']:
-            title.string = 'repons'
-        elif title_sig.startswith('parole de dieu'):
-            reference = title.string.rsplit(':', 1)
-            if len(reference) > 1:
-                title.string = 'Pericope : (%s)' % reference[1]
-            else:
-                title.string = 'Pericope'
+            # Argh, another ugly hack to WA my own app :(
+            # Replace any unbreakable space by a regular space
+            lecture['title'] = lecture['title'].replace(u'\xa0', u' ');
 
-        # Argh, another ugly hack to WA my own app :(
-        # Replace any unbreakable space by a regular space
-        title.string = title.string.replace(u'\xa0', u' ');
-
-    return soup.prettify()
+    return data
 

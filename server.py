@@ -12,7 +12,6 @@ import laudes
 import vepres
 import lectures
 from utils import get_office_for_day_api, get_office_for_day_api_rss, get_office_for_day_aelf_rss, AelfHttpError
-from utils import lectures_soup_common_cleanup
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 28
@@ -27,7 +26,7 @@ APIS = {
 }
 
 # Office configuration, including API engine and postprocessor
-DEFAULT_FALLBACK_LEN_TRESHOLD = 3000
+DEFAULT_FALLBACK_LEN_TRESHOLD = 4000 # empty complies are 3600 bytes
 OFFICES = {
     "informations": {
         'postprocess': meta.postprocess,
