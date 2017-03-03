@@ -16,7 +16,7 @@ class TestOfficeComplies(TestBase):
         items = self.parseItems(resp.data)
 
         # Validate: Once, before the Intercession
-        self.assertEqual(11, len(items))
+        self.assertEqual(12, len(items))
         self.assertEqual(u"Nous te saluons, Vierge Marie", items[-1][0])
         self.assertEqual(u"Bénédiction", items[-2][0])
         self.assertEqual(u"Oraison", items[-3][0])

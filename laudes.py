@@ -4,7 +4,7 @@ import re
 import copy
 from bs4 import BeautifulSoup
 
-from utils import get_office_for_day, get_asset
+from utils import get_asset
 from utils import get_item_by_title
 
 def postprocess(version, variant, data, day, month, year):

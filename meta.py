@@ -8,16 +8,19 @@ def postprocess(version, variant, data, day, month, year):
     informations = data['informations']
     out = {
         'informations': informations,
-        'lectures': {
-            'informations': [
-                {
-                    'title':     'Jour liturgique',
-                    'text':      informations['text'],
-                    'reference': '',
-                    'key':       'informations'
-                },
-            ],
-        }
+        'variants': [
+            {
+                'name': 'Informations',
+                'lectures': [
+                    {
+                        'title':     'Jour liturgique',
+                        'text':      informations['text'],
+                        'reference': '',
+                        'key':       'informations',
+                    }
+                ]
+            }
+        ]
     }
 
     return json_to_rss(out)

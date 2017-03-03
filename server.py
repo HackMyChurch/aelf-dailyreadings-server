@@ -11,7 +11,7 @@ import meta
 import laudes
 import vepres
 import lectures
-from utils import get_office_for_day, get_office_for_day_api, get_office_for_day_api_rss, get_office_for_day_aelf_rss, AelfHttpError
+from utils import get_office_for_day_api, get_office_for_day_api_rss, get_office_for_day_aelf_rss, AelfHttpError
 from utils import lectures_soup_common_cleanup
 from keys import KEY_TO_OFFICE
 
@@ -22,7 +22,6 @@ def noop_postprocess(version, variant, data, day, month, year):
 
 # List of APIs engines + fallback path
 APIS = {
-    'rss':       [get_office_for_day,         get_office_for_day_aelf_rss],
     'json_rss' : [get_office_for_day_api_rss, get_office_for_day_aelf_rss],
     'json':      [get_office_for_day_api],
 }
@@ -160,6 +159,7 @@ def do_get_office(version, office, day, month, year):
             last_http_error = http_err
             continue
         except Exception as e:
+            last_http_error = AelfHttpError(500, str(e))
             continue
 
         # Does it look broken ?

@@ -17,6 +17,10 @@ ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets
 HEADERS={'User-Agent': 'AELF - Lectures du jour - API - cathogeek@epitre.co'}
 HTTP_TIMEOUT = 10 # seconds
 
+OFFICE_NAME = {
+    "messes": "messe",
+}
+
 # TODO: memoization
 
 class AelfHttpError(Exception):
@@ -92,9 +96,6 @@ def _do_get_request(url):
         raise AelfHttpError(r.status_code)
     return r
 
-def get_office_for_day(office, day, month, year):
-    return _do_get_request(AELF_RSS.format(day=day, month=month, year=year, key=KEYS[office])).text
-
 def get_office_for_day_aelf(office, day, month, year):
     return _do_get_request(AELF_SITE.format(office=office, day=day, month=month, year=year)).text
 
@@ -110,7 +111,7 @@ def get_office_for_day_api(office, day, month, year):
     # Start to build our json format from API's format
     out = {
         u'informations': postprocess_informations(dict(data.pop('informations'))),
-        u'lectures': {},
+        u'variants': [],
     }
 
     # 'information' office has no reading
@@ -119,30 +120,75 @@ def get_office_for_day_api(office, day, month, year):
     if not data:
         return out
 
-    # Move from a list or single item to a dict VARIANT => LECTURES
-    name, lectures = data.items().pop()
-    if isinstance(lectures, list):
-        # In this case, everything is a list
-        cleaned = {}
-        for variant in lectures:
-            cleaned[variant['nom']] = OrderedDict((o['type'], o) for o in variant['lectures'])
-        lectures = cleaned
-    else:
-        lectures = {name: lectures}
+    # PASS 1: Normalize data to a list of office variantes. Each variant is a list of offices with a type
+    # we use lists to 1/ preserve order 2/ allow for duplicates like "short version"
+    name, variants = data.items().pop()
+    if isinstance(variants, list):
+        # Mass: multiple variants, lectures list inside, possible collision on types
+        counter = 0; # We'll need it to generate variants name in case it's missing
+        cleaned = []
+        for variant in variants:
+            # Yes, it appends (cf Rameaux)
+            if not variant['lectures']:
+                continue
 
-    # Iterate on all variants / lectures to normalize
-    for variant_name, variant in lectures.iteritems():
-        out['lectures'][variant_name] = []
+            # Handle variants with missing name (cf Rameaux)
+            counter += 1
+            if not variant['nom']:
+                variant['nom'] = "%s %s" % (OFFICE_NAME.get(office, office).capitalize(), counter)
+
+            cleaned.append(variant)
+        variants = cleaned
+    else:
+        # Regular Office: single variant, type --> lecture dict inside
+        lectures = []
 
         # In the lectures office, the patristique text is... broken
         patristique = {
             u'titre': '',
             u'texte': '',
         }
-        for name, lecture in variant.iteritems():
-            # There is not point in attempting to parse empty data: will fail anyway
-            if not name or not lecture:
-                continue
+
+        for name, lecture in variants.iteritems():
+            # 'lecture' may not be a dict yet...
+            if isinstance(lecture, basestring):
+                # Re-assemble patristique text...
+                if name == 'titre_patristique':
+                    patristique['titre'] = u'Lecture patristique: %s' % lecture
+                    continue
+                elif name == 'texte_patristique':
+                    patristique['texte'] = lecture
+                    name = u'lecture_patristique'
+                    lecture = patristique
+                else:
+                    # Broken, general case...
+                    lecture = {
+                        'texte': lecture,
+                    }
+            if isinstance(lecture, dict):
+                lecture['type'] = name
+                lectures.append(lecture)
+            # At this stage, we only have valid looking data in the dict
+            # Te Deum being an empty list, it's also been skipped. That's
+            # OK, we'll add it later
+
+        variants = [
+            {
+                'nom':      OFFICE_NAME.get(office, office).capitalize(),
+                'lectures': lectures,
+            }
+        ]
+
+    # PASS 2: Normalize all items
+    for variant in variants:
+        variant_name = variant['nom']
+        out_variant = {
+            'name':     variant_name,
+            'lectures': [],
+        }
+        out['variants'].append(out_variant)
+        for lecture in variant['lectures']:
+            name = lecture.get('type', '')
 
             if office == "messes":
                 # WIP: this is still very much broken
@@ -185,22 +231,6 @@ def get_office_for_day_api(office, day, month, year):
                     'texte':     u''.join(texte),
                 }
 
-            # Value may not be a dict
-            if isinstance(lecture, basestring):
-                # Re-assemble patristique text...
-                if name == 'titre_patristique':
-                    patristique['titre'] = u'Lecture patristique: %s' % lecture
-                    continue
-                elif name == 'texte_patristique':
-                    patristique['texte'] = lecture
-                    name = u'lecture_patristique'
-                    lecture = patristique
-                else:
-                    # Broken, general case...
-                    lecture = {
-                        'texte': lecture,
-                    }
-
             # Now, lecture is a dict. Not yet a consistent one, but a dict
             cleaned = {
                 u'title':     lecture.get('titre',     ''),
@@ -236,11 +266,11 @@ def get_office_for_day_api(office, day, month, year):
 
             if name.split('_', 1)[0] in ['verset']:
                 cleaned['title'] = u'verset'
-
-            out['lectures'][variant_name].append(cleaned)
+            out_variant['lectures'].append(cleaned)
 
     return out
 
+LAST = object()
 def get_office_for_day_aelf_json(office, day, month, year):
     '''
     AELF has a strog tradition of being broken in creative ways. This method is yet another
@@ -248,7 +278,7 @@ def get_office_for_day_aelf_json(office, day, month, year):
     hopefuly has a better SLA, and reformat it using the same format as ``get_office_for_day_api``
     '''
     data = get_office_for_day_aelf(office, day, month, year)
-    soup = BeautifulSoup(data, 'html.parser')
+    soup = BeautifulSoup(data, 'html5lib')
     lectures = soup.find_all("div", class_="lecture")
     variant_titles = [title.string.capitalize() for title in soup.find_all('h1')]
     variant_current = -1
@@ -260,7 +290,7 @@ def get_office_for_day_aelf_json(office, day, month, year):
     # Start to build our json format from API's format
     out = {
         u'informations': {}, # TODO...
-        u'lectures': {},
+        u'variants': [],
     }
 
     for lecture in lectures:
@@ -279,28 +309,33 @@ def get_office_for_day_aelf_json(office, day, month, year):
         else:
             variant_name = variant_titles[variant_current]
 
-        # Load or create the variant if need be
-        if variant_name not in out[lectures]:
-            out[lectures] = []
-        variant = out[lectures]
+        # Is it the last known variant or do we need to create a new one ?
+        if out['variants'] and out['variants'][-1]['name'] != variant_name:
+            variant = out['variants'][-1]
+        else:
+            variant = {
+                'name': variant_name,
+                'lectures': [],
+            }
+            out['variants'].append(variant)
 
         # Lectures can be composed of sub-lectures. De-aggregate them
         l = {
             u'title':     u'',
             u'text':      u'',
         }
-        for balise in lecture.contents + [None]:
-            if balise is None or balise.name == 'h4':
+        for balise in lecture.contents + [LAST]:
+            if balise == LAST or balise.name == 'h4':
                 # Flush reading IF there is some content (title or text)
                 if l['title'].strip() or l['text'].strip():
-                    variant.append({
+                    variant['lectures'].append({
                         u'title':     l['title'],
                         u'text':      l['text'],
                         u'reference': u'', # TODO
                         u'key':       lecture_key,
                     })
 
-            if balise is None:
+            if balise is LAST:
                 # This is a hack to share flush path. I'm in a hurry. AELF is one again broken.
                 break
 
@@ -312,30 +347,38 @@ def get_office_for_day_aelf_json(office, day, month, year):
                 # Reading content
                 l['text'] += unicode(balise)
 
+    # All done!
+    return out
+
 def json_to_rss(data):
     '''
     API and json scrappers return a json of the form:
     ```json
     {
         "informations": {},
-        "lectures": {
-            "OFFICE_NAME": [
-                {
-                    "title":     "",
-                    "reference": "",
-                    "text":      "",
-                    "key":       "",
-                },
-            ],
-            "OFFICE_VARIANTE_NAME": []
-        }
+        "variants": [
+            {
+                "name": OFFICE_NAME,
+                "lectures": [
+                    {
+                        "title":     "",
+                        "reference": "",
+                        "text":      "",
+                        "key":       "",
+                    },
+                ],
+            },
+            {
+                "name": OFFICE_VARIANTE_NAME,
+                "lectures": []
+            }
+        ]
     }
     ```
 
     When multiple alternatives are proposed for an office (typically the mass), chain them and
     add a <variant> with the "OFFICE_NAME" key in the items
     '''
-    from xml.sax.saxutils import escape
     out = []
     out.append(u'''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -345,7 +388,9 @@ def json_to_rss(data):
         <copyright>Copyright AELF - Tout droits réservés</copyright>
 ''')
 
-    for office, lectures in data.get('lectures', {}).iteritems():
+    for variant in data.get('variants', []):
+        office   = variant['name']
+        lectures = variant['lectures']
         for lecture in lectures:
             out.append(u'''
             <item>
@@ -510,7 +555,7 @@ def postprocess_informations(informations):
 
 def lectures_soup_common_cleanup(data):
     # TODO: move to json
-    soup = BeautifulSoup(data, 'html.parser')
+    soup = BeautifulSoup(data, 'html5lib')
     items = soup.find_all('item')
 
     # Fix titles for compat with older applications
