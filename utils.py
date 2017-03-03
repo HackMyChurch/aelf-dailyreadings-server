@@ -6,6 +6,7 @@ import yaml
 import re
 from bs4 import BeautifulSoup
 from keys import KEYS
+from xml.sax.saxutils import escape
 from collections import OrderedDict
 
 AELF_JSON="https://api.aelf.org/v1/{office}/{year:04d}-{month:02d}-{day:02d}"
