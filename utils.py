@@ -7,7 +7,7 @@ import re
 from bs4 import BeautifulSoup
 from keys import KEYS
 from xml.sax.saxutils import escape
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 
 AELF_JSON="https://api.aelf.org/v1/{office}/{year:04d}-{month:02d}-{day:02d}"
 AELF_RSS="https://rss.aelf.org/{day:02d}/{month:02d}/{year:02d}/{key}"
@@ -22,6 +22,10 @@ OFFICE_NAME = {
 }
 
 # TODO: memoization
+# TODO: rewrite as a class
+
+# Create some base, internal types
+LecturePosition = namedtuple('LecturePosition', ['variantIdx', 'lectureIdx', 'lecture'])
 
 class AelfHttpError(Exception):
     def __init__(self, status, message=None):
@@ -167,6 +171,7 @@ def get_office_for_day_api(office, day, month, year):
                         'texte': lecture,
                     }
             if isinstance(lecture, dict):
+                lecture = dict(lecture) # Drop the OrderedDict overhead, no longer needed
                 lecture['type'] = name
                 lectures.append(lecture)
             # At this stage, we only have valid looking data in the dict
@@ -221,7 +226,10 @@ def get_office_for_day_api(office, day, month, year):
                     texte.append(u'<font color="#CC0000">R/ %s</font>' % refrain)
 
                 if verset:
-                    texte.append(u'<blockquote><b>Acclamation&nbsp;:</b>%s<small><i>— %s</i></small></blockquote>' % (verset, clean_ref(verset_ref)))
+                    verset = verset.strip()
+                    if verset.startswith('<p>'): verset = verset[3:]
+                    if verset.endswith('<p>'):   verset = verset[:-4]
+                    texte.append(u'<blockquote><b>Acclamation&nbsp;:</b><br/>%s<small><i>— %s</i></small></blockquote>' % (verset, clean_ref(verset_ref)))
 
                 if contenu:
                     texte.append(contenu)
@@ -443,6 +451,7 @@ def get_pronoun_for_sentence(sentence):
 
     return u"la "
 
+# FIXME: this function is deprecated (use json accessors instead)
 def get_item_by_title_internal(items, title, normalize):
     '''Get first item containing 'title' in its title if any. Normalize input.'''
     title = normalize(title)
@@ -451,9 +460,36 @@ def get_item_by_title_internal(items, title, normalize):
             return item
     return None
 
+# FIXME: this function is deprecated (use json accessors instead)
 def get_item_by_title(items, title):
     '''Get first item containing 'title' in its title if any. Case insensitive.'''
     return get_item_by_title_internal(items, title, lambda x: x.strip().lower())
+
+def get_lectures_by_type(data, name):
+    '''
+    Find all lectures of type ``name``. Return a list of ``(variant_idx, lecture_idx, lecture)``
+    '''
+    out = []
+    for variant_idx, variant in enumerate(data['variants']):
+        for lecture_idx, lecture in enumerate(variant['lectures']):
+            if lecture['key'] == name:
+                out.append(LecturePosition(variant_idx, lecture_idx, lecture))
+    return out
+
+def get_lecture_by_type(data, name):
+    '''
+    Find first lecture element with type ``name`` or return None
+    '''
+    lectures = get_lectures_by_type(data, name)
+    if lectures:
+        return lectures[0]
+    return None
+
+def insert_lecture_before(data, lecture, before):
+    '''
+    Insert raw ``lecture`` dict before ``before`` LecturePosition object
+    '''
+    data['variants'][before.variantIdx]['lectures'].insert(before.lectureIdx, lecture)
 
 def _filter_fete(fete):
     '''fete can be proceesed from 2 places. Share common filtering code'''

@@ -37,7 +37,7 @@ OFFICES = {
     },
     "lectures": {
         'postprocess': lectures.postprocess,
-        'api': 'json_rss',
+        'api': 'json',
     },
     "tierce": {
         'postprocess': noop_postprocess,
