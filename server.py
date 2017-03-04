@@ -18,9 +18,6 @@ from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 28
 
-def noop_postprocess(version, variant, data, date):
-    return data
-
 # List of APIs engines + fallback path
 APIS = {
     'json_rss' : [get_office_for_day_api_rss, get_office_for_day_aelf_rss],
@@ -32,40 +29,40 @@ APIS = {
 DEFAULT_FALLBACK_LEN_TRESHOLD = 4000 # empty complies are 3600 bytes
 OFFICES = {
     "informations": {
-        'postprocess': meta.postprocess,
+        'postprocess': [meta.postprocess],
         'fallback_len_treshold': -1, # There is no fallback for meta
         'api': 'json_only',
     },
     "lectures": {
-        'postprocess': lectures.postprocess,
+        'postprocess': [lectures.postprocess],
         'api': 'json',
     },
     "tierce": {
-        'postprocess': noop_postprocess,
+        'postprocess': [],
         'api': 'json_rss',
     },
     "sexte": {
-        'postprocess': noop_postprocess,
+        'postprocess': [],
         'api': 'json_rss',
     },
     "none": {
-        'postprocess': noop_postprocess,
+        'postprocess': [],
         'api': 'json_rss',
     },
     "laudes": {
-        'postprocess': laudes.postprocess,
+        'postprocess': [laudes.postprocess],
         'api': 'json_rss',
     },
     "vepres": {
-        'postprocess': vepres.postprocess,
+        'postprocess': [vepres.postprocess],
         'api': 'json_rss',
     },
     "complies": {
-        'postprocess': noop_postprocess,
+        'postprocess': [],
         'api': 'json_rss',
     },
     "messes": {
-        'postprocess': messes.postprocess,
+        'postprocess': [messes.postprocess],
         'api': 'json',
     },
 }
@@ -177,8 +174,9 @@ def do_get_office(version, office, date):
     # Apply office specific postprocessor
     # Input format is as configured. MUST output rss
     # TODO: migrate to json
-    variant = "beta" if request.args.get('beta', 0) else "prod"
-    data = OFFICES[office]['postprocess'](version, variant, data, date)
+    mode = "beta" if request.args.get('beta', 0) else "prod"
+    for postprocessor in OFFICES[office]['postprocess']:
+        data = postprocessor(version, mode, data, date)
 
     # Return
     return Response(data, mimetype='application/rss+xml')
