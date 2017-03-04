@@ -3,7 +3,7 @@
 import re
 from utils import json_to_rss, fix_case, AELF_SITE
 
-def postprocess_keys(version, mode, data, day, month, year):
+def postprocess_keys(version, mode, data, date):
     '''
     Rewrite keys to match AELF's website convention
     '''
@@ -16,7 +16,7 @@ def postprocess_keys(version, mode, data, day, month, year):
             lecture['key.orig'] = lecture['key']
             lecture['key'] = "messe%s_lecture%s" % (messe_counter, lecture_counter)
 
-def postprocess_links(version, mode, data, day, month, year):
+def postprocess_links(version, mode, data, date):
     '''
     Generate a link page on compatible versions
     '''
@@ -47,7 +47,7 @@ def postprocess_links(version, mode, data, day, month, year):
 
     # GENERATE the title slide
     links = ""
-    base_link = AELF_SITE.format(year=year, month=month, day=day, office='messe')
+    base_link = AELF_SITE.format(year=date.year, month=date.month, day=date.day, office='messe')
     for variant_counter, variant in enumerate(variant_data):
         links += '<a href="%s#%s" class="variant-%s">%s</a>' % (base_link, variant['key'], variant_counter, variant['name'])
 
@@ -61,9 +61,9 @@ def postprocess_links(version, mode, data, day, month, year):
             'key':       'navigation',
         })
 
-def postprocess(version, mode, data, day, month, year):
-    postprocess_keys(version, mode, data, day, month, year)
-    postprocess_links(version, mode, data, day, month, year)
+def postprocess(version, mode, data, date):
+    postprocess_keys (version, mode, data, date)
+    postprocess_links(version, mode, data, date)
 
     return json_to_rss(data)
 

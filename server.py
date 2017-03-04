@@ -12,12 +12,13 @@ import messes
 import laudes
 import vepres
 import lectures
+import datetime
 from utils import get_office_for_day_api, get_office_for_day_api_rss, get_office_for_day_aelf_rss, get_office_for_day_aelf_json, AelfHttpError
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 28
 
-def noop_postprocess(version, variant, data, day, month, year):
+def noop_postprocess(version, variant, data, date):
     return data
 
 # List of APIs engines + fallback path
@@ -72,7 +73,7 @@ OFFICES = {
 def parse_date_or_abort(date):
     try:
         year, month, day = date.split('-')
-        return int(year), int(month), int(day)
+        return datetime.date(int(year), int(month), int(day))
     except:
         abort(400)
 
@@ -133,10 +134,10 @@ def get_status():
 
 @app.route('/<int:version>/office/<office>/<date>')
 def get_office(version, office, date):
-    year, month, day = parse_date_or_abort(date)
-    return do_get_office(version, office, day, month, year)
+    date = parse_date_or_abort(date)
+    return do_get_office(version, office, date)
 
-def do_get_office(version, office, day, month, year):
+def do_get_office(version, office, date):
     data = None
     error = None
 
@@ -155,7 +156,7 @@ def do_get_office(version, office, day, month, year):
     for office_api_engine in office_api_engines:
         # Attempt to load
         try:
-            data = office_api_engine(office, day, month, year)
+            data = office_api_engine(office, date)
         except AelfHttpError as http_err:
             last_http_error = http_err
             continue
@@ -177,7 +178,7 @@ def do_get_office(version, office, day, month, year):
     # Input format is as configured. MUST output rss
     # TODO: migrate to json
     variant = "beta" if request.args.get('beta', 0) else "prod"
-    data = OFFICES[office]['postprocess'](version, variant, data, day, month, year)
+    data = OFFICES[office]['postprocess'](version, variant, data, date)
 
     # Return
     return Response(data, mimetype='application/rss+xml')
@@ -192,7 +193,8 @@ def get_office_legacy(day, month, year, key):
 	return return_error(404, "Aucune lecture n'a été trouvée pour cet office.")
     office = KEY_TO_OFFICE[key]
     version = int(request.args.get('version', 0))
-    return do_get_office(version, KEY_TO_OFFICE[key], day, month, year)
+    date = datetime.date(year, month, day)
+    return do_get_office(version, KEY_TO_OFFICE[key], date)
 
 if __name__ == "__main__":
     if os.environ.get('AELF_DEBUG', False):

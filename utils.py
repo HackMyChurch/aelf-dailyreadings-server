@@ -111,8 +111,8 @@ def _do_get_request(url):
         raise AelfHttpError(r.status_code)
     return r
 
-def get_office_for_day_aelf(office, day, month, year):
-    return _do_get_request(AELF_SITE.format(office=office, day=day, month=month, year=year)).text
+def get_office_for_day_aelf(office, date):
+    return _do_get_request(AELF_SITE.format(office=office, day=date.day, month=date.month, year=date.year)).text
 
 def get_lecture_text_from_epitre(reference):
     reference.replace(' ', '')
@@ -129,14 +129,14 @@ def get_lecture_text_from_epitre(reference):
 
     return '<br/>'.join(out)
 
-def get_office_for_day_api(office, day, month, year):
+def get_office_for_day_api(office, date):
     '''
     Grab data from api.aelf.org and format it in a consistent way. This api is very creative in
     mixing different conventions in a single file. Output from the function is guaranteed to be
     consistent as far as the format is concerned, but is not yet post-proceced. You'll probably
     want to merge some readings befor sending.
     '''
-    data = _do_get_request(AELF_JSON.format(office=office, day=day, month=month, year=year)).json(object_pairs_hook=OrderedDict)
+    data = _do_get_request(AELF_JSON.format(office=office, day=date.day, month=date.month, year=date.year)).json(object_pairs_hook=OrderedDict)
 
     # Start to build our json format from API's format
     out = {
@@ -279,13 +279,13 @@ def get_office_for_day_api(office, day, month, year):
     return lectures_common_cleanup(out)
 
 LAST = object()
-def get_office_for_day_aelf_json(office, day, month, year):
+def get_office_for_day_aelf_json(office, date):
     '''
     AELF has a strog tradition of being broken in creative ways. This method is yet another
     fallback on top of their unreliable RSS. It works by scrapping the web version which,
     hopefuly has a better SLA, and reformat it using the same format as ``get_office_for_day_api``
     '''
-    data = get_office_for_day_aelf(office, day, month, year)
+    data = get_office_for_day_aelf(office, date)
     soup = BeautifulSoup(data, 'html5lib')
     lectures = soup.find_all("div", class_="lecture")
     variant_titles = [title.string.capitalize() for title in soup.find_all('h1')]
@@ -421,15 +421,15 @@ def json_to_rss(data):
     out.append(u'''</channel></rss>''')
     return u''.join(out)
 
-def get_office_for_day_api_rss(office, day, month, year):
+def get_office_for_day_api_rss(office, date):
     '''
     Get office from new API but return it as RSS so that we do not need to change the full stack at once
     '''
-    data = get_office_for_day_api(office, day, month, year)
+    data = get_office_for_day_api(office, date)
     return json_to_rss(data)
 
-def get_office_for_day_aelf_rss(office, day, month, year):
-    data = get_office_for_day_aelf_json(office, day, month, year)
+def get_office_for_day_aelf_rss(office, date):
+    data = get_office_for_day_aelf_json(office, date)
     return json_to_rss(data)
 
 ASSET_CACHE={}

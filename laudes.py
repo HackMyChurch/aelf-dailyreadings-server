@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from utils import get_asset
 from utils import get_item_by_title
 
-def postprocess(version, variant, data, day, month, year):
+def postprocess(version, variant, data, date):
     # Do not enable postprocessing for versions before 20, unless beta mode
     if variant != "beta" and version < 20:
         return data

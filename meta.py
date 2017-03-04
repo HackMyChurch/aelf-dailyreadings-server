@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 from utils import json_to_rss
 
-def postprocess(version, variant, data, day, month, year):
+def postprocess(version, variant, data, date):
     informations = data['informations']
     out = {
         'informations': informations,

@@ -8,7 +8,7 @@ from utils import json_to_rss, get_lectures_by_type, get_lecture_by_type, insert
 
 # FIXME: this will not work if the data dor not come from the API because of the different
 # key convention
-def postprocess(version, mode, data, day, month, year):
+def postprocess(version, mode, data, date):
     # Do not enable postprocessing for versions before 20, unless beta mode
     if mode != "beta" and version < 20:
         return data
@@ -21,7 +21,7 @@ def postprocess(version, mode, data, day, month, year):
     # Fix missing "Lecture"
     if lecture_item is None and repons_item is not None:
         # Grab lectures from the website, still json format
-        data_aelf = get_office_for_day_aelf_json("lectures", day, month, year)
+        data_aelf = get_office_for_day_aelf_json("lectures", date)
 
         # Attempt to get the lecture
         lecture_items = get_lectures_by_type(data_aelf, u"office_lecture")
@@ -41,7 +41,7 @@ def postprocess(version, mode, data, day, month, year):
             pass
 
     # Fix missing "Te Deum" on Sunday
-    if te_deum_item is None and oraison_item and datetime.date(year, month, day).isoweekday() == 7:
+    if te_deum_item is None and oraison_item and date.isoweekday() == 7:
         te_deum = get_asset('prayers/te-deum')
         te_deum_lecture = {
             'title':     te_deum['title'],
