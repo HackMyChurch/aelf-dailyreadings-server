@@ -12,6 +12,7 @@ from collections import OrderedDict, namedtuple
 AELF_JSON="https://api.aelf.org/v1/{office}/{year:04d}-{month:02d}-{day:02d}"
 AELF_RSS="https://rss.aelf.org/{day:02d}/{month:02d}/{year:02d}/{key}"
 AELF_SITE="http://www.aelf.org/{year:04d}-{month:02d}-{day:02d}/romain/{office}"
+EPITRE_CO_JSON="http://epitre.co/api/1.0/ref/fr-lit/{reference}"
 ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets")
 
 HEADERS={'User-Agent': 'AELF - Lectures du jour - API - cathogeek@epitre.co'}
@@ -55,6 +56,16 @@ def is_letter(data):
 PSALM_MATCH=re.compile('^[0-9]+(-[IV0-9]+)?$')
 def is_psalm_ref(data):
     return re.match(PSALM_MATCH, data.replace(' ', ''))
+
+def extract_title_reference(title):
+    title = title.strip(' \t\n\r')
+    chunks = title.split('(', 1)
+    title = chunks[0]
+    if len(chunks) < 2:
+        return title, ""
+
+    reference = chunks[1].rsplit(')', 1)[0]
+    return title, reference
 
 ID_TO_TITLE = {
     'benediction': u'Bénédiction',
@@ -102,6 +113,21 @@ def _do_get_request(url):
 
 def get_office_for_day_aelf(office, day, month, year):
     return _do_get_request(AELF_SITE.format(office=office, day=day, month=month, year=year)).text
+
+def get_lecture_text_from_epitre(reference):
+    reference.replace(' ', '')
+    if not reference:
+        return ""
+
+    r = _do_get_request(EPITRE_CO_JSON.format(reference=reference))
+    data = r.json().get('data', {})
+    out = []
+    multiple_chapters = ';' in reference
+    for verse in data.get('verse', []):
+        reference = '%s.%s' % (verse[0], verse[1]) if multiple_chapters else verse[1]
+        out.append('<font color="#FF0000" size="1">%s</font>%s' % (reference, verse[2]))
+
+    return '<br/>'.join(out)
 
 def get_office_for_day_api(office, day, month, year):
     '''
@@ -311,10 +337,12 @@ def get_office_for_day_aelf_json(office, day, month, year):
             if balise == LAST or balise.name == 'h4':
                 # Flush reading IF there is some content (title or text)
                 if l['title'].strip() or l['text'].strip():
+                    title, reference =  extract_title_reference(l['title'].strip(' \t\n\r'))
+                    text  =  l['text'].strip(' \t\n\r')
                     variant['lectures'].append({
-                        u'title':     l['title'],
-                        u'text':      l['text'],
-                        u'reference': u'', # TODO
+                        u'title':     title,
+                        u'text':      text,
+                        u'reference': reference,
                         u'key':       lecture_key,
                     })
 
