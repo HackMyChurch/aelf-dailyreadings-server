@@ -121,8 +121,8 @@ def get_status():
     except:
         return "Can not load mass", 500
 
-    if 'https://rss.aelf.org/messe' not in mass.data:
-        return "Does not look like mass\n"+mass.data, 500
+    if '<source>api</source>' not in mass.data:
+        return "Data is not comming from the main API:"+mass.data, 500
 
     # All good !
     return Response(json.dumps(int(time.time())), mimetype='application/json')
