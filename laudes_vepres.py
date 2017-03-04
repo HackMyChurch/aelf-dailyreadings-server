@@ -8,6 +8,9 @@ from utils import get_item_by_title
 from utils import get_lecture_by_type, insert_lecture_before, insert_lecture_after
 
 def postprocess(version, variant, data, date):
+    '''
+    Common postprocessing code for laudes and vepres. These are very similar offices
+    '''
     # Do not enable postprocessing for versions before 20, unless beta mode
     if variant != "beta" and version < 20:
         return data
@@ -33,7 +36,7 @@ def postprocess(version, variant, data, date):
         insert_lecture_before(data, notre_pere_lecture, oraison_item)
 
     # Append Benediction
-    benediction = get_asset('prayers/laudes-benediction')
+    benediction = get_asset('prayers/%s-benediction' % data['office'])
     benediction_lecture = {
         'title':     benediction['title'],
         'text':      benediction['body'],

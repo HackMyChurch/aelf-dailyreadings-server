@@ -9,8 +9,7 @@ import time
 import json
 import meta
 import messes
-import laudes
-import vepres
+import laudes_vepres
 import lectures
 import datetime
 from utils import get_office_for_day_api, get_office_for_day_aelf_json, AelfHttpError
@@ -46,10 +45,10 @@ OFFICES = {
         'postprocess': [],
     },
     "laudes": {
-        'postprocess': [laudes.postprocess],
+        'postprocess': [laudes_vepres.postprocess],
     },
     "vepres": {
-        'postprocess': [vepres.postprocess],
+        'postprocess': [laudes_vepres.postprocess],
     },
     "complies": {
         'postprocess': [],
