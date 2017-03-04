@@ -24,6 +24,10 @@ def postprocess_links(version, mode, data, day, month, year):
     if version < 29:
         return data
 
+    # Not applicable if there is a single mass
+    if len(data['variants']) < 2:
+        return data
+
     # PASS 1: detect + fix known to be broken cases
     if data['variants'][0]['lectures'][0]['key.orig'] == "entree_messianique":
         data['variants'][ 0]['name'] = u"Entrée messianique"
