@@ -293,7 +293,7 @@ def get_office_for_day_aelf_json(office, day, month, year):
             variant_name = variant_titles[variant_current]
 
         # Is it the last known variant or do we need to create a new one ?
-        if out['variants'] and out['variants'][-1]['name'] != variant_name:
+        if out['variants'] and out['variants'][-1]['name'] == variant_name:
             variant = out['variants'][-1]
         else:
             variant = {
