@@ -115,7 +115,7 @@ def get_office_for_day_aelf(office, date):
     return _do_get_request(AELF_SITE.format(office=office, day=date.day, month=date.month, year=date.year)).text
 
 def get_lecture_text_from_epitre(reference):
-    reference.replace(' ', '')
+    reference = reference.replace(' ', '')
     if not reference:
         return ""
 

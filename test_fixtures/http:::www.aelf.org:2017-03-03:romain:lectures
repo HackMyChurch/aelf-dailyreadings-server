@@ -1,0 +1,368 @@
+<!DOCTYPE HTML>
+<html lang="fr-FR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="Office des lectures du 3 mars 2017 pour la zone « Calendrier romain » sur le site de l'Association Épiscopale Liturgique pour les pays Francophones."/>
+        <meta name="keywords" content="AELF, liturgie, catholique, rite, romain, laudes, tierce, sexte, none, vêpres, complies, office des lectures, évangile, traduction française, messe, Noël, Pâques, Pentecôte, Toussaint, Vierge, saints, apôtres, martyrs"/>
+                <title>AELF > Office des lectures - 3 mars 2017</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+                <link href="/assets/adf2597.front.css" type="text/css" rel="stylesheet" media="screen" />
+        
+                    </head>
+    <body class="front_offices">
+                                            <div class="menu-secondary-mobile">
+                <ul>
+                    <li class="menu-aelf">
+                        <a href="/page/les-missions-de-laelf" class="" title="Accéder aux contenus de l'AELF">
+                            L'AELF
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/abonnement" title="Accéder à la page d'abonnement">
+                            S'abonner
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/calendrier/romain/2017/03" class="" title="Accéder au calendrier">Calendrier</a>
+                    </li>
+                    <li>
+                        <a href="/contact" class="" title="Accéder à la page de contact">Contact</a>
+                    </li>
+                </ul>
+                <button class="btn btn-default">
+                    <div class="span-img">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+            </div>
+            <header id="header_background">
+                <div class="container">
+                    <div id="header">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <a href="/" title="Accéder à la page d'accueil"><img src="/bundles/front/images/logo-aelf-2016.svg" alt="Logo de l'AELF" /></a>
+                                <h2>Association Épiscopale Liturgique<br class="only-desktop only-tablet"/> pour les pays Francophones</h2>
+                            </div>
+                            <div class="col-sm-5 text-right">
+                                <p class="light">Recevez gratuitement<br> les lectures du jour par courriel</p>
+                                <a href="/abonnement" class="btn btn-default btn-aelf" title="Accéder à la page d'abonnement">S'abonner</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <ul id="menu-mobile" class="clearfix">
+                <li>
+                    <a href="/2017-03-03/romain/messe" class="" title="Accéder aux messes">La messe</a>
+                </li>
+                <li>
+                    <a href="/2017-03-03/romain/lectures" class="active" title="Accéder à la liturgie des heures">Les heures</a>
+                </li>
+                <li>
+                    <a href="/bible" class="" title="Accéder à la Bible">La Bible</a>
+                </li>
+            </ul>
+
+            <div class="container" id="content">
+                <div class="row">
+                    <div class="col-sm-3 col-md-2">
+                        <div class="sidebar-nav" id="menu">
+                            <div class="navbar navbar-default" role="navigation">
+                                <ul class="nav navbar-nav" id="sidenav01">
+                                    <li><a href="/2017-03-03/romain/messe" class="" title="Accéder aux messes">La messe</a></li>
+                                    <li><a href="/2017-03-03/romain/lectures" class="active" title="Accéder aux heures">Les heures</a></li>
+                                    <li><a href="/bible" class="" title="Accéder à la Bible">La Bible</a></li>
+                                    <li id="menu-aelf">
+                                        <a href="/page/les-missions-de-laelf" class="" title="Accéder à la page AELF">
+                                            <div class="span-img">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            L'AELF
+                                        </a>
+                                    </li>
+                                    <li id="menu-calendrier"><a href="/calendrier/romain/2017/03" class="" title="Accéder au calendrier">Calendrier</a></li>
+                                    <li id="menu-contact"><a href="/contact" class="" title="Accéder à la page de contact">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                                                                                        <div class="col-sm-9 col-md-5">
+        <div class="block-summary" id="middle-col">
+                            <div class="heading-day">
+                        <h4 class="date">3 mars 2017</h4>
+    <p class="m-b-0">
+                                            <span class="span-color color-violet" title="Couleur liturgique : violet"></span>
+                        <strong>Vendredi,  — </strong><br />
+                                        Vendredi après les cendres<br />
+                    </p>
+                                            <a href="/2017-03-05/romain/messe" class="btn btn-default btn-aelf btn-red m-t-10">Dimanche prochain</a>
+                                        <div class="aelf-date-picker m-t-10">
+                        <div id="myDatePicker"></div>
+                        <a href="#" class="btn btn-default btn-aelf myDatePicker" id="myDatePickerButton">Autres dates</a>
+                    </div>
+                    <div class="dropdown m-t-10">
+                        <a href="#" class="dropdown-toggle" id="drop6" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Calendrier romain <span class="bold">|</span> <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> </a>
+                        <ul class="dropdown-menu" id="menu3" aria-labelledby="drop6">
+                                                                                                <li><a href="/2017-03-03/afrique/lectures">Afrique du Nord</a></li>
+                                                                                                                                <li><a href="/2017-03-03/belgique/lectures">Belgique</a></li>
+                                                                                                                                <li><a href="/2017-03-03/canada/lectures">Canada</a></li>
+                                                                                                                                <li><a href="/2017-03-03/france/lectures">France</a></li>
+                                                                                                                                <li><a href="/2017-03-03/luxembourg/lectures">Luxembourg</a></li>
+                                                                                                                                                                                            <li><a href="/2017-03-03/suisse/lectures">Suisse</a></li>
+                                                                                    </ul>
+                    </div>
+                    <div class="block-buttons-navigation only-tablet m-t-10">
+                                                    <a href="/2017-03-02/romain/lectures" title="Accéder aux offices de la veille" class="btn btn-default btn-aelf" style="margin-right: 3px;"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>&nbsp;veille</a>
+                                                                            <a href="/2017-03-04/romain/lectures" title="Accéder aux offices du lendemain" class="btn btn-default btn-aelf">lendemain&nbsp;<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
+                                            </div>
+                </div>
+                <div class="heading-day-mobile">
+                    <div class="aelf-date-picker">
+                        <div id="myDatePickerMobile"></div>
+                        <a href="#" class="btn btn-default btn-aelf myDatePicker" id="myDatePickerButtonMobile"><div class="pull-right"><span class="bold">|</span> <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></div><span class="light">Le</span> 3 mars 2017</a>
+                    </div>
+                    <div class="dropdown hours-dropdown">
+                        <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><div class="pull-right"><span class="bold">|</span> <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></div>Office des lectures</button>
+                        <ul class="dropdown-menu" aria-labelledby="dLabel">
+                            <li>
+                                <a href="/2017-03-03/romain/lectures" title="Accéder à l'office des lectures">Lectures</a>
+                            </li>
+                            <li>
+                                <a href="/2017-03-03/romain/laudes" title="Accéder à l'office des laudes">Laudes</a>
+                            </li>
+                            <li>
+                                <a href="/2017-03-03/romain/tierce" title="Accéder à l'office de tierce">Tierce</a>
+                            </li>
+                            <li>
+                                <a href="/2017-03-03/romain/sexte" title="Accéder à l'office de sexte">Sexte</a>
+                            </li>
+                            <li>
+                                <a href="/2017-03-03/romain/none" title="Accéder à l'office de none">None</a>
+                            </li>
+                            <li>
+                                <a href="/2017-03-03/romain/vepres" title="Accéder à l'office des vêpres">Vêpres</a>
+                            </li>
+                            <li>
+                                <a href="/2017-03-03/romain/complies" title="Accéder à l'office des complies">Complies</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                        <ul class="hours-menu">
+                <li>                        <span>Lectures</span>
+                                    </li>
+                <li>                        <a href="/2017-03-03/romain/laudes" title="Accéder à l'office des laudes">Laudes</a>
+                                    </li>
+                <li>                        <a href="/2017-03-03/romain/tierce" title="Accéder à l'office de tierce">Tierce</a>
+                                    </li>
+                <li>                        <a href="/2017-03-03/romain/sexte" title="Accéder à l'office de sexte">Sexte</a>
+                                    </li>
+                <li>                        <a href="/2017-03-03/romain/none" title="Accéder à l'office de none">None</a>
+                                    </li>
+                <li>                        <a href="/2017-03-03/romain/vepres" title="Accéder à l'office des vêpres">Vêpres</a>
+                                    </li>
+                <li>                        <a href="/2017-03-03/romain/complies" title="Accéder à l'office des complies">Complies</a>
+                                    </li>
+            </ul>
+                            
+    <ul class="blocks readings hours">
+        <li>
+            <a class="lecture_link clearfix" href="#office_introduction" title="Accéder à la lecture">
+                <span class="subhead single-line">Introduction</span>
+                <span class="title"><p>V/ Dieu, viens à mon aide,
+        <br />R/ Seigneur, à notre secours.</p>...</span>
+            </a>
+        </li>
+                    <li>
+                <a class="lecture_link clearfix" href="#office_hymne" title="Accéder à la lecture">
+                    <span class="subhead single-line">Hymne</span>
+                    <span class="title">Venez au jour !</span>
+                </a>
+            </li>
+                            <li>
+                <a class="lecture_link clearfix" href="#office_psaume1" title="Accéder à la lecture">
+                    <span class="subhead single-line">Psaume</span>
+                    <span class="title">77 - I — Dieu nous a pardonnés dans le Christ : à notre tour, débordons de miséricorde.</span>
+                </a>
+            </li>
+                            <li>
+                <a class="lecture_link clearfix" href="#office_psaume2" title="Accéder à la lecture">
+                    <span class="subhead single-line">Psaume</span>
+                    <span class="title">77 - II  </span>
+                </a>
+            </li>
+                            <li>
+                <a class="lecture_link clearfix" href="#office_psaume3" title="Accéder à la lecture">
+                    <span class="subhead single-line">Psaume</span>
+                    <span class="title">77 - III  </span>
+                </a>
+            </li>
+                <li>
+            <a class="lecture_link clearfix" href="#office_lecture" title="Accéder à la lecture">
+                <span class="subhead single-line">Lecture</span>
+                <span class="title">Moïse, le défenseur des Hébreux persécutés</span>
+            </a>
+        </li>
+        <li>
+            <a class="lecture_link clearfix" href="#office_lecture_patristique" title="Accéder à la lecture">
+                <span class="subhead">Lecture patristique</span>
+                <span class="title">Homélie du Vème siècle </span>
+            </a>
+        </li>
+        <li>
+            <a class="lecture_link clearfix" href="#office_conclusion" title="Accéder à la lecture">
+                <span class="subhead single-line">Conclusion</span>
+                <span class="title">Que ta bienveillance nous accompagne, Seigneur, durant ces jours de privation, pour que la discipline imposée...</span>
+            </a>
+        </li>
+    </ul>                    </div>
+        <div class="block-buttons-navigation pull-right">
+                            <a href="/2017-03-02/romain/lectures" title="Accéder aux offices de la veille" class="btn btn-default btn-aelf"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>&nbsp;veille</a>
+                                        <a href="/2017-03-04/romain/lectures" title="Accéder aux offices du lendemain" class="btn btn-default btn-aelf">lendemain&nbsp;<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a>
+                    </div>
+            </div>
+    <div class="col-sm-9 col-md-5 container-reading">
+        <div class="container-toolbar">
+            <div class="toolbar"></div>
+        </div>
+        <div class="block-single-reading" id="right-col">
+            <h1>Office des lectures</h1>
+                            
+<div class="lecture" id="office_introduction">
+    <h4>Introduction</h4>
+    <p>V/ Dieu, viens à mon aide,
+        <br />R/ Seigneur, à notre secours.</p>
+        <p>Gloire au Père, et au Fils et au Saint-Esprit,
+        <br/>au Dieu qui est, qui était et qui vient,
+        <br/>pour les siècles des siècles.
+        <br/>Amen. (Alléluia.)</p>
+</div>
+
+    
+<div class="lecture" id="office_hymne">
+    <h4>Hymne : Venez au jour !</h4>
+    <p><small>La Tour du Pin — CNPL</small></p>
+    Venez au jour !<br>Le Christ prépare son retour !<br>Le Christ prévient l’ère nuptiale !<br>Passent les temps ! Passe la chair !<br>L’Esprit de Dieu souffle au désert,<br>Annonçant l’aurore pascale ! <br><br>Dépouillez-vous ! <br>Quand vous mourrez, vous perdrez tout ! <br>Suivez votre exode à l’avance ! <br>Tombe la mort ! Tombe le soir ! <br>N’attendez pas qu’il soit trop tard <br>Pour que Dieu vous donne naissance. <br><br>Ne craignez pas<br>De vous défaire, il recréera<br>Ce que vous cédez de vous-mêmes ;<br>Fermez les yeux ! Baissez vos fronts !<br>Venez mendier sa création<br>Au fond des ténèbres humaines. <br><br>Ne glissez plus<br>Sur votre pente à l’inconnu,<br>Car ici commence un autre âge ;<br>Retournez-vous ! Apprenez Dieu !<br>Il a promis son règne à ceux<br>Qui emprunteront ses passages ! <br><br>Le jour viendra<br>Où le désert refleurira<br>Et l’ombre rendra la lumière !<br>Traversez-les ! Dès maintenant,<br>Allez chercher au testament<br>Ce qui n’est pas né de la terre !<br>
+</div>
+    <div class="lecture" id="office_psaume1">
+                    <h4>Antienne</h4>
+            Dieu nous a pardonnés dans le Christ : à notre tour, débordons de miséricorde.
+        
+        <h4>Psaume : 77 - I</h4>
+        <font color="#FF0000" size="1">1</font>Écoute ma l<u>o</u>i, ô mon peuple,<br>tends l’oreille aux par<u>o</u>les de ma bouche.<br><font color="#FF0000" size="1">2</font>J’ouvrirai la bouche pour une p<u>a</u>rabole,<br>je publierai ce qui fut cach<u>é</u> dès l’origine.<br><font color="#FF0000" size="1">3</font>Nous avons entend<u>u</u> et nous savons<br>ce que nos pères nous <u>o</u>nt raconté ;<br><font color="#FF0000" size="1">4</font>nous le redirons à l’<u>â</u>ge qui vient,<br>sans rien cach<u>e</u>r à nos descendants :<br>les titres de gl<u>o</u>ire du Seigneur,<br>sa puissance et les merv<u>e</u>illes qu’il a faites.<br><font color="#FF0000" size="1">5</font>Il fixa une r<u>è</u>gle en Jacob,<br>il établit en Isra<u>ë</u>l une loi,<br>loi qui ordonn<u>a</u>it à nos pères<br>d’enseigner ces ch<u>o</u>ses à leur fils, <br><font color="#FF0000" size="1">6</font>pour que l’âge suiv<u>a</u>nt les connaisse,<br>et leur descend<u>a</u>nce à venir.<br>Qu’ils se lèvent et les rac<u>o</u>ntent à leurs fils<br><font color="#FF0000" size="1">7</font>pour qu’ils placent en Die<u>u</u> leur espoir<br>et n’oublient pas les expl<u>o</u>its du Seigneur<br>mais obs<u>e</u>rvent ses commandements.<br><font color="#FF0000" size="1">8</font>Qu’ils ne soient pas, c<u>o</u>mme leurs pères,<br>une génération indoc<u>i</u>le et rebelle,<br>génération de cœ<u>u</u>rs inconstants<br>et d’esprits infid<u>è</u>les à Dieu.<br> <br><font color="#FF0000" size="1">9</font>Les fils d’Éphra<u>ï</u>m, archers d’élite,<br>se sont enfuis, le jo<u>u</u>r du combat :<br><font color="#FF0000" size="1">10</font>ils n’ont pas gardé l’alli<u>a</u>nce de Dieu,<br>ils refusaient de su<u>i</u>vre sa loi ;<br><font color="#FF0000" size="1">11</font>ils avaient oubli<u>é</u> ses exploits,<br>les merveilles dont ils f<u>u</u>rent les témoins.<br><font color="#FF0000" size="1">12</font>Devant leurs pères il accompl<u>i</u>t un miracle<br>en Égypte, au pa<u>y</u>s de Tanis :<br><font color="#FF0000" size="1">13</font>il fend la mer, il les f<u>a</u>it passer,<br>dressant les ea<u>u</u>x comme une digue ;<br><font color="#FF0000" size="1">14</font>le jour, il les condu<u>i</u>t par la nuée,<br>et la nuit, par la lumi<u>è</u>re d’un feu.<br><font color="#FF0000" size="1">15</font>Il fend le roch<u>e</u>r du désert,<br>les désaltère aux ea<u>u</u>x profondes ;<br><font color="#FF0000" size="1">16</font>de la roche, il t<u>i</u>re des ruisseaux<br>qu’il fait déval<u>e</u>r comme un fleuve.<br>
+    </div>
+
+    <div class="lecture" id="office_psaume2">
+        
+        <h4>Psaume : 77 - II</h4>
+        <font color="#FF0000" size="1">17</font>Mais ils péchaient enc<u>o</u>re contre lui,<br>dans les lieux arides ils brav<u>a</u>ient le Très-Haut ;<br><font color="#FF0000" size="1">18</font>ils tentaient le Seigne<u>u</u>r dans leurs cœurs,<br>ils réclamèrent de mang<u>e</u>r à leur faim.<br><font color="#FF0000" size="1">19</font>Ils s’en prennent à Die<u>u</u> et demandent :<br>« Dieu peut-il apprêter une t<u>a</u>ble au désert ?<br><font color="#FF0000" size="1">20</font>Sans doute, il a frapp<u>é</u> le rocher :<br>l’eau a jailli, elle co<u>u</u>le à flots !<br>Mais pourra-t-il nous donn<u>e</u>r du pain<br>et procurer de la vi<u>a</u>nde à son peuple ? »<br><font color="#FF0000" size="1">21</font>Alors le Seigneur entendit et s’emporta,<br>il s’enflamma de fure<u>u</u>r contre Jacob, *<br>sa colère mont<u>a</u> contre Israël,<br><font color="#FF0000" size="1">22</font>car ils n’avaient pas f<u>o</u>i en Dieu,<br>ils ne croyaient p<u>a</u>s qu’il les sauverait.<br><font color="#FF0000" size="1">23</font>Il commande aux nu<u>é</u>es là-haut,<br>il ouvre les écl<u>u</u>ses du ciel :<br><font color="#FF0000" size="1">24</font>pour les nourrir il fait pleuv<u>o</u>ir la manne,<br>il leur donne le from<u>e</u>nt du ciel ;<br><font color="#FF0000" size="1">25</font>chacun se nourr<u>i</u>t du pain des Forts,*<br>il les pourvoit de v<u>i</u>vres à satiété.<br><font color="#FF0000" size="1">26</font>Dans le ciel, il po<u>u</u>sse le vent d’est<br>et lance le grand v<u>e</u>nt du midi.<br><font color="#FF0000" size="1">27</font>Sur eux il fait pleuvoir une nu<u>é</u>e d’oiseaux,<br>autant de viande que de s<u>a</u>ble au bord des mers.<br><font color="#FF0000" size="1">28</font>Elle s’abat au milie<u>u</u> de leur camp<br>tout auto<u>u</u>r de leurs demeures.<br><font color="#FF0000" size="1">29</font>Ils mangent, ils s<u>o</u>nt rassasiés,<br>Dieu content<u>a</u>it leur envie.<br><font color="#FF0000" size="1">30</font>Mais leur envie n’était pas satisfaite,<br>ils avaient enc<u>o</u>re la bouche pleine, *<br><font color="#FF0000" size="1">31</font>quand s’éleva la col<u>è</u>re de Dieu :<br>il frappe les plus vaill<u>a</u>nts d’entre eux<br>et terrasse la jeun<u>e</u>sse d’Israël.<br>
+    </div>
+
+    <div class="lecture" id="office_psaume3">
+        
+        <h4>Psaume : 77 - III</h4>
+        <font color="#FF0000" size="1">32</font>Et pourtant ils péch<u>a</u>ient encore,<br>ils n’avaient pas f<u>o</u>i en ses merveilles.<br><font color="#FF0000" size="1">33</font>D’un souffle il ach<u>è</u>ve leurs jours,<br>et leurs ann<u>é</u>es en un moment.<br><font color="#FF0000" size="1">34</font>Quand Dieu les frapp<u>a</u>it, ils le cherchaient,<br>ils revenaient et se tourn<u>a</u>ient vers lui :<br><font color="#FF0000" size="1">35</font>ils se souvenaient que Die<u>u</u> est leur rocher,<br>et le Dieu Très-Ha<u>u</u>t, leur rédempteur.<br><font color="#FF0000" size="1">36</font>Mais de leur bo<u>u</u>che ils le trompaient,<br>de leur l<u>a</u>ngue ils lui mentaient.<br><font color="#FF0000" size="1">37</font>Leur cœur n’était pas const<u>a</u>nt envers lui ;<br>ils n’étaient pas fid<u>è</u>les à son alliance.<br><font color="#FF0000" size="1">38</font>Et lui, m<u>i</u>séricordieux,<br>au lieu de détru<u>i</u>re, il pardonnait ;<br>maintes fois, il ret<u>i</u>nt sa colère<br>au lieu de réveill<u>e</u>r sa violence.<br><font color="#FF0000" size="1">39</font>Il se rappelait : ils ne s<u>o</u>nt que chair,<br>un souffle qui s’en v<u>a</u> sans retour.<br><font color="#FF0000" size="1">40</font>Que de fois au dés<u>e</u>rt ils l’ont bravé,<br>offensé d<u>a</u>ns les solitudes !<br><font color="#FF0000" size="1">41</font>De nouveau ils t<u>e</u>ntaient Dieu, <br>ils attristaient le S<u>a</u>int d’Israël.<br><font color="#FF0000" size="1">42</font>Ils avaient oubli<u>é</u> ce jour<br>où sa main les sauv<u>a</u> de l’adversaire.<br><br>
+    </div>
+
+<div class="lecture" id="office_lecture">
+    <h4>Verset</h4>
+    V/ Revenons au Seigneur, notre Dieu,<br />car il est tendre et mis&eacute;ricordieux.
+
+    <h4>Lecture : Moïse, le défenseur des Hébreux persécutés (Exode 2, 1 - 22)</h4>
+    
+
+    <h4>Répons</h4>
+    <br /><br />R/ Qui est vainqueur du monde, <br />sinon celui qui croit?<br /><br />Par la foi, <br />Moïse choisit d'être maltraité avec son peuple <br />plutôt que de jouir pour un temps du péché. <br /><br />Par la foi, <br />Moïse considéra l'humiliation du Christ <br />comme un trésor plus grand <br />que les richesses d'Égypte.
+</div>
+
+<div class="lecture" id="office_lecture_patristique">
+    <h4>Homélie du Vème siècle </h4>
+    <p><strong>La prière est la lumière de l'âme<br /><br /></strong>Le bien suprême, c'est la prière, l'entretien familier avec Dieu. Elle est communication avec Dieu et union avec lui. De même que les yeux du corps sont éclairés quand ils voient la lumière, ainsi l'âme tendue vers Dieu est illuminée par son inexprimable lumière. La prière n'est donc pas l'effet d'une attitude extérieure, mais elle vient du cœur. Elle ne se limite pas à des heures ou à des moments déterminés, mais elle déploie son activité sans relâche, nuit et jour.<br /><br />En effet, il ne convient pas seulement que la pensée se porte rapidement vers Dieu lorsqu'elle s'applique à la prière ; il faut aussi, même lorsqu'elle est absorbée par d'autres occupations — comme le soin des pauvres ou d'autres soucis de bienfaisance —, y mêler le désir et le souvenir de Dieu, afin que tout demeure comme une nourriture très savoureuse, assaisonnée par l'amour de Dieu, à offrir au Seigneur de l'univers. Et nous pouvons en retirer un grand avantage, tout au long de notre vie, si nous y consacrons une bonne part de notre temps.<br /><br />La prière est la lumière de l'âme, la vraie connaissance de Dieu, la médiatrice entre Dieu et les hommes.<br /><br />Par elle, l'âme s'élève vers le ciel, et embrasse Dieu dans une étreinte inexprimable ; assoiffée du lait divin, comme un nourrisson, elle crie avec larmes vers sa mère. Elle exprime ses volontés profondes et elle reçoit des présents qui dépassent toute la nature visible.<br /><br />Car la prière se présente comme une puissante ambassadrice, elle réjouit, elle apaise l'âme.<br /><br />Lorsque je parle de prière, ne t'imagine pas qu'il s'agisse de paroles. Elle est un élan vers Dieu, un amour indicible qui ne vient pas des hommes et dont l'Apôtre parle ainsi : <em>Nous ne savons pas prier comme il faut, mais l'Esprit lui-même intervient pour nous par des cris inexprimables</em>.<br /><br />Une telle prière, si Dieu en fait la grâce à quelqu'un, est pour lui une richesse inaliénable, un aliment céleste qui rassasie l'âme. Celui qui l'a goûté est saisi pour le Seigneur d'un désir éternel, comme d'un feu dévorant qui embrase son cœur.<br /><br />Lorsque tu la pratiques dans sa pureté originelle, orne ta maison de douceur et d'humilité, illumine-la par la justice ; orne-la de bonnes actions comme d'un revêtement précieux ; décore ta maison, au lieu de pierres de taille et de mosaïques, par la foi et la patience. Au-dessus de tout cela, place la prière au sommet de l'édifice pour porter ta maison à son achèvement. Ainsi tu te prépareras pour le Seigneur comme une demeure parfaite. Tu pourras l'y accueillir comme dans un palais royal et resplendissant, toi qui, par la grâce, le possèdes déjà dans le temple de ton âme.</p>
+    <p><br /><br />Long cri vers Dieu dans la détresse,                   Stance<br />mains levées, cœur ouvert, <br />remise totale au Père, <br />force de la faiblesse, <br />Jésus, notre prière, <br />ouvre-nous le chemin vers le Père.<br /><br />R/ Ouvre-nous le chemin vers le Père. <br /><br />Toi qui as dit : <br />« Demandez et vous recevrez »,<br /><br />Toi qui as dit :<br />« Celui qui cherche trouve »,<br /><br />Toi qui as dit : <br />« À celui qui frappe on ouvrira »,<br /><br />Toi qui as dit :<br />« Demandez l'Esprit, il vous sera donné »,</p>
+</div>
+
+<div class="lecture" id="office_conclusion">
+    
+    <h4>Oraison</h4>
+    Que ta bienveillance nous accompagne, Seigneur, durant ces jours de privation, pour que la discipline imposée à nos corps soit vraiment pratiquée avec amour.
+
+    </div>                    </div>
+    </div>
+                </div>
+            </div>
+        
+<!--
+        <footer id="footer" class="footer">
+            <div class="container">
+                <p class="text-center">© 2017 Association Épiscopale Liturgique pour les pays Francophones — <a href="/page/mentions-legales" title="Accéder aux mentions légales">Mentions légales</a> — <a href="https://twitter.com/aelf_officiel" title="Accéder au fil Twitter de l'AELF" target="_blank"><i class="fa fa-twitter"></i> Twitter</a> —  Réalisé par <a target="_blank" title="Cliquer-ici pour accéder au site de Spyrit" href="http://www.spyrit.net/" title="Accéder au site de SPYRIT">Spyrit</a>.</p>
+            </div>
+        </footer>
+-->
+
+                <script type="text/javascript" src="/assets/c503ab9.front.js"></script>
+        
+            <script type="text/javascript">
+    $(document).ready(function() {
+        $('#myDatePickerButton').click(function() {
+            if (!$('#myDatePicker').hasClass('hasDatepicker')) {
+                $('#myDatePicker').datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    defaultDate: new Date(2017, 3 - 1, 3),
+                    duration: 'fast',
+                    maxDate: new Date(2017, 5 - 1, 7),
+                    minDate: new Date(2016, 1 - 1, 2),
+                    onSelect: function(dateText) {
+                        window.location = '/2001-01-01/romain/lectures'.replace('2001-01-01', dateText);
+                    },
+                }).datepicker('show');
+                return;
+            }
+            if ($('#myDatePicker').is(':visible')) {
+                $('#myDatePicker').hide().datepicker('hide');
+            } else {
+                $('#myDatePicker').show().datepicker('show');
+            }
+        });
+
+
+        if($(window).width() < 768)
+        {
+            $('#myDatePickerButtonMobile').click(function() {
+                if (!$('#myDatePickerMobile').hasClass('hasDatepicker')) {
+                    $('#myDatePickerMobile').datepicker({
+                        dateFormat: 'yy-mm-dd',
+                        defaultDate: new Date(2017, 3 - 1, 3),
+                        duration: 'fast',
+                        maxDate: new Date(2017, 5 - 1, 7),
+                        minDate: new Date(2016, 1 - 1, 2),
+                        onSelect: function(dateText) {
+                            window.location = '/2001-01-01/romain/lectures'.replace('2001-01-01', dateText);
+                        },
+                    }).datepicker('show');
+                    return;
+                }
+                if ($('#myDatePickerMobile').is(':visible')) {
+                    $('#myDatePickerMobile').hide().datepicker('hide');
+                } else {
+                    $('#myDatePickerMobile').show().datepicker('show');
+                }
+            });
+        }
+    });
+</script>
+                    <script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+              ga('create', 'UA-6492186-1', 'auto');
+              ga('send', 'pageview');
+            </script>
+            </body>
+</html>
