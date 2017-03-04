@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-from bs4 import BeautifulSoup
 from utils import json_to_rss
 
 def postprocess(version, variant, data, date):
@@ -23,5 +22,5 @@ def postprocess(version, variant, data, date):
         ]
     }
 
-    return json_to_rss(out)
+    return out
 

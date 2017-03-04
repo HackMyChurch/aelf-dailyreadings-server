@@ -10,7 +10,6 @@ from xml.sax.saxutils import escape
 from collections import OrderedDict, namedtuple
 
 AELF_JSON="https://api.aelf.org/v1/{office}/{year:04d}-{month:02d}-{day:02d}"
-AELF_RSS="https://rss.aelf.org/{day:02d}/{month:02d}/{year:02d}/{key}"
 AELF_SITE="http://www.aelf.org/{year:04d}-{month:02d}-{day:02d}/romain/{office}"
 EPITRE_CO_JSON="http://epitre.co/api/1.0/ref/fr-lit/{reference}"
 ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "assets")
@@ -281,9 +280,9 @@ def get_office_for_day_api(office, date):
 LAST = object()
 def get_office_for_day_aelf_json(office, date):
     '''
-    AELF has a strog tradition of being broken in creative ways. This method is yet another
-    fallback on top of their unreliable RSS. It works by scrapping the web version which,
-    hopefuly has a better SLA, and reformat it using the same format as ``get_office_for_day_api``
+    This is an alternative method to the API to get the offices. It works by scrapping
+    the website and returning the same internal format as the API.
+    This method is also used as a fallback in case a lecture or full office is missing
     '''
     data = get_office_for_day_aelf(office, date)
     soup = BeautifulSoup(data, 'html5lib')
@@ -421,17 +420,6 @@ def json_to_rss(data):
     out.append(u'''</channel></rss>''')
     return u''.join(out)
 
-def get_office_for_day_api_rss(office, date):
-    '''
-    Get office from new API but return it as RSS so that we do not need to change the full stack at once
-    '''
-    data = get_office_for_day_api(office, date)
-    return json_to_rss(data)
-
-def get_office_for_day_aelf_rss(office, date):
-    data = get_office_for_day_aelf_json(office, date)
-    return json_to_rss(data)
-
 ASSET_CACHE={}
 def get_asset(path):
     # Fixme: Quick n Dirty security
@@ -518,6 +506,12 @@ def insert_lecture_before(data, lecture, before):
     Insert raw ``lecture`` dict before ``before`` LecturePosition object
     '''
     data['variants'][before.variantIdx]['lectures'].insert(before.lectureIdx, lecture)
+
+def insert_lecture_after(data, lecture, after):
+    '''
+    Insert raw ``lecture`` dict after ``after`` LecturePosition object
+    '''
+    data['variants'][after.variantIdx]['lectures'].insert(after.lectureIdx+1, lecture)
 
 def _filter_fete(fete):
     '''fete can be proceesed from 2 places. Share common filtering code'''

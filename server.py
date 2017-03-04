@@ -13,15 +13,15 @@ import laudes
 import vepres
 import lectures
 import datetime
-from utils import get_office_for_day_api, get_office_for_day_api_rss, get_office_for_day_aelf_rss, get_office_for_day_aelf_json, AelfHttpError
+from utils import get_office_for_day_api, get_office_for_day_aelf_json, AelfHttpError
+from utils import json_to_rss
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 28
 
 # List of APIs engines + fallback path
 APIS = {
-    'json_rss' : [get_office_for_day_api_rss, get_office_for_day_aelf_rss],
-    'json':      [get_office_for_day_api,     get_office_for_day_aelf_json],
+    'json':      [get_office_for_day_api, get_office_for_day_aelf_json],
     'json_only': [get_office_for_day_api],
 }
 
@@ -35,35 +35,27 @@ OFFICES = {
     },
     "lectures": {
         'postprocess': [lectures.postprocess],
-        'api': 'json',
     },
     "tierce": {
         'postprocess': [],
-        'api': 'json_rss',
     },
     "sexte": {
         'postprocess': [],
-        'api': 'json_rss',
     },
     "none": {
         'postprocess': [],
-        'api': 'json_rss',
     },
     "laudes": {
         'postprocess': [laudes.postprocess],
-        'api': 'json_rss',
     },
     "vepres": {
         'postprocess': [vepres.postprocess],
-        'api': 'json_rss',
     },
     "complies": {
         'postprocess': [],
-        'api': 'json_rss',
     },
     "messes": {
         'postprocess': [messes.postprocess],
-        'api': 'json',
     },
 }
 
@@ -172,14 +164,13 @@ def do_get_office(version, office, date):
         return return_error(last_http_error.status, last_http_error.message)
 
     # Apply office specific postprocessor
-    # Input format is as configured. MUST output rss
-    # TODO: migrate to json
     mode = "beta" if request.args.get('beta', 0) else "prod"
     for postprocessor in OFFICES[office]['postprocess']:
         data = postprocessor(version, mode, data, date)
 
     # Return
-    return Response(data, mimetype='application/rss+xml')
+    rss = json_to_rss(data)
+    return Response(rss, mimetype='application/rss+xml')
 
 #
 # Legacy API (keep compatible in case fallback is needed)

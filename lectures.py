@@ -4,7 +4,7 @@ import re
 import datetime
 
 from utils import get_asset, get_office_for_day_aelf_json, get_lecture_text_from_epitre
-from utils import json_to_rss, get_lectures_by_type, get_lecture_by_type, insert_lecture_before
+from utils import get_lectures_by_type, get_lecture_by_type, insert_lecture_before
 
 # FIXME: this will not work if the data dor not come from the API because of the different
 # key convention
@@ -56,5 +56,5 @@ def postprocess(version, mode, data, date):
         oraison_item.lecture['title'] = "Oraison"
 
     # All done
-    return json_to_rss(data)
+    return data
 

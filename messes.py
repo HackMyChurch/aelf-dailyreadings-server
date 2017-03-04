@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from utils import json_to_rss, fix_case, AELF_SITE
+from utils import fix_case, AELF_SITE
 
 def postprocess_keys(version, mode, data, date):
     '''
@@ -65,5 +65,5 @@ def postprocess(version, mode, data, date):
     postprocess_keys (version, mode, data, date)
     postprocess_links(version, mode, data, date)
 
-    return json_to_rss(data)
+    return data
 
