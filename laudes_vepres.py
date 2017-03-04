@@ -7,7 +7,7 @@ from utils import get_asset
 from utils import get_item_by_title
 from utils import get_lecture_by_type, insert_lecture_before, insert_lecture_after
 
-def postprocess(version, variant, data, date):
+def postprocess(version, variant, data):
     '''
     Common postprocessing code for laudes and vepres. These are very similar offices
     '''

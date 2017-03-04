@@ -143,7 +143,7 @@ def get_office_for_day_api(office, date):
         u'variants': [],
         u'source': 'api',
         u'office': office,
-        u'date': date.isoformat(),
+        u'date': date,
     }
 
     # 'information' office has no reading
@@ -302,7 +302,7 @@ def get_office_for_day_aelf_json(office, date):
         u'variants': [],
         u'source': 'website',
         u'office': office,
-        u'date': date.isoformat(),
+        u'date': date,
     }
 
     for lecture in lectures:

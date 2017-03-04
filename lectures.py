@@ -8,11 +8,12 @@ from utils import get_lectures_by_type, get_lecture_by_type, insert_lecture_befo
 
 # FIXME: this will not work if the data dor not come from the API because of the different
 # key convention
-def postprocess(version, mode, data, date):
+def postprocess(version, mode, data):
     # Do not enable postprocessing for versions before 20, unless beta mode
     if mode != "beta" and version < 20:
         return data
 
+    date = data['date']
     te_deum_item = get_lecture_by_type(data, u"te_deum")
     lecture_item = get_lecture_by_type(data, u"lecture")
     repons_item  = get_lecture_by_type(data, u"repons_lecture")

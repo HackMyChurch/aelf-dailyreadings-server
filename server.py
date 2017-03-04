@@ -165,7 +165,7 @@ def do_get_office(version, office, date):
     # Apply office specific postprocessor
     mode = "beta" if request.args.get('beta', 0) else "prod"
     for postprocessor in OFFICES[office]['postprocess']:
-        data = postprocessor(version, mode, data, date)
+        data = postprocessor(version, mode, data)
 
     # Return
     rss = json_to_rss(data)

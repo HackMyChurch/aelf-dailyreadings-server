@@ -3,7 +3,7 @@
 import re
 from utils import fix_case, AELF_SITE
 
-def postprocess_keys(version, mode, data, date):
+def postprocess_keys(version, mode, data):
     '''
     Rewrite keys to match AELF's website convention
     '''
@@ -47,6 +47,7 @@ def postprocess_links(version, mode, data, date):
 
     # GENERATE the title slide
     links = ""
+    date = data['date']
     base_link = AELF_SITE.format(year=date.year, month=date.month, day=date.day, office='messe')
     for variant_counter, variant in enumerate(variant_data):
         links += '<a href="%s#%s" class="variant-%s">%s</a>' % (base_link, variant['key'], variant_counter, variant['name'])
@@ -61,9 +62,9 @@ def postprocess_links(version, mode, data, date):
             'key':       'navigation',
         })
 
-def postprocess(version, mode, data, date):
-    postprocess_keys (version, mode, data, date)
-    postprocess_links(version, mode, data, date)
+def postprocess(version, mode, data):
+    postprocess_keys (version, mode, data)
+    postprocess_links(version, mode, data)
 
     return data
 
