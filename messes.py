@@ -16,7 +16,7 @@ def postprocess_keys(version, mode, data):
             lecture['key.orig'] = lecture['key']
             lecture['key'] = "messe%s_lecture%s" % (messe_counter, lecture_counter)
 
-def postprocess_links(version, mode, data, date):
+def postprocess_links(version, mode, data):
     '''
     Generate a link page on compatible versions
     '''
