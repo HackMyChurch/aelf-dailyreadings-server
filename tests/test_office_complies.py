@@ -29,3 +29,21 @@ class TestOfficeComplies(TestBase):
             items[-3][1]
         )
 
+        # Validate: no alléluia
+        self.assertEqual(u"Introduction", items[0][0])
+        self.assertIn(u'alléluia',        items[0][1].lower())
+
+    @mock.patch('utils.requests.Session.get')
+    def test_no_alleluia_careme(self, m_get):
+        m_get.side_effect = self.m_get
+
+        # Get vepres, make sure we have the Notre Pere
+        resp = self.app.get('/28/office/complies/2017-03-05')
+        self.assertEqual(200, resp.status_code)
+        items = self.parseItems(resp.data)
+
+        # Validate: no alléluia
+        self.assertEqual(12, len(items))
+        self.assertEqual(u"Introduction", items[0][0])
+        self.assertNotIn(u'alléluia',     items[0][1].lower())
+

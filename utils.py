@@ -664,6 +664,16 @@ def lectures_common_cleanup(data):
     return data
 
 # TODO: move me to a common postprocessor file
+def postprocess_office_careme(version, mode, data):
+    '''
+    Remove "Alleluia" from introduction slide if the periode is careme
+    '''
+    if data['informations'].get('temps_liturgique', '') != 'careme':
+        return
+
+    introduction_item = get_lecture_by_type(data, u"introduction")
+    introduction_item.lecture['text'] = introduction_item.lecture['text'].replace(u'(Alléluia.)', '')
+
 def postprocess_office_keys(version, mode, data):
     '''
     Posprocess office keys so that they are as compatible as possible
@@ -693,6 +703,7 @@ def postprocess_office_common(version, mode, data):
     '''
     Run all office-specific postprocessing
     '''
+    postprocess_office_careme(version, mode, data)
     postprocess_office_keys(version, mode, data)
     return data
 
