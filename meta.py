@@ -3,7 +3,7 @@
 import re
 from utils import json_to_rss
 
-def postprocess(version, variant, data):
+def postprocess(version, mode, data):
     informations = data['informations']
     out = {
         'informations': informations,

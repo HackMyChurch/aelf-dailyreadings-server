@@ -14,6 +14,7 @@ import lectures
 import datetime
 from utils import get_office_for_day_api, get_office_for_day_aelf_json, AelfHttpError
 from utils import json_to_rss
+from utils import postprocess_office_common
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 28
@@ -33,25 +34,25 @@ OFFICES = {
         'api': 'json_only',
     },
     "lectures": {
-        'postprocess': [lectures.postprocess],
+        'postprocess': [postprocess_office_common, lectures.postprocess],
     },
     "tierce": {
-        'postprocess': [],
+        'postprocess': [postprocess_office_common],
     },
     "sexte": {
-        'postprocess': [],
+        'postprocess': [postprocess_office_common],
     },
     "none": {
-        'postprocess': [],
+        'postprocess': [postprocess_office_common],
     },
     "laudes": {
-        'postprocess': [laudes_vepres.postprocess],
+        'postprocess': [postprocess_office_common, laudes_vepres.postprocess],
     },
     "vepres": {
-        'postprocess': [laudes_vepres.postprocess],
+        'postprocess': [postprocess_office_common, laudes_vepres.postprocess],
     },
     "complies": {
-        'postprocess': [],
+        'postprocess': [postprocess_office_common],
     },
     "messes": {
         'postprocess': [messes.postprocess],

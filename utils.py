@@ -663,3 +663,36 @@ def lectures_common_cleanup(data):
 
     return data
 
+# TODO: move me to a common postprocessor file
+def postprocess_office_keys(version, mode, data):
+    '''
+    Posprocess office keys so that they are as compatible as possible
+    with AELF's website. Special care needs to be taken. Skip this
+    funtion when the source is not the API (ie: comming from the website)
+    '''
+    if data['source'] != 'api':
+        return data
+
+    for variant in data['variants']:
+        for lecture in variant['lectures']:
+            key = lecture['key']
+            if key.startswith('cantique'):
+                key = "office_cantique"
+            elif key.startswith('psaume') and is_int(key.split('_')[-1]):
+                key = "office_%s" % key.replace('_', '')
+            elif key == 'intercession':
+                # FIXME: in most offices, that's the Oraison that should become the conclusion. But that would break too much to bother
+                key = "office_conclusion"
+            elif not key.startswith('office_'):
+                key = "office_%s" % key
+            lecture['key'] = key
+
+    return data
+
+def postprocess_office_common(version, mode, data):
+    '''
+    Run all office-specific postprocessing
+    '''
+    postprocess_office_keys(version, mode, data)
+    return data
+

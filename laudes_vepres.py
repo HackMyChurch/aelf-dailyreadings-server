@@ -7,22 +7,22 @@ from utils import get_asset
 from utils import get_item_by_title
 from utils import get_lecture_by_type, insert_lecture_before, insert_lecture_after
 
-def postprocess(version, variant, data):
+def postprocess(version, mode, data):
     '''
     Common postprocessing code for laudes and vepres. These are very similar offices
     '''
     # Do not enable postprocessing for versions before 20, unless beta mode
-    if variant != "beta" and version < 20:
+    if mode != "beta" and version < 20:
         return data
 
     # Attempt to load oraison item. If we can't, gracefully degrade
-    oraison_item = get_lecture_by_type(data, u"oraison")
+    oraison_item = get_lecture_by_type(data, u"office_oraison")
     if oraison_item is None:
         return data
 
     # Fix Notre Père
     notre_pere = get_asset('prayers/notre-pere')
-    notre_pere_item = get_lecture_by_type(data, u"notre_pere")
+    notre_pere_item = get_lecture_by_type(data, u"office_notre_pere")
     notre_pere_lecture = {
         'title':     notre_pere['title'],
         'text':      notre_pere['body'],
