@@ -1,7 +1,46 @@
 # -*- coding: utf-8 -*-
 
 import re
+import datetime
 from utils import fix_case, AELF_SITE
+
+def should_fallback(version, mode, data):
+    '''
+    For most days, we should just do the default check. With 1 slight expection:
+    there is no mass on Holly Saturday. This is OK. We'll just display a message
+    with a link to the vigile.
+    '''
+    if data['informations'].get('jour_liturgique_nom', '').lower().strip() == "samedi saint":
+        return False
+    return len(unicode(data)) < 3000
+
+def postprocess_holly_saturday(version, mode, data):
+    text = u"""<p>
+    Le Samedi Saint est un jour spécial. C'est le jour de l'attente de la résurrection
+    du Christ. Il n'y a pas de messe ce jour là. Si vous cherchez la Veillée Pascale,
+    vous la trouverez dans les lectures de Pâques, c'est la première messe.
+    </p>"""
+
+    if version >= 29:
+        date = data['date']
+        date = date + datetime.timedelta(1)
+        base_link = AELF_SITE.format(year=date.year, month=date.month, day=date.day, office='messe')
+        text += u'<div class="app-office-navigation"><a href="%s#messe1_lecture1" class="variant-1">Veillée Pascale</a></div>' % (base_link)
+
+    data['variants'] = [
+        {
+            'name': 'Samedi saint',
+            'lectures': [
+                {
+                    'title':     'Messe: Le saviez-vous ?',
+                    'text':      text,
+                    'reference': '',
+                    'key':       '',
+                }
+            ]
+        }
+    ]
+    return data
 
 def postprocess_keys(version, mode, data):
     '''
@@ -63,6 +102,9 @@ def postprocess_links(version, mode, data):
         })
 
 def postprocess(version, mode, data):
+    if data['informations'].get('jour_liturgique_nom', '').lower().strip() == "samedi saint":
+        return postprocess_holly_saturday(version, mode, data)
+
     postprocess_keys (version, mode, data)
     postprocess_links(version, mode, data)
 

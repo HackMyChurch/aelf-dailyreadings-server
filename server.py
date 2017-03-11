@@ -56,8 +56,13 @@ OFFICES = {
     },
     "messes": {
         'postprocess': [messes.postprocess],
+        'should_fallback': messes.should_fallback,
     },
 }
+
+def default_should_fallback(version, mode, data):
+    office = data['office']
+    return len(unicode(data)) < OFFICES[office].get('fallback_len_treshold', DEFAULT_FALLBACK_LEN_TRESHOLD)
 
 def parse_date_or_abort(date):
     try:
@@ -127,6 +132,7 @@ def get_office(version, office, date):
     return do_get_office(version, office, date)
 
 def do_get_office(version, office, date):
+    mode = "beta" if request.args.get('beta', 0) else "prod"
     data = None
     error = None
 
@@ -154,7 +160,7 @@ def do_get_office(version, office, date):
             continue
 
         # Does it look broken ?
-        if len(unicode(data)) < OFFICES[office].get('fallback_len_treshold', DEFAULT_FALLBACK_LEN_TRESHOLD):
+        if OFFICES[office].get('should_fallback', default_should_fallback)(version, mode, data):
             last_http_error = AelfHttpError(500, u"L'office est trop court, c'est louche...")
             continue
         break
@@ -164,7 +170,6 @@ def do_get_office(version, office, date):
         return return_error(last_http_error.status, last_http_error.message)
 
     # Apply office specific postprocessor
-    mode = "beta" if request.args.get('beta', 0) else "prod"
     for postprocessor in OFFICES[office]['postprocess']:
         data = postprocessor(version, mode, data)
 
