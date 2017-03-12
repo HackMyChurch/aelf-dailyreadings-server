@@ -112,7 +112,7 @@ def return_error(status, message):
 def get_status():
     # Attempt to get the mass for today. If we can't, we are in trouble
     try:
-        mass = do_get_office(CURRENT_VERSION, "messes", *[int(c) for c in (time.strftime("%d:%m:%Y").split(':'))])
+        mass = do_get_office(CURRENT_VERSION, "messes", datetime.date(*[int(c) for c in (time.strftime("%Y:%m:%d").split(':'))]))
     except:
         return "Can not load mass", 500
 
