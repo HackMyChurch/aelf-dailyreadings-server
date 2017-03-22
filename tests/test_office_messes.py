@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from base import TestBase
 
 class TestOfficeLaudes(TestBase):
-    @mock.patch('utils.requests.Session.get')
+    @mock.patch('lib.input.requests.Session.get')
     def test_get_holly_saturday_mass(self, m_get):
         m_get.side_effect = self.m_get
 

@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from base import TestBase
 
 class TestOfficeComplies(TestBase):
-    @mock.patch('utils.requests.Session.get')
+    @mock.patch('lib.input.requests.Session.get')
     def test_get_complies(self, m_get):
         m_get.side_effect = self.m_get
 
@@ -33,7 +33,7 @@ class TestOfficeComplies(TestBase):
         self.assertEqual(u"Introduction", items[0][0])
         self.assertIn(u'alléluia',        items[0][1].lower())
 
-    @mock.patch('utils.requests.Session.get')
+    @mock.patch('lib.input.requests.Session.get')
     def test_no_alleluia_careme(self, m_get):
         m_get.side_effect = self.m_get
 

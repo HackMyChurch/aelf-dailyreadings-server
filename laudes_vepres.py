@@ -4,7 +4,6 @@ import re
 import copy
 
 from utils import get_asset
-from utils import get_item_by_title
 from utils import get_lecture_by_type, insert_lecture_before, insert_lecture_after
 
 def postprocess(version, mode, data):

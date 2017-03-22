@@ -157,6 +157,7 @@ def do_get_office(version, office, date):
             continue
         except Exception as e:
             last_http_error = AelfHttpError(500, str(e))
+            raise
             continue
 
         # Does it look broken ?

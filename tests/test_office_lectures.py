@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from base import TestBase
 
 class TestOfficeLectures(TestBase):
-    @mock.patch('utils.requests.Session.get')
+    @mock.patch('lib.input.requests.Session.get')
     def test_get_lectures_sunday(self, m_get):
         m_get.side_effect = self.m_get
 
@@ -22,7 +22,7 @@ class TestOfficeLectures(TestBase):
 
         self.assertIn(u"Devant toi se prosternent les archanges,", items[-2][1])
 
-    @mock.patch('utils.requests.Session.get')
+    @mock.patch('lib.input.requests.Session.get')
     def test_get_lectures_other_day(self, m_get):
         m_get.side_effect = self.m_get
 
@@ -36,7 +36,7 @@ class TestOfficeLectures(TestBase):
         for item in items:
             self.assertNotEqual(u"Te Deum", item[0])
 
-    @mock.patch('utils.requests.Session.get')
+    @mock.patch('lib.input.requests.Session.get')
     def test_get_lectures_fallback_missing_lecture(self, m_get):
         m_get.side_effect = self.m_get
 

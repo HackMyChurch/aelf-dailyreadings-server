@@ -13,7 +13,7 @@ class TestRouteCompat(TestBase):
     def tearDown(self):
         FakeResponse.status_code = 200
 
-    @mock.patch('utils.requests.Session.get')
+    @mock.patch('lib.input.requests.Session.get')
     def test_error_handling(self, m_get):
         m_get.side_effect = self.m_get
 
