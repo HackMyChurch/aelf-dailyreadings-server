@@ -24,10 +24,10 @@ class TestOfficeMeta(TestBase):
         self.assertMetaEqual("2017-04-16", u"Nous c\xe9l\xe8brons la R\xe9surrection du Seigneur de l'ann\xe9e A. La couleur liturgique est le blanc.")
         self.assertMetaEqual("2017-05-28", u"Dimanche, 7<sup>ème</sup> Semaine du Temps Pascal (semaine III du psautier) de l'année A. La couleur liturgique est le blanc.")
         self.assertMetaEqual("2017-06-04", u"Nous c\xe9l\xe8brons la Pentec\xf4te de l'ann\xe9e A. La couleur liturgique est le rouge.")
-        self.assertMetaEqual("2017-05-12", u"Vendredi de la f\xe9rie, 4<sup>\xe8me</sup> Semaine du Temps Pascal (semaine IV du psautier). Nous f\xeatons Saint N\xe9r\xe9e et Saint Achille, martyrs ; Saint Pancrace, martyr. La couleur liturgique est le blanc.")
-        self.assertMetaEqual("2017-05-19", u"Vendredi de la f\xe9rie, 5<sup>\xe8me</sup> Semaine du Temps Pascal (semaine I du psautier). Nous f\xeatons Saint Yves. La couleur liturgique est le blanc.")
+        self.assertMetaEqual("2017-05-12", u"Vendredi de la f\xe9rie, 4<sup>\xe8me</sup> Semaine du Temps Pascal (semaine IV du psautier). Nous f\xeatons saint N\xe9r\xe9e et saint Achille, martyrs ; saint Pancrace, martyr. La couleur liturgique est le blanc.")
+        self.assertMetaEqual("2017-05-19", u"Vendredi de la f\xe9rie, 5<sup>\xe8me</sup> Semaine du Temps Pascal (semaine I du psautier). Nous f\xeatons saint Yves. La couleur liturgique est le blanc.")
         self.assertMetaEqual("2017-05-25", u"Jeudi. Nous c\xe9l\xe8brons l'Ascension. La couleur liturgique est le blanc.")
-        self.assertMetaEqual("2016-06-11", u"Samedi de la f\xe9rie, 10<sup>\xe8me</sup> Semaine du Temps Ordinaire (semaine II du psautier) de l'ann\xe9e Paire. Nous f\xeatons Saint Barnab\xe9. La couleur liturgique est le rouge.")
+        self.assertMetaEqual("2016-06-11", u"Samedi de la f\xe9rie, 10<sup>\xe8me</sup> Semaine du Temps Ordinaire (semaine II du psautier) de l'ann\xe9e Paire. Nous f\xeatons saint Barnab\xe9. La couleur liturgique est le rouge.")
         self.assertMetaEqual("2016-06-12", u"Dimanche, 11<sup>ème</sup> Semaine du Temps Ordinaire (semaine III du psautier) de l'année C. La couleur liturgique est le vert.")
         self.assertMetaEqual("2016-08-15", u"Nous célèbrons l'Assomption de la Vierge Marie. La couleur liturgique est le blanc.")
 

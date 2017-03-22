@@ -51,10 +51,7 @@ def clean_ref(ref):
 def _filter_fete(fete):
     '''fete can be proceesed from 2 places. Share common filtering code'''
     fete = fete.strip()
-    fete = re.sub(r'(\w)(S\.|St|Ste) ', r'\1, \2 ', fete) # Fix word splitting when multiple Saints
-    fete = fete.replace("S. ", "Saint ")\
-               .replace("St ", "Saint ")\
-               .replace("Ste ", "Sainte ")
+    fete = fix_abbrev(fete)
 
     verbe = u"fêtons" if u'saint' in fete.lower() else u"célèbrons"
     text = ''
@@ -91,18 +88,37 @@ def _id_to_title(data):
 # API
 #
 
-# TODO: handle '
+def fix_abbrev(sentence):
+    # Fix word splitting when multiple Saints
+    sentence = re.sub(r'(\w)(S\.|St|Ste) ', r'\1, \2 ', sentence)
+
+    # Fix abbrev itself
+    sentence = sentence.replace("S. ",  "saint ")\
+                       .replace("St ",  "saint ")\
+                       .replace("Ste ", "sainte ")
+
+    return sentence
+
 def fix_case(sentence):
-    words = sentence.split(' ')
+    '''
+    Take a potentially all caps sentence as input and make it readable
+    '''
+    sentence = fix_abbrev(sentence)
+    chunks = sentence.split(' ')
     cleaned = []
-    for word in words:
-        if not word:
+
+    for i, chunk in enumerate(chunks):
+        if not chunk:
             continue
-        c = word[0]
-        word = word.lower()
-        if c != word[0] and word not in DETERMINANTS:
-            word = word.capitalize()
-        cleaned.append(word)
+
+        word_chunks = []
+        for word in chunk.split('\''):
+            c = word[0]
+            word = word.lower()
+            if c != word[0] and (word not in DETERMINANTS or i == 0):
+                word = word.capitalize()
+            word_chunks.append(word)
+        cleaned.append('\''.join(word_chunks))
     return ' '.join(cleaned)
 
 def get_pronoun_for_sentence(sentence):

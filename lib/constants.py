@@ -13,7 +13,15 @@ HEADERS={'User-Agent': 'AELF - Lectures du jour - API - cathogeek@epitre.co'}
 HTTP_TIMEOUT = 10 # seconds
 
 # French constants
-DETERMINANTS = ['l\'', 'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'd\'', 'au', u'à'];
+DETERMINANTS = [
+        'd', 'l', 'l\'', 'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'd\'', 'au', u'à',
+        'ma', 'ta', 'sa', 'mon', 'ton', 'son', 'notre', 'votre', 'leur,'
+        'mais', 'ou', 'et', 'donc', 'sur', 'sans',
+
+        # Most common common names
+        'saint', 'sainte', 'anniversaire', 'ordination', 'sermon', 'homelie', u'homélie',
+        'grand', 'grande',
+];
 
 # Simple translation tables
 OFFICE_NAME = {
