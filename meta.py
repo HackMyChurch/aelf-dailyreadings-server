@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-from utils import json_to_rss
 
 def postprocess(version, mode, data):
     informations = data['informations']

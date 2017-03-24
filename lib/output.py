@@ -1,8 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from xml.sax.saxutils import escape
+from copy import deepcopy
 
-def json_to_rss(data):
+def office_to_json(data):
+    '''
+    Take an office dict and serialize any non json data so that jsonify can
+    return a valid json.
+    '''
+    data = deepcopy(data)
+    data['date'] = data['date'].isoformat()
+    return data
+
+def office_to_rss(data):
     '''
     API and json scrappers return a json of the form:
     ```json

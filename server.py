@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, Response, abort, request
+from flask import Flask, Response, abort, request, jsonify
 app = Flask(__name__)
 
 import os
@@ -13,8 +13,8 @@ import laudes_vepres
 import lectures
 import datetime
 from utils import get_office_for_day_api, get_office_for_day_aelf_json, AelfHttpError
-from utils import json_to_rss
 from utils import postprocess_office_common
+from lib.output import office_to_json, office_to_rss
 from keys import KEY_TO_OFFICE
 
 CURRENT_VERSION = 28
@@ -112,7 +112,8 @@ def return_error(status, message):
 def get_status():
     # Attempt to get the mass for today. If we can't, we are in trouble
     try:
-        mass = do_get_office(CURRENT_VERSION, "messes", datetime.date(*[int(c) for c in (time.strftime("%Y:%m:%d").split(':'))]))
+        data = do_get_office(CURRENT_VERSION, "messes", datetime.date(*[int(c) for c in (time.strftime("%Y:%m:%d").split(':'))]))
+        mass = office_to_rss(data)
     except:
         return "Can not load mass", 500
 
@@ -127,9 +128,16 @@ def get_status():
 #
 
 @app.route('/<int:version>/office/<office>/<date>')
-def get_office(version, office, date):
+@app.route('/<int:version>/office/<office>/<date>.rss')
+def get_office_rss(version, office, date):
     date = parse_date_or_abort(date)
-    return do_get_office(version, office, date)
+    rss = office_to_rss(do_get_office(version, office, date))
+    return Response(rss, mimetype='application/rss+xml')
+
+@app.route('/<int:version>/office/<office>/<date>.json')
+def get_office_json(version, office, date):
+    date = parse_date_or_abort(date)
+    return jsonify(office_to_json(do_get_office(version, office, date)))
 
 def do_get_office(version, office, date):
     mode = "beta" if request.args.get('beta', 0) else "prod"
@@ -175,8 +183,7 @@ def do_get_office(version, office, date):
         data = postprocessor(version, mode, data)
 
     # Return
-    rss = json_to_rss(data)
-    return Response(rss, mimetype='application/rss+xml')
+    return data
 
 #
 # Legacy API (keep compatible in case fallback is needed)
@@ -189,7 +196,8 @@ def get_office_legacy(day, month, year, key):
     office = KEY_TO_OFFICE[key]
     version = int(request.args.get('version', 0))
     date = datetime.date(year, month, day)
-    return do_get_office(version, KEY_TO_OFFICE[key], date)
+    rss = office_to_rss(do_get_office(version, KEY_TO_OFFICE[key], date))
+    return Response(rss, mimetype='application/rss+xml')
 
 if __name__ == "__main__":
     if os.environ.get('AELF_DEBUG', False):

@@ -7,5 +7,5 @@ from .input import get_office_for_day_aelf, get_office_for_day_api, get_office_f
 from .input import get_lecture_text_from_epitre, get_asset
 from .postprocessor import postprocess_office_common
 from .postprocessor import fix_case
-from .output import json_to_rss
+from .output import office_to_rss, office_to_json
 
