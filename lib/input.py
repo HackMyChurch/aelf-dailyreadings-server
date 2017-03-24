@@ -11,7 +11,7 @@ from .exceptions import AelfHttpError
 from .constants import AELF_JSON, AELF_SITE, EPITRE_CO_JSON, ASSET_BASE_PATH
 from .constants import HEADERS, HTTP_TIMEOUT, OFFICE_NAME
 from .postprocessor import lectures_common_cleanup
-from .postprocessor import is_int, clean_ref # FIXME
+from .postprocessor import is_int, clean_ref, _id_to_title # FIXME
 
 # Create a connection pool
 session = requests.Session()

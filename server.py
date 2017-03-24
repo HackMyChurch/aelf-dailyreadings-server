@@ -112,13 +112,13 @@ def return_error(status, message):
 def get_status():
     # Attempt to get the mass for today. If we can't, we are in trouble
     try:
-        data = do_get_office(CURRENT_VERSION, "messes", datetime.date(*[int(c) for c in (time.strftime("%Y:%m:%d").split(':'))]))
-        mass = office_to_rss(data)
+        mass = do_get_office(CURRENT_VERSION, "messes", datetime.date(*[int(c) for c in (time.strftime("%Y:%m:%d").split(':'))]))
     except:
         return "Can not load mass", 500
 
-    if '<source>api</source>' not in mass.data:
-        return "Data is not comming from the main API:"+mass.data, 500
+    source = mass.get('source', '')
+    if source != 'api':
+        return "Mass office should come from API. Got: %s" % (source), 500
 
     # All good !
     return Response(json.dumps(int(time.time())), mimetype='application/json')
