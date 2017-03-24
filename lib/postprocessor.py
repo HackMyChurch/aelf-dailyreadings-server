@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+from bs4 import BeautifulSoup
 
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
@@ -29,6 +30,10 @@ def _is_letter(data):
 PSALM_MATCH=re.compile('^[0-9]+(-[IV0-9]+)?$')
 def _is_psalm_ref(data):
     return re.match(PSALM_MATCH, data.replace(' ', ''))
+
+VERSE_REF_MATCH=re.compile('^[0-9]+[A-Z]?(\.[0-9]+)?$')
+def _is_verse_ref(data):
+    return re.match(VERSE_REF_MATCH, data.replace(' ', ''))
 
 # FIXME: this is very hackish. We'll need to replace this with a real parser
 def clean_ref(ref):
@@ -302,11 +307,71 @@ def postprocess_office_keys(version, mode, data):
 
     return data
 
+#
+# Text cleaners
+#
+
+def html_fix_font(soup):
+    '''
+    Detect 'font' type objects, remove all attributes, except the color.
+    - red, with reference --> convert to verse reference
+    - red, with text      --> keep as-is
+    - not red             --> remove tag
+    '''
+    font_tags = soup.find_all('font') or []
+    for tag in font_tags:
+        # Remove all attributes, except those in whitelist
+        for attr_name in tag.attrs.keys():
+            if attr_name not in ['color']:
+                del tag[attr_name]
+
+        # Is it red ?
+        color = tag.get('color', '').lower()
+        is_red = (
+            (len(color) > 2 and color[0] == '#' and color[1] != '0') and
+            (
+                (len(color) == 4 and color[-2:] == "00") or
+                (len(color) == 7 and color[-4:] == "0000")
+            ))
+
+        # Does it look like a reference ?
+        if is_red and _is_verse_ref(tag.string):
+            tag.name = 'span'
+            tag.string = tag.string.strip()
+            del tag['color']
+            tag['aria-hidden'] = 'true'
+            tag['class'] = 'verse verse-v2'
+        # Is it "just" red ? (refrain)
+        elif is_red:
+            tag['color'] = '#ff0000'
+        else:
+            tag.unwrap()
+
+#
+# Postprocessors
+#
+
+def postprocess_office_lines(version, mode, data):
+    '''
+    Detect long lines and wrap them in '<line>' pseudo element so that they can be properly wrapped
+    '''
+    if version < 30:
+        return data
+
+    for variant in data['variants']:
+        for lecture in variant['lectures']:
+            # Process title
+            # Process text
+            soup = BeautifulSoup(lecture['text'], 'html5lib')
+            html_fix_font(soup)
+            lecture['text'] = unicode(soup.body)[6:-7]
+
 def postprocess_office_common(version, mode, data):
     '''
     Run all office-specific postprocessing
     '''
     postprocess_office_careme(version, mode, data)
     postprocess_office_keys(version, mode, data)
+    postprocess_office_lines(version, mode, data)
     return data
 
