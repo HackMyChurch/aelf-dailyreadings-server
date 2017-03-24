@@ -17,6 +17,8 @@ DETERMINANTS = [
         'd', 'l', 'l\'', 'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'd\'', 'au', u'à',
         'ma', 'ta', 'sa', 'mon', 'ton', 'son', 'notre', 'votre', 'leur,'
         'mais', 'ou', 'et', 'donc', 'sur', 'sans',
+        'ce', 'ces', 'cela', 'cette', 'celui', 'celle', 'celles', 'ceux', u'ça',
+        'pour', 'afin', 'contre', 'avec', 'en',
 
         # Most common common names
         'saint', 'sainte', 'anniversaire', 'ordination', 'sermon', 'homelie', u'homélie',
