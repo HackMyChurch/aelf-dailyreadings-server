@@ -217,7 +217,6 @@ def lectures_common_cleanup(data):
     # PASS 1: post-process lectures items
     for variant in data['variants']:
         for lecture in variant['lectures']:
-            print lecture['key']
             # Title cleanup / compat with current applications
             name = lecture['key']
             if lecture['title']:
@@ -261,7 +260,6 @@ def lectures_common_cleanup(data):
 
             # Argh, another ugly hack to WA my own app :(
             # Replace any unbreakable space by a regular space
-            print "-->", lecture['title']
             lecture['title'] = lecture['title'].replace(u'\xa0', u' ');
 
     # PASS 2: merge meargable items
