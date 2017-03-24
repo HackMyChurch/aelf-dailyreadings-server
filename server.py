@@ -75,34 +75,30 @@ def return_error(status, message):
     '''
     AELF app does not support codes != 200 (yet), work around this but still keep the intent clear
     '''
-    data = u"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <atom:link rel="self" type="application/rss+xml" href="http://rss.aelf.org/rss.php/messe"/>
-	<title>Erreur {status} {message}</title>
-        <description><![CDATA[(c) Association Épiscopale Liturgique pour les pays francophones - 2016]]></description>
-        <link>http://aelf.org</link>
-        <pubDate>Mon, 16 May 2016 23:09:21 +0200</pubDate>
-        <lastBuildDate>Mon, 16 May 2016 23:09:21 +0200</lastBuildDate>
-        <image>
-            <title>AELF</title>
-            <url>http://aelf.org/images/logo.jpg</url>
-            <link>http://aelf.org</link>
-        </image>
-        <language>fr</language>
-        <copyright>Copyright AELF - Tout droits réservés</copyright>
-        <item>
-            <title>Oups... Cette lecture n'est pas dans notre calendrier ({status})</title>
-            <description><![CDATA[
+    title = u"<title>Oups... Cette lecture n'est pas dans notre calendrier ({status})</title>"
+    description = u"""
 <p>{message}</p>
 <p>Saviez-vous que cette application est développée complètement bénévolement&nbsp;? Elle est construite en lien et avec le soutien de l'AELF, mais elle reste un projet indépendant, soutenue par <em>votre</em> prière&nbsp!</p>
 <p>Si vous pensez qu'il s'agit d'une erreur, vous pouvez envoyer un mail à <a href="mailto:cathogeek@epitre.co">cathogeek@epitre.co</a>.<p>
-	    ]]></description>
-        </item>
-    </channel>
-</rss>"""
-    return Response(data.format(status=status, message=message), mimetype='application/rss+xml')
+"""
 
+    return {
+        u'source':  u'error',
+        u'name':    u'error',
+        u'status':  status,
+        u'message': message,
+        u'variants': [
+            {
+                u'name': u'message',
+                u'lectures': [
+                    {
+                        u'title':       title.format(status=status),
+                        u'description': description.format(status=status, message=message)
+                    },
+                ],
+            }
+        ],
+    }
 
 #
 # Internal API
