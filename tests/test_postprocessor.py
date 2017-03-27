@@ -73,6 +73,23 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('<p>hello<br/>nice</p><p>world</p>',   bs(html_fix_paragraph, 'hello<br/>nice<br/><br/><br/>world'))
         self.assertEqual('<p>hello world</p>',                  bs(html_fix_paragraph, 'hello world<br/><br/>'))
 
+    def test_html_fix_lines(self):
+        from lib.postprocessor import html_fix_lines
+
+        # Noop
+        self.assertEqual('', bs(html_fix_lines, ''))
+        self.assertEqual('<p><line class="wrap">hello</line><line class="wrap">world</line></p>',        bs(html_fix_lines, '<p><line class="wrap">hello</line><line class="wrap">world</line></p>'))
+        self.assertEqual('<p><line class="wrap">hello</line></p><p><line class="wrap">world</line></p>', bs(html_fix_lines, '<p><line class="wrap">hello</line></p><p><line class="wrap">world</line></p>'))
+
+        # Simple line wrap
+        self.assertEqual('<p><line class="wrap">hello world</line></p>', bs(html_fix_lines, '<p>hello world</p>'))
+
+        # Line reconstruction
+        self.assertEqual('<p><line class="wrap">hello</line><line class="wrap">world</line></p><p><line class="wrap">hello</line><line class="wrap">world</line></p>', bs(html_fix_lines, '<p>hello<br/>world</p><p>hello<br/>world</p>'))
+        self.assertEqual('<p><line class="wrap">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</line></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
+        self.assertEqual('<p><line>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</line></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
+
+
     def test_fix_case(self):
         from lib.postprocessor import fix_case
 

@@ -102,11 +102,12 @@ def _wrap_node_children(soup, parent, name, *args, **kwargs):
     parent.clear()
     parent.append(intermediate)
 
-def _split_node_parent(soup, first, last):
+def _split_node_parent(soup, first, last=None):
     '''
     Split first's parent tag from first to last tags. If any of the resulting tag
     is empty, drop it.
     '''
+    last = last or first
     if first.parent != last.parent:
         raise ValueError("First and Last MUST have the same parent")
 
@@ -437,8 +438,41 @@ def html_fix_paragraph(soup):
 def html_fix_lines(soup):
     '''
     Detect lines and wrap them in "<line>" tags so that we can properly wrap them
-    via CSS.
+    via CSS. At this stage, we have the guarantee that all br live in a p and are
+    single. Ie, there is never an empty line in a paragraph.
     '''
+    # Ensure each <p> contains a <line>
+    for p in soup.find_all('p'):
+        if p.find('line'):
+            continue
+        _wrap_node_children(soup, p, 'line')
+
+    # Convert <br> to <line>
+    node = soup.find('br')
+    while node:
+        # Get a pointer on next iteration node, while we have valid references
+        next_iteration_node = node.find_next('br')
+
+        # Build a new paragraph for all preceeding elements, we have the guarantee that the parent is a p
+        _split_node_parent(soup, node)
+
+        # Move on
+        node = next_iteration_node
+
+    # Decide if we should wrap lines
+    lines = soup.find_all('line') or []
+    line_count = len(lines) or 1
+    line_avg_len = 0
+    line_len = 0
+    for line in lines:
+        string = ' '.join(line.stripped_strings)
+        line_len += len(string)
+    line_avg_len = float(line_len)/line_count
+
+    if line_avg_len < 70:
+        for line in lines:
+            line['class'] = 'wrap'
+
 
 #
 # Postprocessors
