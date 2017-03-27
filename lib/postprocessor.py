@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString, Tag
 
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
@@ -88,6 +88,54 @@ def _id_to_title(data):
     else:
         chunks.pop()
     return (u' '.join(chunks)).capitalize()
+
+def _wrap_node_children(soup, parent, name, *args, **kwargs):
+    '''
+    Wrap all children of a bs4 node into an intermediate node.
+    '''
+    intermediate = soup.new_tag(name, *args, **kwargs)
+
+    # Do /not/ remove the list. It prevents the node deduplication done by bs4
+    # which in turn breaks the pargraph detection
+    for content in list(parent.contents):
+        intermediate.append(content)
+    parent.clear()
+    parent.append(intermediate)
+
+def _split_node_parent(soup, first, last):
+    '''
+    Split first's parent tag from first to last tags. If any of the resulting tag
+    is empty, drop it.
+    '''
+    if first.parent != last.parent:
+        raise ValueError("First and Last MUST have the same parent")
+
+    # Create and insert new element
+    current_parent = first.parent
+    new_parent = soup.new_tag(current_parent.name)
+    new_parent.attrs = current_parent.attrs
+    current_parent.insert_before(new_parent)
+
+    # We'll delete content only between these 2 tags
+    first['__first_node'] = True
+    last ['__last_node']  = True
+
+    # Move text elements to new container
+    for content in list(current_parent.contents):
+        if isinstance(content, Tag) and content.get('__first_node'):
+            break
+        new_parent.append(content.extract())
+
+    # Remove the elements between first and last
+    for content in list(current_parent.contents):
+        content.extract()
+        if isinstance(content, Tag) and content.get('__last_node'):
+            break
+
+    # Make sure neither container is empty
+    for parent in [new_parent, current_parent]:
+        if not parent.contents:
+            parent.extract()
 
 #
 # API
@@ -347,13 +395,58 @@ def html_fix_font(soup):
         else:
             tag.unwrap()
 
+def html_fix_paragraph(soup):
+    '''
+    Detect paragraphs from line breaks. There should be no empty paragraphs. 2 Consecutives
+    line breaks indicates a paragraph. There should be no nested paragraphs.
+    '''
+    # Ensure each <br> immediate parent is a <p>
+    node = soup.find('br')
+    while node:
+        parent = node.parent
+        if parent.name != 'p':
+            _wrap_node_children(soup, parent, 'p')
+        node = node.find_next('br')
+
+    # Convert sequences of <br/> to <p>
+    node = soup.find('br')
+    while node:
+        # Locate the furthest <br> element that is only linked with br, empty strings or comments
+        next_br = None
+        next_node = node
+        while next_node:
+            next_node_text = (next_node.string or "").strip(' \n\t')
+            if isinstance(next_node, Tag):
+                if next_node.name != 'br':
+                    break
+                next_br = next_node
+            if isinstance(next_node, NavigableString) and next_node_text:
+                break
+            next_node = next_node.next_sibling
+
+        # Get a pointer on next iteration node, while we have valid references
+        next_iteration_node = next_node.find_next('br') if next_node else None
+
+        # Build a new paragraph for all preceeding elements, we have the guarantee that the parent is a p
+        if next_br is not node:
+            _split_node_parent(soup, node, next_br)
+
+        # Move on
+        node = next_iteration_node
+
+def html_fix_lines(soup):
+    '''
+    Detect lines and wrap them in "<line>" tags so that we can properly wrap them
+    via CSS.
+    '''
+
 #
 # Postprocessors
 #
 
-def postprocess_office_lines(version, mode, data):
+def postprocess_office_html(version, mode, data):
     '''
-    Detect long lines and wrap them in '<line>' pseudo element so that they can be properly wrapped
+    Find all office text and normalize html markup.
     '''
     if version < 30:
         return data
@@ -364,6 +457,8 @@ def postprocess_office_lines(version, mode, data):
             # Process text
             soup = BeautifulSoup(lecture['text'], 'html5lib')
             html_fix_font(soup)
+            html_fix_paragraph(soup)
+            html_fix_lines(soup)
             lecture['text'] = unicode(soup.body)[6:-7]
 
 def postprocess_office_common(version, mode, data):
@@ -372,6 +467,6 @@ def postprocess_office_common(version, mode, data):
     '''
     postprocess_office_careme(version, mode, data)
     postprocess_office_keys(version, mode, data)
-    postprocess_office_lines(version, mode, data)
+    postprocess_office_html(version, mode, data)
     return data
 

@@ -8,9 +8,6 @@ from bs4 import BeautifulSoup
 # intercession
 # lines
 # tipography
-# font --> remove size
-# font --> keep red / normalize
-# font --> remove any other color (black...)
 # inflexion (*+) --> <sup>
 
 def t2bs(data): return BeautifulSoup(data, 'html5lib')
@@ -58,8 +55,26 @@ class TestPostprocessor(unittest.TestCase):
         # Red, verse
         self.assertEqual('<span aria-hidden="true" class="verse verse-v2">1.42</span>', bs(html_fix_font, '<font color="#f00"> 1.42 </font>'))
 
+    def test_html_fix_paragraph(self):
+        from lib.postprocessor import html_fix_paragraph
+
+        # Noop
+        self.assertEqual('',                                  bs(html_fix_paragraph, ''))
+        self.assertEqual('<p>hello</p><p>world</p>',          bs(html_fix_paragraph, '<p>hello</p><p>world</p>'))
+        self.assertEqual('<p>hello</p><p>nice<br/>world</p>', bs(html_fix_paragraph, '<p>hello</p><p>nice<br/>world</p>'))
+
+        # Simple paragraph wrap
+        self.assertEqual('<p><br/></p>', bs(html_fix_paragraph, '<br>'))
+        self.assertEqual('<p><br/></p>', bs(html_fix_paragraph, '<br/>'))
+
+        # Paragraph reconstruction and cleanup
+        self.assertEqual('<p>hello<br/>world</p>',              bs(html_fix_paragraph, 'hello<br/>world'))
+        self.assertEqual('<p>hello</p><p>nice</p><p>world</p>', bs(html_fix_paragraph, 'hello<br/><br><br/>nice<br/><br/><br/>world'))
+        self.assertEqual('<p>hello<br/>nice</p><p>world</p>',   bs(html_fix_paragraph, 'hello<br/>nice<br/><br/><br/>world'))
+        self.assertEqual('<p>hello world</p>',                  bs(html_fix_paragraph, 'hello world<br/><br/>'))
+
     def test_fix_case(self):
         from lib.postprocessor import fix_case
 
         self.assertEqual(u'Homelie d\'Origène sur le Lévitique', fix_case(u'HOMELIE D\'ORIGÈNE SUR LE LÉVITIQUE'))
-        self.assertEqual(u'Sermon de saint L\xe9on le grand Pour l\'anniversaire de son ordination', fix_case(u'SERMON DE S. LÉON LE GRAND POUR L\'ANNIVERSAIRE DE SON ORDINATION'))
+        self.assertEqual(u'Sermon de saint L\xe9on le grand pour l\'anniversaire de son ordination', fix_case(u'SERMON DE S. LÉON LE GRAND POUR L\'ANNIVERSAIRE DE SON ORDINATION'))
