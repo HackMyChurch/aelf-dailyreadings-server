@@ -35,6 +35,11 @@ VERSE_REF_MATCH=re.compile('^[0-9]+[A-Z]?(\.[0-9]+)?$')
 def _is_verse_ref(data):
     return re.match(VERSE_REF_MATCH, data.replace(' ', ''))
 
+ROMAN_NUMBER_MATCH=re.compile('^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$')
+def _is_roman_number(data):
+    return re.match(ROMAN_NUMBER_MATCH, data.upper())
+
+
 # FIXME: this is very hackish. We'll need to replace this with a real parser
 def clean_ref(ref):
     ref = ref.strip()
@@ -163,6 +168,10 @@ def fix_case(sentence):
 
     for i, chunk in enumerate(chunks):
         if not chunk:
+            continue
+
+        if _is_roman_number(chunk):
+            cleaned.append(chunk.upper())
             continue
 
         word_chunks = []
