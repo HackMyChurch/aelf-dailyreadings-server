@@ -475,6 +475,10 @@ def html_fix_paragraph(soup):
         # Move on
         node = next_iteration_node
 
+    # Remove any attributes / style from paragraphs
+    for p in soup.find_all('p'):
+        p.attrs = {}
+
 def html_fix_lines(soup):
     '''
     Detect lines and wrap them in "<line>" tags so that we can properly wrap them

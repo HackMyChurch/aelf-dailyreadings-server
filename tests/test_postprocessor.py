@@ -73,6 +73,9 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('<p>hello<br/>nice</p><p>world</p>',   bs(html_fix_paragraph, 'hello<br/>nice<br/><br/><br/>world'))
         self.assertEqual('<p>hello world</p>',                  bs(html_fix_paragraph, 'hello world<br/><br/>'))
 
+        # Paragraph cleaner
+        self.assertEqual('<p>world</p>', bs(html_fix_paragraph, '<p style="text-decoration: underline;" class="hello">world</p>'))
+
     def test_html_fix_lines(self):
         from lib.postprocessor import html_fix_lines
 
