@@ -29,6 +29,15 @@ class TestPostprocessor(unittest.TestCase):
         self.assertFalse(_is_verse_ref('1.'))
         self.assertFalse(_is_verse_ref('1.42a'))
 
+    def test_html_fix_comments(self):
+        from lib.postprocessor import html_fix_comments
+
+        # Nominal
+        self.assertEqual("", bs(html_fix_comments, ""))
+        self.assertEqual("<p>hello</p>", bs(html_fix_comments, "<p>hello</p>"))
+        self.assertEqual("<p>hello</p>", bs(html_fix_comments, "<p>hello<!-- comment --></p>"))
+        self.assertEqual("<p>hello</p>", bs(html_fix_comments, "<p>hello<!-- comment --></p><!-- <u>test</u> -->"))
+
     def test_html_fix_font(self):
         from lib.postprocessor import html_fix_font
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from bs4 import BeautifulSoup, NavigableString, Tag
+from bs4 import BeautifulSoup, NavigableString, Tag, Comment
 
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
@@ -400,6 +400,14 @@ def postprocess_office_keys(version, mode, data):
 # Text cleaners
 #
 
+def html_fix_comments(soup):
+    '''
+    Detect and remove any HTML comments. HTML comments may just come from MS WORD copy
+    and paste. They may break the processing and also increase the output size.
+    '''
+    comments = soup.findAll(text=lambda text:isinstance(text, Comment))
+    [comment.extract() for comment in comments]
+
 def html_fix_font(soup):
     '''
     Detect 'font' type objects, remove all attributes, except the color.
@@ -538,6 +546,7 @@ def postprocess_office_html(version, mode, data):
             # Process text
             lecture['text'] = fix_common_typography(lecture['text'])
             soup = BeautifulSoup(lecture['text'], 'html5lib')
+            html_fix_comments(soup)
             html_fix_font(soup)
             html_fix_paragraph(soup)
             html_fix_lines(soup)
