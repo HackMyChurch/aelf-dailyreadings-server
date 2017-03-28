@@ -181,8 +181,39 @@ def fix_case(sentence):
             if c != word[0] and (word not in DETERMINANTS or i == 0):
                 word = word.capitalize()
             word_chunks.append(word)
+
         cleaned.append('\''.join(word_chunks))
+        if cleaned:
+            cleaned[0] = cleaned[0].capitalize()
     return ' '.join(cleaned)
+
+def fix_common_typography(text):
+    '''
+    Generc search and replace fixes
+    '''
+    # Simple replaces
+    text = text.replace(u'fete', u'fête')\
+               .replace(u'degre', u'degré')\
+               .replace(u'oe', u'œ')\
+               .replace(u'n\\est', u'n\'est')\
+
+    # Preg replaces
+    text = re.sub(ur'([Pp])ere', ur'\1ère', text)
+    text = re.sub(ur'[Ee]glise', u'Église', text)
+
+    # Typography
+    text = re.sub(ur'\s*-\s*',      u'-', text)
+    text = re.sub(ur':\s+(\s+)',    u'',  text)
+    text = re.sub(ur'\s*\(',        u' (', text)
+    text = re.sub(ur"\s*&nbsp;\s*", u"&nbsp;", text) # Mixed type of blanks
+
+    text = re.sub(ur'\s*(»|&raquo;)',           ur'&nbsp;» ',     text) # Typographic quote
+    text = re.sub(ur'(«|&laquo;)\s*',           ur' «&nbsp;',     text)
+    text = re.sub(ur'\s*([:?!])\s*',            ur'&nbsp;\1 ',    text)
+    text = re.sub(ur'\s+;\s*',                  ur'&nbsp;; ',     text) # Semicolon, prefixed by a blank
+    text = re.sub(ur"\b(?<!&)(?<!&#)(\w+);\s*", ur"\1&#x202f;; ", text) # Semicolon, NOT prefixed by an entity
+
+    return text
 
 def get_pronoun_for_sentence(sentence):
     words = [w.lower() for w in sentence.split(" ")]
@@ -497,7 +528,11 @@ def postprocess_office_html(version, mode, data):
     for variant in data['variants']:
         for lecture in variant['lectures']:
             # Process title
+            lecture['title'] = fix_case(lecture['title'])
+            lecture['title'] = fix_common_typography(lecture['title'])
+
             # Process text
+            lecture['text'] = fix_common_typography(lecture['text'])
             soup = BeautifulSoup(lecture['text'], 'html5lib')
             html_fix_font(soup)
             html_fix_paragraph(soup)

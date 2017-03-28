@@ -89,6 +89,24 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('<p><line class="wrap">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</line></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
         self.assertEqual('<p><line>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</line></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
 
+    def test_fix_common_typography(self):
+        from lib.postprocessor import fix_common_typography
+
+        # Nominal
+        self.assertEqual(u'',      fix_common_typography(u''))
+        self.assertEqual(u'Père',  fix_common_typography(u'Pere'))
+        self.assertEqual(u'père',  fix_common_typography(u'pere'))
+        self.assertEqual(u'degré', fix_common_typography(u'degre'))
+        self.assertEqual(u'cœur',  fix_common_typography(u'coeur'))
+        self.assertEqual(u'cœur',  fix_common_typography(u'coeur'))
+
+	# Typography
+        self.assertEqual(u'&nbsp;', fix_common_typography(u'&nbsp;'))
+        self.assertEqual(u'&nbsp;;', fix_common_typography(u'&nbsp;;'))
+        self.assertEqual(u'&nbsp;;', fix_common_typography(u'&nbsp; ;'))
+        self.assertEqual(u'Hello world&nbsp;! ', fix_common_typography(u'Hello world!'))
+        self.assertEqual(u' «&nbsp;Hello World&nbsp;» ', fix_common_typography(u'«Hello World»'))
+        self.assertEqual(u' «&nbsp;Hello World&nbsp;» ', fix_common_typography(u'&laquo;Hello World&raquo;'))
 
     def test_fix_case(self):
         from lib.postprocessor import fix_case
