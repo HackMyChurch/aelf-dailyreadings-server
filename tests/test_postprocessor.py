@@ -38,31 +38,34 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual("<p>hello</p>", bs(html_fix_comments, "<p>hello<!-- comment --></p>"))
         self.assertEqual("<p>hello</p>", bs(html_fix_comments, "<p>hello<!-- comment --></p><!-- <u>test</u> -->"))
 
-    def test_html_fix_font(self):
-        from lib.postprocessor import html_fix_font
+    def test_html_fix_verse(self):
+        from lib.postprocessor import html_fix_verse
 
         # Noop
-        self.assertEqual("", bs(html_fix_font, ""))
-        self.assertEqual("<p>hello</p>", bs(html_fix_font, "<p>hello</p>"))
+        self.assertEqual("", bs(html_fix_verse, ""))
+        self.assertEqual("<p>hello</p>", bs(html_fix_verse, "<p>hello</p>"))
 
         # Non-red
-        self.assertEqual("hello", bs(html_fix_font, "<font>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_font, "<font color='#'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_font, "<font color='#0'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_font, "<font color='#0'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_font, "<font color='#000'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_font, "<font color='#000000'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_font, "<font color='#fff'>hello</font>"))
+        self.assertEqual("hello", bs(html_fix_verse, "<font>hello</font>"))
+        self.assertEqual("hello", bs(html_fix_verse, "<font color='#'>hello</font>"))
+        self.assertEqual("hello", bs(html_fix_verse, "<font color='#0'>hello</font>"))
+        self.assertEqual("hello", bs(html_fix_verse, "<font color='#0'>hello</font>"))
+        self.assertEqual("hello", bs(html_fix_verse, "<font color='#000'>hello</font>"))
+        self.assertEqual("hello", bs(html_fix_verse, "<font color='#000000'>hello</font>"))
+        self.assertEqual("hello", bs(html_fix_verse, "<font color='#fff'>hello</font>"))
 
         # Red, text
-        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_font, '<font color="#Ff0000">hello</font>'))
-        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_font, '<font color="#cC0000">hello</font>'))
-        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_font, '<font color="#f00">hello</font>'))
-        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_font, '<font color="#c00">hello</font>'))
-        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_font, '<font color="#c00" some_tag="data">hello</font>'))
+        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_verse, '<font color="#Ff0000">hello</font>'))
+        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_verse, '<font color="#cC0000">hello</font>'))
+        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_verse, '<font color="#f00">hello</font>'))
+        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_verse, '<font color="#c00">hello</font>'))
+        self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_verse, '<font color="#c00" some_tag="data">hello</font>'))
 
         # Red, verse
-        self.assertEqual('<span aria-hidden="true" class="verse verse-v2">1.42</span>', bs(html_fix_font, '<font color="#f00"> 1.42 </font>'))
+        self.assertEqual('<span aria-hidden="true" class="verse verse-v2">1.42</span>', bs(html_fix_verse, '<font color="#f00"> 1.42 </font>'))
+
+        # Pre-existing verse
+        self.assertEqual('<span aria-hidden="true" class="verse verse-v2">42</span>', bs(html_fix_verse, '<span class="verse_number" disabled="true">42</span>'))
 
     def test_html_fix_paragraph(self):
         from lib.postprocessor import html_fix_paragraph

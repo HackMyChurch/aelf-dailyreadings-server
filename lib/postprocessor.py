@@ -412,7 +412,7 @@ def html_fix_comments(soup):
     comments = soup.findAll(text=lambda text:isinstance(text, Comment))
     [comment.extract() for comment in comments]
 
-def html_fix_font(soup):
+def html_fix_verse(soup):
     '''
     Detect 'font' type objects, remove all attributes, except the color.
     - red, with reference --> convert to verse reference
@@ -447,6 +447,13 @@ def html_fix_font(soup):
             tag['color'] = '#ff0000'
         else:
             tag.unwrap()
+
+    # Fix lecture's verses
+    for tag in soup.find_all('span', class_='verse_number'):
+        tag.attrs = {
+            'class':       'verse verse-v2',
+            'aria-hidden': 'true',
+        }
 
 def html_fix_paragraph(soup):
     '''
@@ -551,7 +558,7 @@ def postprocess_office_html(version, mode, data):
             lecture['text'] = fix_common_typography(lecture['text'])
             soup = BeautifulSoup(lecture['text'], 'html5lib')
             html_fix_comments(soup)
-            html_fix_font(soup)
+            html_fix_verse(soup)
             html_fix_paragraph(soup)
             html_fix_lines(soup)
             lecture['text'] = unicode(soup.body)[6:-7]
