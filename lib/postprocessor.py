@@ -507,6 +507,11 @@ def html_fix_paragraph(soup):
     for p in soup.find_all('p'):
         p.attrs = {}
 
+    # Remove empty p
+    for p in soup.find_all('p'):
+        if not ' '.join(p.strings).strip():
+            p.extract()
+
 def html_fix_lines(soup):
     '''
     Detect lines and wrap them in "<line>" tags so that we can properly wrap them
@@ -544,6 +549,11 @@ def html_fix_lines(soup):
     if line_avg_len < 70:
         for line in lines:
             line['class'] = 'wrap'
+
+    # Remove empty line
+    for line in soup.find_all('line'):
+        if not ' '.join(line.strings).strip():
+            line.extract()
 
 
 #

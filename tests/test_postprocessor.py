@@ -76,8 +76,12 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('<p>hello</p><p>nice<br/>world</p>', bs(html_fix_paragraph, '<p>hello</p><p>nice<br/>world</p>'))
 
         # Simple paragraph wrap
-        self.assertEqual('<p><br/></p>', bs(html_fix_paragraph, '<br>'))
-        self.assertEqual('<p><br/></p>', bs(html_fix_paragraph, '<br/>'))
+        self.assertEqual('', bs(html_fix_paragraph, '<br>'))
+        self.assertEqual('<p><br/>hello</p>', bs(html_fix_paragraph, '<br>hello'))
+        self.assertEqual('<p><br/>world</p>', bs(html_fix_paragraph, '<br/>world'))
+
+        # Trim empty p
+        self.assertEqual('<p>Hello</p>', bs(html_fix_paragraph, '<p></p><p>Hello</p>'))
 
         # Paragraph reconstruction and cleanup
         self.assertEqual('<p>hello<br/>world</p>',              bs(html_fix_paragraph, 'hello<br/>world'))
@@ -98,6 +102,9 @@ class TestPostprocessor(unittest.TestCase):
 
         # Simple line wrap
         self.assertEqual('<p><line class="wrap">hello world</line></p>', bs(html_fix_lines, '<p>hello world</p>'))
+
+        # Trim empty line
+        self.assertEqual('<p><line class="wrap">Hello</line></p>', bs(html_fix_lines, '<p><br/>Hello</p>'))
 
         # Line reconstruction
         self.assertEqual('<p><line class="wrap">hello</line><line class="wrap">world</line></p><p><line class="wrap">hello</line><line class="wrap">world</line></p>', bs(html_fix_lines, '<p>hello<br/>world</p><p>hello<br/>world</p>'))
