@@ -12,8 +12,10 @@ import messes
 import laudes_vepres
 import lectures
 import datetime
-from utils import get_office_for_day_api, get_office_for_day_aelf_json, AelfHttpError
-from utils import postprocess_office_common
+from lib.input import get_office_for_day_api, get_office_for_day_aelf_json
+from lib.exceptions import AelfHttpError
+from lib.postprocessor import postprocess_office_common
+from lib.postprocessor import postprocess_office_html
 from lib.output import office_to_json, office_to_rss
 from keys import KEY_TO_OFFICE
 
@@ -55,7 +57,7 @@ OFFICES = {
         'postprocess': [postprocess_office_common],
     },
     "messes": {
-        'postprocess': [messes.postprocess],
+        'postprocess': [postprocess_office_html, messes.postprocess],
         'should_fallback': messes.should_fallback,
     },
 }

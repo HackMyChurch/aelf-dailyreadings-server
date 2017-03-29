@@ -30,14 +30,23 @@ def _is_letter(data):
 
 PSALM_MATCH=re.compile('^[0-9]+(-[IV0-9]+)?$')
 def _is_psalm_ref(data):
+    if not data:
+        return False
+
     return re.match(PSALM_MATCH, data.replace(' ', ''))
 
 VERSE_REF_MATCH=re.compile('^[0-9]+[A-Z]?(\.[0-9]+)?$')
 def _is_verse_ref(data):
+    if not data:
+        return False
+
     return re.match(VERSE_REF_MATCH, data.replace(' ', ''))
 
 ROMAN_NUMBER_MATCH=re.compile('^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$')
 def _is_roman_number(data):
+    if not data:
+        return False
+
     return re.match(ROMAN_NUMBER_MATCH, data.upper())
 
 
@@ -562,6 +571,8 @@ def postprocess_office_html(version, mode, data):
             html_fix_paragraph(soup)
             html_fix_lines(soup)
             lecture['text'] = unicode(soup.body)[6:-7]
+
+    return data
 
 def postprocess_office_common(version, mode, data):
     '''
