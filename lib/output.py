@@ -9,7 +9,8 @@ def office_to_json(data):
     return a valid json.
     '''
     data = deepcopy(data)
-    data['date'] = data['date'].isoformat()
+    if 'date' in data:
+        data['date'] = data['date'].isoformat()
     return data
 
 def office_to_rss(data):
