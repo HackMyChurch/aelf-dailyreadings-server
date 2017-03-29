@@ -2,6 +2,7 @@
 
 import re
 from bs4 import BeautifulSoup, NavigableString, Tag, Comment
+from HTMLParser import HTMLParser
 
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
@@ -191,6 +192,10 @@ def fix_common_typography(text):
     '''
     Generc search and replace fixes
     '''
+    # Decode entities so that we do not accidentally break them
+    h = HTMLParser()
+    text = h.unescape(text)
+
     # Simple replaces
     text = text.replace(u'fete', u'fête')\
                .replace(u'degre', u'degré')\
@@ -202,16 +207,15 @@ def fix_common_typography(text):
     text = re.sub(ur'[Ee]glise', u'Église', text)
 
     # Typography
-    text = re.sub(ur'\s*-\s*',      u'-', text)
-    text = re.sub(ur':\s+(\s+)',    u'',  text)
-    text = re.sub(ur'\s*\(',        u' (', text)
-    text = re.sub(ur"\s*&nbsp;\s*", u"&nbsp;", text) # Mixed type of blanks
+    text = re.sub(ur'\s*-\s*',      u'-',    text)
+    text = re.sub(ur':\s+(\s+)'  ,  u'',     text)
+    text = re.sub(ur'\s*\(',        u' (',   text)
+    text = re.sub(ur"\s*\u00a0\s*", u'\xa0', text) # Mixed type of blanks
 
-    text = re.sub(ur'\s*(»|&raquo;)',           ur'&nbsp;» ',     text) # Typographic quote
-    text = re.sub(ur'(«|&laquo;)\s*',           ur' «&nbsp;',     text)
-    text = re.sub(ur'\s*([:?!])\s*',            ur'&nbsp;\1 ',    text)
-    text = re.sub(ur'\s+;\s*',                  ur'&nbsp;; ',     text) # Semicolon, prefixed by a blank
-    text = re.sub(ur"\b(?<!&)(?<!&#)(\w+);\s*", ur"\1&#x202f;; ", text) # Semicolon, NOT prefixed by an entity
+    text = re.sub(ur'\s*»',          ur'\u00a0» ',  text) # Typographic quote
+    text = re.sub(ur'«\s*',          ur' «\u00a0',  text)
+    text = re.sub(ur'\s*([:?!])\s*', ur'\u00a0\1 ', text)
+    text = re.sub(ur'\s+;\s*',       ur'\u00a0 ',   text) # Semicolon, prefixed by a blank
 
     return text
 

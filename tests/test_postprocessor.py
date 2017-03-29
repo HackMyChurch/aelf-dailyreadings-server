@@ -114,12 +114,12 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual(u'cœur',  fix_common_typography(u'coeur'))
 
 	# Typography
-        self.assertEqual(u'&nbsp;', fix_common_typography(u'&nbsp;'))
-        self.assertEqual(u'&nbsp;;', fix_common_typography(u'&nbsp;;'))
-        self.assertEqual(u'&nbsp;;', fix_common_typography(u'&nbsp; ;'))
-        self.assertEqual(u'Hello world&nbsp;! ', fix_common_typography(u'Hello world!'))
-        self.assertEqual(u' «&nbsp;Hello World&nbsp;» ', fix_common_typography(u'«Hello World»'))
-        self.assertEqual(u' «&nbsp;Hello World&nbsp;» ', fix_common_typography(u'&laquo;Hello World&raquo;'))
+        self.assertEqual(u'\xa0', fix_common_typography(u'&nbsp;'))
+        self.assertEqual(u'\xa0;', fix_common_typography(u'&nbsp;;'))
+        self.assertEqual(u'\xa0;', fix_common_typography(u'&nbsp; ;'))
+        self.assertEqual(u'Hello world\xa0! ', fix_common_typography(u'Hello world!'))
+        self.assertEqual(u' «\xa0Hello World\xa0» ', fix_common_typography(u'«Hello World»'))
+        self.assertEqual(u' «\xa0Hello World\xa0» ', fix_common_typography(u'&laquo;Hello World&raquo;'))
 
     def test_fix_case(self):
         from lib.postprocessor import fix_case
