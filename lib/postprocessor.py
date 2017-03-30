@@ -563,7 +563,8 @@ def html_fix_lines(soup):
         line_len += len(string)
     line_avg_len = float(line_len)/line_count
 
-    if line_avg_len < 70:
+    # There must be at *least* 2 lines and a "good" ratio of char / line
+    if line_count > 1 and line_avg_len < 70:
         for line in lines:
             line['class'] = 'wrap'
 
