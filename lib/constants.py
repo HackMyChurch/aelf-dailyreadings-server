@@ -25,6 +25,15 @@ DETERMINANTS = [
         'grand', 'grande',
 ];
 
+# HTML
+HTML_BLOCK_ELEMENTS = [
+        "body",
+        "section", "nav",
+        "header", "footer",
+        "table", "thread", "tbody", "td", "tr", "th",
+        "div", "p"
+]
+
 # Simple translation tables
 OFFICE_NAME = {
     "messes": "messe",

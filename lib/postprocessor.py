@@ -6,6 +6,7 @@ from HTMLParser import HTMLParser
 
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
+from .constants import HTML_BLOCK_ELEMENTS
 from .office import get_lecture_by_type, insert_lecture_before, insert_lecture_after
 
 #
@@ -479,14 +480,26 @@ def html_fix_verse(soup):
 def html_fix_paragraph(soup):
     '''
     Detect paragraphs from line breaks. There should be no empty paragraphs. 2 Consecutives
-    line breaks indicates a paragraph. There should be no nested paragraphs.
+    line breaks indicates a paragraph. There should be no nested paragraphs. Every <br> should
+    belong to a paragraph.
     '''
+    # Locate and remove orphaned <br>. A <br> is considered orphaned if it has a block
+    # on both sides.
+    for tag in soup.find_all('br'):
+        # TODO: support empty navigable strings
+        for sibling in [tag.next_sibling, tag.previous_sibling]:
+            if not (sibling is None or (isinstance(sibling, Tag) and sibling.name in HTML_BLOCK_ELEMENTS)):
+                is_orphan = False
+                break
+        else:
+            tag.extract()
+
     # Ensure each <br> is in a p
     node = soup.find('br')
     while node:
         parent = node.parent
         while parent:
-            if parent.name in ["body", "section", "header", "footer", "nav", "div", "td", "tr", "th", "table", "p"]:
+            if parent.name in HTML_BLOCK_ELEMENTS:
                 break
             parent = parent.parent
 
