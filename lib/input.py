@@ -165,16 +165,18 @@ def get_office_for_day_api(office, date):
                 contenu     = lecture.get('contenu',           '').strip()
 
                 if intro:
-                    texte.append(u'<b><i>%s</i></b>' % intro)
+                    texte.append(u'<p><b><i>%s</i></b></p>' % intro)
 
                 if refrain:
-                    texte.append(u'<font color="#CC0000">R/ %s</font>' % refrain)
+                    if refrain.startswith('<p>'):
+                        refrain = refrain[3:-4]
+                    texte.append(u'<p><font color="#CC0000">R/ %s</font></p>' % refrain)
 
                 if verset:
                     verset = verset.strip()
                     if verset.startswith('<p>'): verset = verset[3:]
                     if verset.endswith('<p>'):   verset = verset[:-4]
-                    texte.append(u'<blockquote><b>Acclamation&nbsp;:</b><br/>%s<small><i>— %s</i></small></blockquote>' % (verset, clean_ref(verset_ref)))
+                    texte.append(u'<blockquote><line><strong>Acclamation&nbsp;:</strong></br>%s<small><i>— %s</i></small></line></blockquote>' % (verset, clean_ref(verset_ref)))
 
                 if contenu:
                     texte.append(contenu)
