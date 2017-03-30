@@ -117,7 +117,7 @@ def _wrap_node_children(soup, parent, name, *args, **kwargs):
     parent.clear()
     parent.append(intermediate)
 
-def _split_node_parent(soup, first, last=None):
+def _split_node_parent(soup, name, first, last=None, keep_delimiters=False):
     '''
     Split first's parent tag from first to last tags. If any of the resulting tag
     is empty, drop it.
@@ -145,8 +145,20 @@ def _split_node_parent(soup, first, last=None):
     # Remove the elements between first and last
     for content in list(current_parent.contents):
         content.extract()
+
+        if keep_delimiters:
+            new_parent.append(content.extract())
+
+        if isinstance(content, Tag) and content.get('__first_node'):
+            del first['__first_node']
+
         if isinstance(content, Tag) and content.get('__last_node'):
+            del first['__last_node']
             break
+
+    # Recurse
+    if current_parent.name != name:
+        _split_node_parent(soup, name, new_parent, keep_delimiters=True)
 
     # Make sure neither container is empty
     for parent in [new_parent, current_parent]:
@@ -469,10 +481,15 @@ def html_fix_paragraph(soup):
     Detect paragraphs from line breaks. There should be no empty paragraphs. 2 Consecutives
     line breaks indicates a paragraph. There should be no nested paragraphs.
     '''
-    # Ensure each <br> immediate parent is a <p>
+    # Ensure each <br> is in a p
     node = soup.find('br')
     while node:
         parent = node.parent
+        while parent:
+            if parent.name in ["body", "section", "header", "footer", "nav", "div", "td", "tr", "th", "table", "p"]:
+                break
+            parent = parent.parent
+
         if parent.name != 'p':
             _wrap_node_children(soup, parent, 'p')
         node = node.find_next('br')
@@ -498,7 +515,7 @@ def html_fix_paragraph(soup):
 
         # Build a new paragraph for all preceeding elements, we have the guarantee that the parent is a p
         if next_br is not node:
-            _split_node_parent(soup, node, next_br)
+            _split_node_parent(soup, 'p', node, next_br)
 
         # Move on
         node = next_iteration_node
@@ -531,7 +548,7 @@ def html_fix_lines(soup):
         next_iteration_node = node.find_next('br')
 
         # Build a new paragraph for all preceeding elements, we have the guarantee that the parent is a p
-        _split_node_parent(soup, node)
+        _split_node_parent(soup, 'line', node)
 
         # Move on
         node = next_iteration_node

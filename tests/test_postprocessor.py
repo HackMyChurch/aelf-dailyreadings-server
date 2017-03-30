@@ -103,6 +103,9 @@ class TestPostprocessor(unittest.TestCase):
         # Simple line wrap
         self.assertEqual('<p><line class="wrap">hello world</line></p>', bs(html_fix_lines, '<p>hello world</p>'))
 
+        # Nested line wrap
+        self.assertEqual('<p><line class="wrap"><strong>hello</strong></line><line class="wrap"><strong>world</strong></line></p>', bs(html_fix_lines, '<p><strong>hello<br/>world</strong></p>'))
+
         # Trim empty line
         self.assertEqual('<p><line class="wrap">Hello</line></p>', bs(html_fix_lines, '<p><br/>Hello</p>'))
 
