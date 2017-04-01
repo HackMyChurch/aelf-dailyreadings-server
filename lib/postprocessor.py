@@ -494,6 +494,12 @@ def html_fix_paragraph(soup):
         else:
             tag.extract()
 
+    # TODO: we must not nest p. If any element is not in a p, we should collect all its siblings and move them to a paragraph
+    # loop on *all* nodes. 
+    # If node is a p --> next
+    # If node is not a p --> wrap it in a p *and* collect all the new non p neighbors and put them in the paragraph
+    # TODO: what if the element itself contains a p ? --> if it's a blockelem --> skip
+
     # Ensure each <br> is in a p
     node = soup.find('br')
     while node:

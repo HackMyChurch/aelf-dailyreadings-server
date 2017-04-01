@@ -31,7 +31,7 @@ HTML_BLOCK_ELEMENTS = [
         "section", "nav",
         "header", "footer",
         "table", "thread", "tbody", "td", "tr", "th",
-        "div", "p"
+        "div", "p", "blockquote",
 ]
 
 # Simple translation tables
