@@ -62,10 +62,10 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_verse, '<font color="#c00" some_tag="data">hello</font>'))
 
         # Red, verse
-        self.assertEqual('<span aria-hidden="true" class="verse verse-v2">1.42</span>', bs(html_fix_verse, '<font color="#f00"> 1.42 </font>'))
+        self.assertEqual('<span aria-hidden="true" class="verse">1.42</span>', bs(html_fix_verse, '<font color="#f00"> 1.42 </font>'))
 
         # Pre-existing verse
-        self.assertEqual('<span aria-hidden="true" class="verse verse-v2">42</span>', bs(html_fix_verse, '<span class="verse_number" disabled="true">42</span>'))
+        self.assertEqual('<span aria-hidden="true" class="verse">42</span>', bs(html_fix_verse, '<span class="verse_number" disabled="true">42</span>'))
 
     def test_html_fix_paragraph(self):
         from lib.postprocessor import html_fix_paragraph

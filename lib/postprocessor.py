@@ -463,7 +463,7 @@ def html_fix_verse(soup):
             tag.string = tag.string.strip()
             del tag['color']
             tag['aria-hidden'] = 'true'
-            tag['class'] = 'verse verse-v2'
+            tag['class'] = 'verse'
         # Is it "just" red ? (refrain)
         elif is_red:
             tag['color'] = '#ff0000'
@@ -473,7 +473,7 @@ def html_fix_verse(soup):
     # Fix lecture's verses
     for tag in soup.find_all('span', class_='verse_number'):
         tag.attrs = {
-            'class':       'verse verse-v2',
+            'class':       'verse',
             'aria-hidden': 'true',
         }
 
