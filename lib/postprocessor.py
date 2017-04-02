@@ -521,8 +521,8 @@ def html_fix_paragraph(soup):
     # If node is not a p --> wrap it in a p *and* collect all the new non p neighbors and put them in the paragraph
     # TODO: what if the element itself contains a p ? --> if it's a blockelem --> skip
 
-    # Ensure each <br> is in a p
-    node = soup.find('br')
+    # Ensure each text element is in a p
+    node = soup.find(text=lambda text:isinstance(text, NavigableString))
     while node:
         parent = node.parent
         while parent:
@@ -532,7 +532,7 @@ def html_fix_paragraph(soup):
 
         if parent.name != 'p':
             _wrap_node_children(soup, parent, 'p')
-        node = node.find_next('br')
+        node = node.find_next(text=lambda text:isinstance(text, NavigableString))
 
     # Convert sequences of <br/> to <p>
     node = soup.find('br')

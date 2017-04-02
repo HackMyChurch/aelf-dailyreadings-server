@@ -82,6 +82,7 @@ class TestPostprocessor(unittest.TestCase):
 
         # Simple paragraph wrap
         self.assertEqual('', bs(html_fix_paragraph, '<br>'))
+        self.assertEqual('<p>hello</p>', bs(html_fix_paragraph, 'hello'))
         self.assertEqual('<p><br/>hello</p>', bs(html_fix_paragraph, '<br>hello'))
         self.assertEqual('<p><br/>world</p>', bs(html_fix_paragraph, '<br/>world'))
 
