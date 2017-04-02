@@ -192,6 +192,7 @@ def fix_case(sentence):
     chunks = sentence.split(' ')
     cleaned = []
 
+    # Remove as many upper case letters as possible
     for i, chunk in enumerate(chunks):
         if not chunk:
             continue
@@ -211,7 +212,11 @@ def fix_case(sentence):
         cleaned.append('\''.join(word_chunks))
         if cleaned:
             cleaned[0] = cleaned[0].capitalize()
-    return ' '.join(cleaned)
+    sentence = ' '.join(cleaned)
+
+    # Make sure punctuation is followed by an upper case letter
+    sentence = re.sub(r'([.:!?«»()]\s*)([a-z])', lambda match: match.group(1) + match.group(2).upper(), sentence)
+    return sentence
 
 def fix_common_typography(text):
     '''

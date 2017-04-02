@@ -146,3 +146,6 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual(u'Sermon de saint L\xe9on le grand pour l\'anniversaire de son ordination', fix_case(u'SERMON DE S. LÉON LE GRAND POUR L\'ANNIVERSAIRE DE SON ORDINATION'))
         self.assertEqual(u'Actes du Concile Vatican II', fix_case(u'Actes Du Concile Vatican ii'))
         self.assertEqual(u'Psaume IV', fix_case(u'pSauMe iv'))
+        self.assertEqual(
+                 u'Evangile : « Celui qui perdra sa vie à cause de moi la sauvera » (Lc 9, 22-25)',
+        fix_case(u'Evangile : « Celui qui perdra sa vie à cause de moi la sauvera » (Lc  9, 22-25)'))
