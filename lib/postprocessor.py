@@ -118,7 +118,7 @@ def _wrap_node_children(soup, parent, name, *args, **kwargs):
     parent.clear()
     parent.append(intermediate)
 
-def _split_node_parent(soup, name, first, last=None, keep_delimiters=False):
+def _split_node_parent(soup, name, first, last=None, keep_delimiters=False, **kwargs):
     '''
     Split first's parent tag from first to last tags. If any of the resulting tag
     is empty, drop it.
@@ -159,7 +159,10 @@ def _split_node_parent(soup, name, first, last=None, keep_delimiters=False):
 
     # Recurse
     if current_parent.name != name:
-        _split_node_parent(soup, name, new_parent, keep_delimiters=True)
+        _split_node_parent(soup, name, new_parent, keep_delimiters=True, **kwargs)
+    for key, value in kwargs.iteritems():
+        if key not in current_parent.attrs or current_parent.attrs[key] != value:
+            _split_node_parent(soup, name, new_parent, keep_delimiters=True, **kwargs)
 
     # Make sure neither container is empty
     for parent in [new_parent, current_parent]:
@@ -554,26 +557,28 @@ def html_fix_lines(soup):
     via CSS. At this stage, we have the guarantee that all br live in a p and are
     single. Ie, there is never an empty line in a paragraph.
     '''
+    CLASS_LINE={'class': ['line']}
+
     # Ensure each <p> contains a <line>
     for p in soup.find_all('p'):
-        if p.find('line'):
+        if p.find('span', class_="line"):
             continue
-        _wrap_node_children(soup, p, 'line')
+        _wrap_node_children(soup, p, 'span', **CLASS_LINE)
 
-    # Convert <br> to <line>
+    # Convert <br> to <span class="line">
     node = soup.find('br')
     while node:
         # Get a pointer on next iteration node, while we have valid references
         next_iteration_node = node.find_next('br')
 
         # Build a new paragraph for all preceeding elements, we have the guarantee that the parent is a p
-        _split_node_parent(soup, 'line', node)
+        _split_node_parent(soup, 'span', node, **CLASS_LINE)
 
         # Move on
         node = next_iteration_node
 
     # Decide if we should wrap lines
-    lines = soup.find_all('line') or []
+    lines = soup.find_all('span', class_="line") or []
     line_count = len(lines) or 1
     line_avg_len = 0
     line_len = 0
@@ -585,10 +590,10 @@ def html_fix_lines(soup):
     # There must be at *least* 2 lines and a "good" ratio of char / line
     if line_count > 1 and line_avg_len < 70:
         for line in lines:
-            line['class'] = 'wrap'
+            line['class'] = 'line line-wrap'
 
     # Remove empty line
-    for line in soup.find_all('line'):
+    for line in soup.find_all('span', class_="line"):
         if not ' '.join(line.strings).strip():
             line.extract()
 

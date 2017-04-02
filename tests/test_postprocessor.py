@@ -97,23 +97,23 @@ class TestPostprocessor(unittest.TestCase):
 
         # Noop
         self.assertEqual('', bs(html_fix_lines, ''))
-        self.assertEqual('<p><line class="wrap">hello</line><line class="wrap">world</line></p>',        bs(html_fix_lines, '<p><line class="wrap">hello</line><line class="wrap">world</line></p>'))
-        self.assertEqual('<p><line class="wrap">hello</line></p><p><line class="wrap">world</line></p>', bs(html_fix_lines, '<p><line class="wrap">hello</line></p><p><line class="wrap">world</line></p>'))
+        self.assertEqual('<p><span class="line line-wrap">hello</span><span class="line line-wrap">world</span></p>',        bs(html_fix_lines, '<p><span class="line line-wrap">hello</span><span class="line line-wrap">world</span></p>'))
+        self.assertEqual('<p><span class="line line-wrap">hello</span></p><p><span class="line line-wrap">world</span></p>', bs(html_fix_lines, '<p><span class="line line-wrap">hello</span></p><p><span class="line line-wrap">world</span></p>'))
 
         # Simple line wrap
-        self.assertEqual('<p><line>hello world</line></p>', bs(html_fix_lines, '<p>hello world</p>'))
+        self.assertEqual('<p><span class="line">hello world</span></p>', bs(html_fix_lines, '<p>hello world</p>'))
 
         # Nested line wrap
-        self.assertEqual('<p><line class="wrap"><strong>hello</strong></line><line class="wrap"><strong>world</strong></line></p>', bs(html_fix_lines, '<p><strong>hello<br/>world</strong></p>'))
+        self.assertEqual('<p><span class="line line-wrap"><strong>hello</strong></span><span class="line line-wrap"><strong>world</strong></span></p>', bs(html_fix_lines, '<p><strong>hello<br/>world</strong></p>'))
 
         # Trim empty line
-        self.assertEqual('<p><line>Hello</line></p>', bs(html_fix_lines, '<p><br/>Hello</p>'))
+        self.assertEqual('<p><span class="line">Hello</span></p>', bs(html_fix_lines, '<p><br/>Hello</p>'))
 
         # Line reconstruction
-        self.assertEqual('<p><line class="wrap">hello</line><line class="wrap">world</line></p><p><line class="wrap">hello</line><line class="wrap">world</line></p>', bs(html_fix_lines, '<p>hello<br/>world</p><p>hello<br/>world</p>'))
-        self.assertEqual('<p><line>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</line></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
-        self.assertEqual('<p><line>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</line></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
-        self.assertEqual('<p><line>hello world</line></p>', bs(html_fix_lines, '<p><br/>hello world</p>'))
+        self.assertEqual('<p><span class="line line-wrap">hello</span><span class="line line-wrap">world</span></p><p><span class="line line-wrap">hello</span><span class="line line-wrap">world</span></p>', bs(html_fix_lines, '<p>hello<br/>world</p><p>hello<br/>world</p>'))
+        self.assertEqual('<p><span class="line">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
+        self.assertEqual('<p><span class="line">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
+        self.assertEqual('<p><span class="line">hello world</span></p>', bs(html_fix_lines, '<p><br/>hello world</p>'))
 
     def test_fix_common_typography(self):
         from lib.postprocessor import fix_common_typography
