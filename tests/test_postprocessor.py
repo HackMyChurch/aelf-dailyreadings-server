@@ -37,6 +37,11 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual("<p>hello</p>", bs(html_fix_comments, "<p>hello</p>"))
         self.assertEqual("<p>hello</p>", bs(html_fix_comments, "<p>hello<!-- comment --></p>"))
         self.assertEqual("<p>hello</p>", bs(html_fix_comments, "<p>hello<!-- comment --></p><!-- <u>test</u> -->"))
+        self.assertEqual("<p>hello<font color=\"#CC0000\">R/ </font></p>", bs(html_fix_comments, """<p>hello<font color="#CC0000">R/ <!--[if gte mso 9]><xml>
+        <o:OfficeDocumentSettings>
+            <o:TargetScreenSize>800x600</o:TargetScreenSize>
+        </o:OfficeDocumentSettings>
+        </xml><![endif]--></font></p>"""))
 
     def test_html_fix_verse(self):
         from lib.postprocessor import html_fix_verse

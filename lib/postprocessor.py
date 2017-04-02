@@ -614,13 +614,13 @@ def postprocess_office_html_lecture(version, mode, lecture):
     lecture['title'] = fix_common_typography(lecture['title'])
 
     # Process text
-    lecture['text'] = fix_common_typography(lecture['text'])
     soup = BeautifulSoup(lecture['text'], 'html5lib')
     html_fix_comments(soup)
     html_fix_verse(soup)
     html_fix_paragraph(soup)
     html_fix_lines(soup)
     lecture['text'] = unicode(soup.body)[6:-7]
+    lecture['text'] = fix_common_typography(lecture['text'])
 
 def postprocess_office_html(version, mode, data):
     '''
