@@ -9,7 +9,7 @@ to the server:
 
 - Correctly style <p> inside <blockquote>
 - Correctly style references
-- Fix R/, V/ formating
+- [PARTIAL] Fix R/, V/ formating
 - Fix inflexion markers
 - Fix acclamation, antienne, verse, repons
 

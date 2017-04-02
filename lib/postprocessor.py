@@ -249,6 +249,16 @@ def fix_common_typography(text):
 
     return text
 
+def fix_rv(text):
+    '''
+    Quick and dirty port of the "rv" formating. Detects R/ and V/ in the offices
+    and turn it bold. As this is upper case, we can assume that it will not
+    collide with tags name, hence bypass the overhead of bs4
+    '''
+    text = text.replace('R/', '<strong>R/</strong>')
+    text = text.replace('V/', '<strong>V/</strong>')
+    return text
+
 def get_pronoun_for_sentence(sentence):
     words = [w.lower() for w in sentence.split(" ")]
 
@@ -629,6 +639,7 @@ def postprocess_office_html_lecture(version, mode, lecture):
     html_fix_lines(soup)
     lecture['text'] = unicode(soup.body)[6:-7]
     lecture['text'] = fix_common_typography(lecture['text'])
+    lecture['text'] = fix_rv(lecture['text'])
 
 def postprocess_office_html(version, mode, data):
     '''
