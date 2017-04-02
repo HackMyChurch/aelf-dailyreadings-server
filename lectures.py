@@ -6,6 +6,7 @@ import datetime
 from utils import get_asset, get_office_for_day_aelf_json, get_lecture_text_from_epitre
 from utils import get_lectures_by_type, get_lecture_by_type, insert_lecture_before
 from lib.postprocessor import postprocess_office_html_lecture
+from lib.postprocessor import postprocess_office_lecture_text
 
 def postprocess(version, mode, data):
     # Do not enable postprocessing for versions before 20, unless beta mode
@@ -36,6 +37,7 @@ def postprocess(version, mode, data):
     if lecture_item and not lecture_item.lecture['text']:
         try:
             lecture_item.lecture['text'] = get_lecture_text_from_epitre(lecture_item.lecture['reference'])
+            lecture_item.lecture['text'] = postprocess_office_lecture_text(version, mode, lecture_item.lecture['text'])
         except:
             # This is best effort. We don't want the fallback path to bring the whole stuff down !
             pass

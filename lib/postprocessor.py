@@ -620,34 +620,48 @@ def html_fix_lines(soup):
 # Postprocessors
 #
 
-def postprocess_office_html_lecture(version, mode, lecture):
+def postprocess_office_lecture_title(version, mode, title):
     '''
-    Clean a single lecture
+    Run all title cleaners
     '''
     if version < 30:
-        return lecture
+        return title
 
-    # Process title
-    lecture['title'] = fix_case(lecture['title'])
-    lecture['title'] = fix_common_typography(lecture['title'])
+    title = fix_case(title)
+    title = fix_common_typography(title)
 
-    # Process text
-    soup = BeautifulSoup(lecture['text'], 'html5lib')
+    return title
+
+def postprocess_office_lecture_text(version, mode, text):
+    '''
+    Run all text cleaners
+    '''
+    if version < 30:
+        return text
+
+    soup = BeautifulSoup(text, 'html5lib')
     html_fix_comments(soup)
     html_fix_verse(soup)
     html_fix_paragraph(soup)
     html_fix_lines(soup)
-    lecture['text'] = unicode(soup.body)[6:-7]
-    lecture['text'] = fix_common_typography(lecture['text'])
-    lecture['text'] = fix_rv(lecture['text'])
+    text = unicode(soup.body)[6:-7]
+    text = fix_common_typography(text)
+    text = fix_rv(text)
+
+    return text
+
+def postprocess_office_html_lecture(version, mode, lecture):
+    '''
+    Run all cleaners on a lecture, typically used when loading an asset which is
+    supposed to be compatible with the broken AELF format.
+    '''
+    lecture['title'] = postprocess_office_lecture_title(version, mode, lecture['title'])
+    lecture['text']  = postprocess_office_lecture_text (version, mode, lecture['text'])
 
 def postprocess_office_html(version, mode, data):
     '''
     Find all office text and normalize html markup.
     '''
-    if version < 30:
-        return data
-
     for variant in data['variants']:
         for lecture in variant['lectures']:
             postprocess_office_html_lecture(version, mode, lecture)
