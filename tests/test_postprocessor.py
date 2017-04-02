@@ -50,14 +50,14 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual("", bs(html_fix_verse, ""))
         self.assertEqual("<p>hello</p>", bs(html_fix_verse, "<p>hello</p>"))
 
-        # Non-red
-        self.assertEqual("hello", bs(html_fix_verse, "<font>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_verse, "<font color='#'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_verse, "<font color='#0'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_verse, "<font color='#0'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_verse, "<font color='#000'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_verse, "<font color='#000000'>hello</font>"))
-        self.assertEqual("hello", bs(html_fix_verse, "<font color='#fff'>hello</font>"))
+        # Non-red (FIXME: it should drop the 'font' tag BUT that causes some crashes. See code for more info)
+        self.assertEqual("<font>hello</font>", bs(html_fix_verse, "<font>hello</font>"))
+        self.assertEqual("<font>hello</font>", bs(html_fix_verse, "<font color='#'>hello</font>"))
+        self.assertEqual("<font>hello</font>", bs(html_fix_verse, "<font color='#0'>hello</font>"))
+        self.assertEqual("<font>hello</font>", bs(html_fix_verse, "<font color='#0'>hello</font>"))
+        self.assertEqual("<font>hello</font>", bs(html_fix_verse, "<font color='#000'>hello</font>"))
+        self.assertEqual("<font>hello</font>", bs(html_fix_verse, "<font color='#000000'>hello</font>"))
+        self.assertEqual("<font>hello</font>", bs(html_fix_verse, "<font color='#fff'>hello</font>"))
 
         # Red, text
         self.assertEqual('<font color="#ff0000">hello</font>', bs(html_fix_verse, '<font color="#Ff0000">hello</font>'))

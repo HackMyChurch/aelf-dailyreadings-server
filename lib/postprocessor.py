@@ -476,7 +476,10 @@ def html_fix_verse(soup):
         elif is_red:
             tag['color'] = '#ff0000'
         else:
-            tag.unwrap()
+            # We can not unwrap as there may be nested "font" tags, and that would crash
+            # one possible fix would be to search empty fonts starting from the leafs and
+            # going up
+            tag.attrs={}
 
     # Fix lecture's verses
     for tag in soup.find_all('span', class_='verse_number'):
