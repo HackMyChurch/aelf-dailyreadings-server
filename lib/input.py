@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
+from requests.adapters import HTTPAdapter
 
 import yaml
 from bs4 import BeautifulSoup
@@ -16,6 +17,8 @@ from .postprocessor import is_int, clean_ref, _id_to_title # FIXME
 # Create a connection pool
 session = requests.Session()
 session.headers.update(HEADERS)
+session.mount('http://',  HTTPAdapter(max_retries=3))
+session.mount('https://', HTTPAdapter(max_retries=3))
 
 # TODO: memoization
 
