@@ -5,6 +5,7 @@ import datetime
 
 from utils import get_asset, get_office_for_day_aelf_json, get_lecture_text_from_epitre
 from utils import get_lectures_by_type, get_lecture_by_type, insert_lecture_before
+from lib.postprocessor import postprocess_office_html_lecture
 
 def postprocess(version, mode, data):
     # Do not enable postprocessing for versions before 20, unless beta mode
@@ -48,6 +49,7 @@ def postprocess(version, mode, data):
             'reference': '',
             'key':       'te_deum',
         }
+        postprocess_office_html_lecture(version, mode, te_deum_lecture)
         insert_lecture_before(data, te_deum_lecture, oraison_item)
 
     # Fix oraison slide title: there is no benediction

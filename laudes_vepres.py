@@ -5,6 +5,7 @@ import copy
 
 from utils import get_asset
 from utils import get_lecture_by_type, insert_lecture_before, insert_lecture_after
+from lib.postprocessor import postprocess_office_html_lecture
 
 def postprocess(version, mode, data):
     '''
@@ -28,6 +29,7 @@ def postprocess(version, mode, data):
         'reference': '',
         'key':       'te_deum',
     }
+    postprocess_office_html_lecture(version, mode, notre_pere_lecture)
 
     if notre_pere_item:
         notre_pere_item.lecture.update(notre_pere_lecture)
@@ -42,6 +44,7 @@ def postprocess(version, mode, data):
         'reference': '',
         'key':       'benediction',
     }
+    postprocess_office_html_lecture(version, mode, benediction_lecture)
     insert_lecture_after(data, benediction_lecture, oraison_item)
 
     # All done

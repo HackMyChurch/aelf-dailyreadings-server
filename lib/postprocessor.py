@@ -602,6 +602,26 @@ def html_fix_lines(soup):
 # Postprocessors
 #
 
+def postprocess_office_html_lecture(version, mode, lecture):
+    '''
+    Clean a single lecture
+    '''
+    if version < 30:
+        return lecture
+
+    # Process title
+    lecture['title'] = fix_case(lecture['title'])
+    lecture['title'] = fix_common_typography(lecture['title'])
+
+    # Process text
+    lecture['text'] = fix_common_typography(lecture['text'])
+    soup = BeautifulSoup(lecture['text'], 'html5lib')
+    html_fix_comments(soup)
+    html_fix_verse(soup)
+    html_fix_paragraph(soup)
+    html_fix_lines(soup)
+    lecture['text'] = unicode(soup.body)[6:-7]
+
 def postprocess_office_html(version, mode, data):
     '''
     Find all office text and normalize html markup.
@@ -611,18 +631,7 @@ def postprocess_office_html(version, mode, data):
 
     for variant in data['variants']:
         for lecture in variant['lectures']:
-            # Process title
-            lecture['title'] = fix_case(lecture['title'])
-            lecture['title'] = fix_common_typography(lecture['title'])
-
-            # Process text
-            lecture['text'] = fix_common_typography(lecture['text'])
-            soup = BeautifulSoup(lecture['text'], 'html5lib')
-            html_fix_comments(soup)
-            html_fix_verse(soup)
-            html_fix_paragraph(soup)
-            html_fix_lines(soup)
-            lecture['text'] = unicode(soup.body)[6:-7]
+            postprocess_office_html_lecture(version, mode, lecture)
 
     return data
 
