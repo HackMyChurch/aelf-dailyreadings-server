@@ -157,7 +157,7 @@ def get_office_for_day_api(office, date):
                     else:
                         titre = u"%sème %s" % (number, titre)
 
-                if lecture['titre']:
+                if lecture.get('titre'):
                     titre = u'%s : %s' % (titre, lecture['titre'])
 
                 texte = []
