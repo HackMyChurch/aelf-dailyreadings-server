@@ -121,6 +121,10 @@ def get_status():
     # All good !
     return Response(json.dumps(int(time.time())), mimetype='application/json')
 
+@app.route('/robots.txt')
+def get_robots():
+    return Response("User-agent: *\nDisallow: /\n", mimetype='text/plain')
+
 #
 # Modern API (beta)
 #
