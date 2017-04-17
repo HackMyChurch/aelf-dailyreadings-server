@@ -173,6 +173,51 @@ def _split_node_parent(soup, name, first, last=None, keep_delimiters=False, **kw
 # API
 #
 
+NUMBER_TO_WORDS = {
+    '1':  'un',
+    '2':  'deux',
+    '3':  'trois',
+    '4':  'quatre',
+    '5':  'cinq',
+    '6':  'six',
+    '7':  'sept',
+    '8':  'huit',
+    '9':  'neuf',
+    '10': 'dix',
+    '11': 'onze',
+    '12': 'douze',
+    '13': 'treize',
+    '14': 'quatorze',
+    '15': 'quinze',
+    '16': 'seize',
+    '20': 'vingt',
+}
+
+def fix_number_abbrev(match):
+    number = match.group(1)
+    abbrev = match.group(2)
+    word = ''
+
+    if number == '1':
+        word = 'prem'
+    elif number in NUMBER_TO_WORDS:
+        word = NUMBER_TO_WORDS[number]
+    elif len(number) == 2 and number[0]+"0" in NUMBER_TO_WORDS and number[1] in NUMBER_TO_WORDS:
+        words = [NUMBER_TO_WORDS[number[0]+"0"], NUMBER_TO_WORDS[number[1]]]
+        if number[1] == '1':
+            words.insert(1, 'et')
+        word = '-'.join(words)
+    else:
+        return match.group(1) + match.group(2)
+
+    if word[-1] == 'e':
+        word = word[:-1]
+    elif word[-1] == 'f':
+        word = word[:-1]+'v'
+
+    return word + 'i' + abbrev
+
+
 def fix_abbrev(sentence):
     # Fix word splitting when multiple Saints
     sentence = re.sub(r'(\w)(S\.|St|Ste) ', r'\1, \2 ', sentence)
@@ -181,6 +226,9 @@ def fix_abbrev(sentence):
     sentence = sentence.replace("S. ",  "saint ")\
                        .replace("St ",  "saint ")\
                        .replace("Ste ", "sainte ")
+
+    # Fix number abreviations
+    sentence = re.sub(ur'([0-9]+)([èe](re?|me))', fix_number_abbrev, sentence)
 
     return sentence
 
@@ -364,6 +412,9 @@ def lectures_common_cleanup(data):
                     lecture['title'] = u"%s : %s" % (_id_to_title(name), lecture['title'])
             else:
                 lecture['title'] = _id_to_title(name)
+
+            # Remove number abbreviations from titles
+            lecture['title'] = fix_abbrev(lecture['title'])
 
             if lecture['reference']:
                 raw_ref = lecture['reference']

@@ -150,3 +150,15 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual(
                  u'Evangile : « Celui qui perdra sa vie à cause de moi la sauvera » (Lc 9, 22-25)',
         fix_case(u'Evangile : « Celui qui perdra sa vie à cause de moi la sauvera » (Lc  9, 22-25)'))
+
+    def test_fix_abbrev(self):
+        from lib.postprocessor import fix_abbrev
+
+        self.assertEqual(u'première', fix_abbrev(u'1ère'))
+        self.assertEqual(u'premier', fix_abbrev(u'1er'))
+        self.assertEqual(u'deuxième', fix_abbrev(u'2ème'))
+        self.assertEqual(u'quatrième', fix_abbrev(u'4ème'))
+        self.assertEqual(u'neuvième', fix_abbrev(u'9ème'))
+        self.assertEqual(u'seizième', fix_abbrev(u'16ème'))
+        self.assertEqual(u'dix-huitième', fix_abbrev(u'18ème'))
+        self.assertEqual(u'vingt-et-unième', fix_abbrev(u'21ème'))
