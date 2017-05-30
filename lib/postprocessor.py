@@ -237,6 +237,24 @@ def fix_case(sentence):
     Take a potentially all caps sentence as input and make it readable
     '''
     sentence = fix_abbrev(sentence)
+
+    # Heuristic: Only apply if the sentence has more than 5 char AND more than half capital letters
+    if len(sentence) < 5:
+        return sentence
+
+    upper_case_letters_count = 0
+    all_letters_count = 0
+    for c in sentence:
+        if not c.isalnum():
+            continue
+        all_letters_count += 1
+
+        if c.isupper():
+            upper_case_letters_count += 1
+
+    if (upper_case_letters_count < all_letters_count / 2):
+        return sentence
+
     chunks = sentence.split(' ')
     cleaned = []
 
@@ -254,7 +272,7 @@ def fix_case(sentence):
             c = word[0]
             word = word.lower()
             if c != word[0] and (word not in DETERMINANTS or i == 0):
-                word = word.capitalize()
+                word = '-'.join([w.capitalize() for w in word.split('-')])
             word_chunks.append(word)
 
         cleaned.append('\''.join(word_chunks))
