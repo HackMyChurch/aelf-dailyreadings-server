@@ -162,3 +162,13 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual(u'seizième', fix_abbrev(u'16ème'))
         self.assertEqual(u'dix-huitième', fix_abbrev(u'18ème'))
         self.assertEqual(u'vingt-et-unième', fix_abbrev(u'21ème'))
+
+    def test_clean_ref(self):
+        from lib.postprocessor import clean_ref
+
+        self.assertEqual(u'', clean_ref(u''))
+        self.assertEqual(u'Luc 1,32', clean_ref(u'Luc 1,32'))
+        self.assertEqual(u'1jn 4, 11-21', clean_ref(u'1jn 4, 11-21'))
+        self.assertEqual(u'Ps 1A', clean_ref(u'1A'))
+        self.assertEqual(u'Ps 1 12-13', clean_ref(u'1 12-13'))
+

@@ -62,9 +62,9 @@ def clean_ref(ref):
     if not ref:
         return ref
 
-    # Add 'Ps' if missing
+    # Add 'Ps' if missing (HACK: manage 1Jn and similar)
     chunks = ref.split(' ')
-    if _is_letter(chunks[0]) or (len(chunks) > 1 and _is_letter(chunks[1])):
+    if _is_letter(chunks[0]) or (len(chunks[0]) >= 3 and _is_letter(chunks[0][1:])) or (len(chunks) > 1 and _is_letter(chunks[1])):
         return ref
 
     return 'Ps %s' % ref
