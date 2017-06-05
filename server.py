@@ -181,8 +181,11 @@ def do_get_office(version, office, date):
         return return_error(last_http_error.status, last_http_error.message)
 
     # Apply office specific postprocessor
-    for postprocessor in OFFICES[office]['postprocess']:
-        data = postprocessor(version, mode, data)
+    try:
+        for postprocessor in OFFICES[office]['postprocess']:
+            data = postprocessor(version, mode, data)
+    except Exception as e:
+        return return_error(500, u"Erreur lors de la génération de l'office.")
 
     # Return
     return data
