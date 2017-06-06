@@ -83,8 +83,8 @@ class TestPostprocessor(unittest.TestCase):
         # Simple paragraph wrap
         self.assertEqual('', bs(html_fix_paragraph, '<br>'))
         self.assertEqual('<p>hello</p>', bs(html_fix_paragraph, 'hello'))
-        self.assertEqual('<p><br/>hello</p>', bs(html_fix_paragraph, '<br>hello'))
-        self.assertEqual('<p><br/>world</p>', bs(html_fix_paragraph, '<br/>world'))
+        self.assertEqual('<p>hello</p>', bs(html_fix_paragraph, '<br>hello'))
+        self.assertEqual('<p>world</p>', bs(html_fix_paragraph, '<br/>world'))
 
         # Trim empty p
         self.assertEqual('<p>Hello</p>', bs(html_fix_paragraph, '<p></p><p>Hello</p>'))
@@ -97,6 +97,9 @@ class TestPostprocessor(unittest.TestCase):
 
         # Paragraph cleaner
         self.assertEqual('<p>world</p>', bs(html_fix_paragraph, '<p style="text-decoration: underline;" class="hello">world</p>'))
+
+        # Regression test for lecture / 23/06/2017
+        self.assertEqual(u'<p>J\'ai vu l\'eau vive!</p>', bs(html_fix_paragraph, u'<br /><br /><p>J\'ai vu l\'eau vive!</p>'))
 
     def test_html_fix_lines(self):
         from lib.postprocessor import html_fix_lines

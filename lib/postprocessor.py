@@ -574,12 +574,26 @@ def html_fix_paragraph(soup):
     belong to a paragraph.
     '''
     # Locate and remove orphaned <br>. A <br> is considered orphaned if it has a block
-    # on both sides.
+    # on both sides OR is the start / end of a block
     for tag in soup.find_all('br'):
         # TODO: support empty navigable strings
+
+        # Remove element if it is the first
+        if tag.next_sibling is None or tag.previous_sibling is None:
+            tag.extract()
+            continue
+
+        # Remove element if it is only followed by br/ or last element
+        sibling = tag.next_sibling
+        while sibling and isinstance(sibling, Tag) and sibling.name in ['br']:
+            sibling = sibling.next_sibling
+        if sibling is None:
+            tag.extract()
+            continue
+
+        # Remove element if it is between 2 lock elements
         for sibling in [tag.next_sibling, tag.previous_sibling]:
-            if not (sibling is None or (isinstance(sibling, Tag) and sibling.name in HTML_BLOCK_ELEMENTS)):
-                is_orphan = False
+            if not (isinstance(sibling, Tag) and sibling.name in HTML_BLOCK_ELEMENTS):
                 break
         else:
             tag.extract()
