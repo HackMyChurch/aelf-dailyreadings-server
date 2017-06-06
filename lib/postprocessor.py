@@ -252,7 +252,7 @@ def fix_case(sentence):
         if c.isupper():
             upper_case_letters_count += 1
 
-    if (upper_case_letters_count < all_letters_count / 2):
+    if (upper_case_letters_count < all_letters_count / 3):
         return sentence
 
     chunks = sentence.split(' ')
