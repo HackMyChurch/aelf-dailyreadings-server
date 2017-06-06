@@ -50,5 +50,13 @@ class TestBase(unittest.TestCase):
         return res
 
     def setUp(self):
+        def fakeCallback(*args, **kwargs):
+            return None
+
         self.app = server.app.test_client()
+        self.app.debug = True
+        self.app.config = {}
+        self.app.import_name = "unittests"
+        self.app.before_request = fakeCallback
+        server.sentry.init_app(self.app)
 

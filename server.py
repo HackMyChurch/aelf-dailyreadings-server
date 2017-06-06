@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, Response, abort, request, jsonify
+from raven.contrib.flask import Sentry
 app = Flask(__name__)
+sentry = Sentry()
 
 import os
 import time
@@ -17,7 +19,7 @@ from lib.exceptions import AelfHttpError
 from lib.postprocessor import postprocess_office_common
 from lib.postprocessor import postprocess_office_html
 from lib.output import office_to_json, office_to_rss
-from keys import KEY_TO_OFFICE
+from keys import KEY_TO_OFFICE, SENTRY_DSN
 
 CURRENT_VERSION = 28
 
@@ -146,14 +148,22 @@ def do_get_office(version, office, date):
     data = None
     error = None
 
+    sentry_data = {
+        'application': version,
+        'office': office,
+        'date': date,
+    }
+
     # Validate office name
     if office not in OFFICES:
+        sentry.captureMessage("Invalid office", extra=sentry_data);
 	return return_error(404, u"Cet office (%s) est inconnu..." % office)
 
     # Validate API engine
     office_api_engine_name = OFFICES[office].get('api', 'json')
     office_api_engines = APIS.get(office_api_engine_name, None)
     if not office_api_engines:
+        sentry.captureMessage("Missing office engine", extra=sentry_data);
 	return return_error(500, u"Hmmm, où se trouve donc l'office %s ?" % office)
 
     # Attempt all engines until we find one that works
@@ -163,15 +173,17 @@ def do_get_office(version, office, date):
         try:
             data = office_api_engine(office, date)
         except AelfHttpError as http_err:
+            sentry.captureException(extra=sentry_data)
             last_http_error = http_err
             continue
         except Exception as e:
+            sentry.captureException(extra=sentry_data)
             last_http_error = AelfHttpError(500, str(e))
-            raise
             continue
 
         # Does it look broken ?
         if OFFICES[office].get('should_fallback', default_should_fallback)(version, mode, data):
+            sentry.captureMessage("Office is too short, triggering fallback", extra=sentry_data);
             last_http_error = AelfHttpError(500, u"L'office est trop court, c'est louche...")
             continue
         break
@@ -185,6 +197,7 @@ def do_get_office(version, office, date):
         for postprocessor in OFFICES[office]['postprocess']:
             data = postprocessor(version, mode, data)
     except Exception as e:
+        sentry.captureException(extra=sentry_data)
         return return_error(500, u"Erreur lors de la génération de l'office.")
 
     # Return
@@ -207,5 +220,11 @@ def get_office_legacy(day, month, year, key):
 if __name__ == "__main__":
     if os.environ.get('AELF_DEBUG', False):
         app.debug = True
+
+    # Init Sentry
+    if app.debug:
+        sentry.init_app(app)
+    else:
+        sentry.init_app(app, dsn=SENTRY_DSN)
     app.run(host="0.0.0.0", port=4000)
 
