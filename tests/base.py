@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os
+
+os.environ['AELF_DEBUG'] = "1"
+
 import unittest
 import server
 import mock
@@ -54,8 +57,3 @@ class TestBase(unittest.TestCase):
             return None
 
         self.app = server.app.test_client()
-        self.app.debug = True
-        self.app.config = {}
-        self.app.import_name = "unittests"
-        self.app.before_request = fakeCallback
-
