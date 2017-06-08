@@ -65,6 +65,22 @@ OFFICES = {
     },
 }
 
+#
+# Init sentry
+#
+
+if os.environ.get('AELF_DEBUG', False):
+    app.debug = True
+
+if app.debug:
+    sentry.init_app(app)
+else:
+    sentry.init_app(app, dsn=SENTRY_DSN)
+
+#
+# Utils
+#
+
 def default_should_fallback(version, mode, data):
     office = data['office']
     return len(unicode(data)) < OFFICES[office].get('fallback_len_treshold', DEFAULT_FALLBACK_LEN_TRESHOLD)
@@ -176,21 +192,20 @@ def do_get_office(version, office, date, region):
         try:
             data = office_api_engine(office, date, region)
         except AelfHttpError as http_err:
-            sentry.captureException(extra=sentry_data)
             last_http_error = http_err
             continue
         except Exception as e:
-            sentry.captureException(extra=sentry_data)
             last_http_error = AelfHttpError(500, str(e))
             continue
 
         # Does it look broken ?
         if OFFICES[office].get('should_fallback', default_should_fallback)(version, mode, data):
-            sentry.captureMessage("Office is too short, triggering fallback", extra=sentry_data);
             last_http_error = AelfHttpError(500, u"L'office est trop court, c'est louche...")
             continue
         break
     else:
+        # Report unrecoverable errors
+        sentry.captureException(extra=sentry_data)
         if last_http_error.status == 404:
 	    return return_error(404, u"Aucune lecture n'a été trouvée pour cette date.")
         return return_error(last_http_error.status, last_http_error.message)
@@ -222,13 +237,5 @@ def get_office_legacy(day, month, year, key):
     return Response(rss, mimetype='application/rss+xml')
 
 if __name__ == "__main__":
-    if os.environ.get('AELF_DEBUG', False):
-        app.debug = True
-
-    # Init Sentry
-    if app.debug:
-        sentry.init_app(app)
-    else:
-        sentry.init_app(app, dsn=SENTRY_DSN)
     app.run(host="0.0.0.0", port=4000)
 
