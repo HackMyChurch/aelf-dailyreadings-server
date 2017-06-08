@@ -87,7 +87,7 @@ def postprocess_links(version, mode, data):
     # GENERATE the title slide
     links = ""
     date = data['date']
-    base_link = AELF_SITE.format(year=date.year, month=date.month, day=date.day, office='messe')
+    base_link = AELF_SITE.format(year=date.year, month=date.month, day=date.day, office='messe', region=data['informations']['zone'])
     for variant_counter, variant in enumerate(variant_data):
         links += '<a href="%s#%s" class="variant-%s">%s</a>' % (base_link, variant['key'], variant_counter, variant['name'])
 

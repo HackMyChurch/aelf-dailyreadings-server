@@ -58,5 +58,4 @@ class TestBase(unittest.TestCase):
         self.app.config = {}
         self.app.import_name = "unittests"
         self.app.before_request = fakeCallback
-        server.sentry.init_app(self.app)
 
