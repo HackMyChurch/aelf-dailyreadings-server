@@ -1,4 +1,4 @@
-FROM alpine:3.3
+FROM alpine:3.6
 MAINTAINER Jean-Tiare Le Bigot <jt@yadutaf.fr>
 
 RUN apk add --no-cache python py-lxml py-pip
