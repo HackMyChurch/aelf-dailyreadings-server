@@ -24,7 +24,7 @@ def postprocess_holly_saturday(version, mode, data):
     if version >= 29:
         date = data['date']
         date = date + datetime.timedelta(1)
-        base_link = AELF_SITE.format(year=date.year, month=date.month, day=date.day, office='messe')
+        base_link = AELF_SITE.format(year=date.year, month=date.month, day=date.day, office='messe', region=data['informations']['zone'])
         text += u'<div class="app-office-navigation"><a href="%s#messe1_lecture1" class="variant-1">Veillée Pascale</a></div>' % (base_link)
 
     data['variants'] = [

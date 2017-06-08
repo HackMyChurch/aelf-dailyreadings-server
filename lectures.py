@@ -22,7 +22,7 @@ def postprocess(version, mode, data):
     # Fix missing "Lecture"
     if lecture_item is None and repons_item is not None:
         # Grab lectures from the website, still json format
-        data_aelf = get_office_for_day_aelf_json("lectures", date)
+        data_aelf = get_office_for_day_aelf_json("lectures", date, data['informations']['zone'])
 
         # Attempt to get the lecture
         lecture_items = get_lectures_by_type(data_aelf, u"office_lecture")

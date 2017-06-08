@@ -19,6 +19,7 @@ from lib.exceptions import AelfHttpError
 from lib.postprocessor import postprocess_office_common
 from lib.postprocessor import postprocess_office_html
 from lib.output import office_to_json, office_to_rss
+from lib.constants import DEFAULT_REGION
 from keys import KEY_TO_OFFICE, SENTRY_DSN
 
 CURRENT_VERSION = 28
@@ -135,15 +136,17 @@ def get_robots():
 @app.route('/<int:version>/office/<office>/<date>.rss')
 def get_office_rss(version, office, date):
     date = parse_date_or_abort(date)
-    rss = office_to_rss(do_get_office(version, office, date))
+    region = request.args.get('region', DEFAULT_REGION)
+    rss = office_to_rss(do_get_office(version, office, date, region))
     return Response(rss, mimetype='application/rss+xml')
 
 @app.route('/<int:version>/office/<office>/<date>.json')
 def get_office_json(version, office, date):
     date = parse_date_or_abort(date)
-    return jsonify(office_to_json(do_get_office(version, office, date)))
+    region = request.args.get('region', DEFAULT_REGION)
+    return jsonify(office_to_json(do_get_office(version, office, date, region)))
 
-def do_get_office(version, office, date):
+def do_get_office(version, office, date, region):
     mode = "beta" if request.args.get('beta', 0) else "prod"
     data = None
     error = None
@@ -171,7 +174,7 @@ def do_get_office(version, office, date):
     for office_api_engine in office_api_engines:
         # Attempt to load
         try:
-            data = office_api_engine(office, date)
+            data = office_api_engine(office, date, region)
         except AelfHttpError as http_err:
             sentry.captureException(extra=sentry_data)
             last_http_error = http_err
@@ -213,8 +216,9 @@ def get_office_legacy(day, month, year, key):
 	return return_error(404, "Aucune lecture n'a été trouvée pour cet office.")
     office = KEY_TO_OFFICE[key]
     version = int(request.args.get('version', 0))
+    region = request.args.get('region', DEFAULT_REGION)
     date = datetime.date(year, month, day)
-    rss = office_to_rss(do_get_office(version, KEY_TO_OFFICE[key], date))
+    rss = office_to_rss(do_get_office(version, KEY_TO_OFFICE[key], date, region))
     return Response(rss, mimetype='application/rss+xml')
 
 if __name__ == "__main__":

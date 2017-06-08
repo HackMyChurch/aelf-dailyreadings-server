@@ -48,17 +48,17 @@ def _do_get_request(url):
 # API
 #
 
-def get_office_for_day_aelf(office, date):
-    return _do_get_request(AELF_SITE.format(office=office, day=date.day, month=date.month, year=date.year)).text
+def get_office_for_day_aelf(office, date, region):
+    return _do_get_request(AELF_SITE.format(office=office, day=date.day, month=date.month, year=date.year, region=region)).text
 
-def get_office_for_day_api(office, date):
+def get_office_for_day_api(office, date, region):
     '''
     Grab data from api.aelf.org and format it in a consistent way. This api is very creative in
     mixing different conventions in a single file. Output from the function is guaranteed to be
     consistent as far as the format is concerned, but is not yet post-proceced. You'll probably
     want to merge some readings befor sending.
     '''
-    data = _do_get_request(AELF_JSON.format(office=office, day=date.day, month=date.month, year=date.year)).json(object_pairs_hook=OrderedDict)
+    data = _do_get_request(AELF_JSON.format(office=office, day=date.day, month=date.month, year=date.year, region=region)).json(object_pairs_hook=OrderedDict)
 
     # Start to build our json format from API's format
     out = {
@@ -68,6 +68,9 @@ def get_office_for_day_api(office, date):
         u'office': office,
         u'date': date,
     }
+
+    # Force 'zone' in 'informations'
+    out['informations']['zone'] = region
 
     # 'information' office has no reading
     # FIXME: in the future, we'll get informations through "mass" only, and this case should move
@@ -205,13 +208,13 @@ def get_office_for_day_api(office, date):
     return lectures_common_cleanup(out)
 
 LAST = object()
-def get_office_for_day_aelf_json(office, date):
+def get_office_for_day_aelf_json(office, date, region):
     '''
     This is an alternative method to the API to get the offices. It works by scrapping
     the website and returning the same internal format as the API.
     This method is also used as a fallback in case a lecture or full office is missing
     '''
-    data = get_office_for_day_aelf(office, date)
+    data = get_office_for_day_aelf(office, date, region)
     soup = BeautifulSoup(data, 'html5lib')
     lectures = soup.find_all("div", class_="lecture")
     variant_titles = [title.string.capitalize() for title in soup.find_all('h1')]
@@ -229,6 +232,9 @@ def get_office_for_day_aelf_json(office, date):
         u'office': office,
         u'date': date,
     }
+
+    # Force 'zone' in 'informations'
+    out['informations']['zone'] = region
 
     for lecture in lectures:
         # Compute the variant id, go to next variant if needed

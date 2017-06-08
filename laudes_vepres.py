@@ -6,6 +6,7 @@ import copy
 from utils import get_asset
 from utils import get_lecture_by_type, insert_lecture_before, insert_lecture_after
 from lib.postprocessor import postprocess_office_html_lecture
+from lib.constants import REGION_NOTRE_PERE_NEW
 
 def postprocess(version, mode, data):
     '''
@@ -21,7 +22,10 @@ def postprocess(version, mode, data):
         return data
 
     # Fix Notre Père
-    notre_pere = get_asset('prayers/notre-pere')
+    if data['informations']['zone'] in REGION_NOTRE_PERE_NEW:
+        notre_pere = get_asset('prayers/notre-pere-new')
+    else:
+        notre_pere = get_asset('prayers/notre-pere')
     notre_pere_item = get_lecture_by_type(data, u"office_notre_pere")
     notre_pere_lecture = {
         'title':     notre_pere['title'],
