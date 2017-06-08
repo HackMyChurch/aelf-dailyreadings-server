@@ -5,5 +5,4 @@ PyYAML==3.11
 CherryPy==10.0.0
 Paste==2.0.3
 html5lib
-raven==6.1.0
-raven[flask]
+raven[flask]==6.1.0
