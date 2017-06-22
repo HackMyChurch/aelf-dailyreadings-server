@@ -14,7 +14,9 @@ class TestRouteCompat(TestBase):
         FakeResponse.status_code = 200
 
     @mock.patch('server.time.strftime')
-    def test_status(self, m_strftime):
+    @mock.patch('lib.input.requests.Session.get')
+    def test_status(self, m_get, m_strftime):
+        m_get.side_effect = self.m_get
         m_strftime.return_value = "2017:04:15"
 
         # Nominal, should return 200

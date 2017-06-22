@@ -85,6 +85,11 @@ def get_office_for_day_api(office, date, region):
         # Mass: multiple variants, lectures list inside, possible collision on types
         counter = 0; # We'll need it to generate variants name in case it's missing
         cleaned = []
+
+        # Fix missing intermediate level (https://api.aelf.org/v1/messes/2017-07-29/romain)
+        if (len(variants) > 0 and isinstance(variants[0], list)):
+            variants = [{'lectures': l} for l in variants]
+
         for variant in variants:
             # Yes, it appends (cf Rameaux)
             if not variant['lectures']:
@@ -92,7 +97,7 @@ def get_office_for_day_api(office, date, region):
 
             # Handle variants with missing name (cf Rameaux)
             counter += 1
-            if not variant['nom']:
+            if not 'nom' in variant or not variant['nom']:
                 variant['nom'] = "%s %s" % (OFFICE_NAME.get(office, office).capitalize(), counter)
 
             cleaned.append(variant)
