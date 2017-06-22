@@ -2,6 +2,8 @@
 
 import os
 
+CURRENT_VERSION = 39
+
 # Base URL / Paths
 AELF_JSON="https://api.aelf.org/v1/{office}/{year:04d}-{month:02d}-{day:02d}/{region}"
 AELF_SITE="http://www.aelf.org/{year:04d}-{month:02d}-{day:02d}/{region}/{office}"
