@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+        <title>AELF - Lectures du jour - API Status</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <h1>AELF - Lectures du jour - API Status <small>({{ date }})</small></h1>
+            {% if message %}
+            <div class="alert alert-{% if status == 200 %}info{% else %}danger{% endif %}" role="alert">
+                {{ message }}
+            </div>
+            {% endif %}
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        {% for office_name in office_names -%}
+                        <th>{{ office_name|capitalize }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for office_date, office in offices|dictsort -%}
+                    <tr>
+                        <td>{{ office_date }}</td>
+                        {% for name in office_names -%}
+                        <td data-toggle="tooltip" data-placement="top" title="{{office[name][1]}}" class="table-{% if office[name][0] == 'OK' %}success{% elif office[name][0] == 'WARN' %}warning{% else %}danger{% endif %}">
+                            <a href="{{ office[name][2] }}">{{ office[name][0] }}</a>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"                            integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+        <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+        </script>
+    </body>
+</html>

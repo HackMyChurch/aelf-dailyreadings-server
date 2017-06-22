@@ -5,7 +5,7 @@ import threading
 import datetime
 
 from office_controller import get as do_get_office, OFFICES
-from lib.constants import CURRENT_VERSION, STATUS_DAYS_TO_MONITOR, STATUS_DAYS_404_FATAL, STATUS_PROBE_INTERVAL
+from lib.constants import CURRENT_VERSION, STATUS_DAYS_TO_MONITOR, STATUS_DAYS_404_FATAL, STATUS_PROBE_INTERVAL, STATUS_PROBE_INTERVAL_ERROR
 
 REASON_OK="OK"
 REASON_WARN="WARN"
@@ -21,6 +21,8 @@ _runner = None
 _status = {
     'offices': {},
     'status': 200,
+    'date': 'in progress...',
+    'message': '',
 }
 
 #
@@ -53,15 +55,21 @@ def validate_future_offices():
     Loop over upcomming STATUS_DAYS_TO_MONITOR days and OFFICES and make sure they are valid
     '''
     global _status
-    status = {}
-    status_code = 200
-
     date = datetime.date.today()
+    status = {
+        'offices': {},
+        'status': 200,
+        'date': str(datetime.datetime.today()),
+        'message': '',
+    }
+
     for days_ahead in range(STATUS_DAYS_TO_MONITOR):
+        _status['message'] = 'Refreshing day %s of %d. Please wait.' % (days_ahead+1, STATUS_DAYS_TO_MONITOR)
         date += datetime.timedelta(days=1)
         date_str = str(date)
-        status[date_str] = {}
+        status['offices'][date_str] = {}
         for office_name in OFFICES.keys():
+            url = "/%s/office/%s/%s.json" % (CURRENT_VERSION, office_name, date_str)
             try:
                 office = do_get_office(CURRENT_VERSION, "prod", office_name, date, "romain")
                 reason = validate_office(office, days_ahead)
@@ -69,22 +77,27 @@ def validate_future_offices():
                 reason = (REASON_ERROR, str(e))
 
             if reason[0] == REASON_ERROR:
-                status_code = 500
+                status['offices']['status'] = 500
 
-            status[date_str][office_name] = reason
+            status['offices'][date_str][office_name] = reason[0], reason[1], url
 
     # Commit
-    _status = {
-        'offices': status,
-        'status': status_code,
-    }
+    _status = status
 
 def runner():
-    try:
-        validate_future_offices()
-    except Exception as e:
-        print "Failed to validate status: "+str(e)
-    time.sleep(STATUS_PROBE_INTERVAL)
+    while True:
+        next_sleep_interval = STATUS_PROBE_INTERVAL
+        try:
+            validate_future_offices()
+        except Exception as e:
+            _status['message'] = "Failed to validate status: "+str(e)
+            _status['status'] = 500
+            next_sleep_interval = STATUS_PROBE_INTERVAL_ERROR
+
+        if _status['status'] != 200:
+            next_sleep_interval = STATUS_PROBE_INTERVAL_ERROR
+
+        time.sleep(next_sleep_interval)
 
 #
 # Public API

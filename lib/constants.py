@@ -51,10 +51,11 @@ REGION_NOTRE_PERE_NEW = ['belgique']
 
 # Internal Monitoring
 # The application syncs up to 30 days in the future. This gives 2 week to fix errors
-STATUS_DAYS_TO_MONITOR = 45
+STATUS_DAYS_TO_MONITOR = int(os.environ.get('AELF_STATUS_DAYS_TO_MONITOR', 45))
 
 # 404 error become fatal 2 weeks ahead
 STATUS_DAYS_404_FATAL = 15
 
 STATUS_PROBE_INTERVAL = 3600 * 24
+STATUS_PROBE_INTERVAL_ERROR = 60 * 15
 

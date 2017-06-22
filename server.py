@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, Response, abort, request, jsonify
+from flask import Flask, Response, abort, request, jsonify, render_template
 from raven.contrib.flask import Sentry
 app = Flask(__name__)
 sentry = Sentry()
@@ -14,7 +14,7 @@ import office_controller
 from lib.output import office_to_json, office_to_rss
 from lib.constants import DEFAULT_REGION, CURRENT_VERSION
 from keys import KEY_TO_OFFICE, SENTRY_DSN
-from office_controller import get as do_get_office, return_error
+from office_controller import get as do_get_office, return_error, OFFICES
 import status
 
 #
@@ -47,24 +47,35 @@ def parse_date_or_abort(date):
 #
 
 @app.route('/status')
-def get_status():
-    status_code = 200
+@app.route('/status.<format>')
+def get_status(format="json"):
     status_data = status.get_status_data()
-    status_data['message'] = ""
+    status_code = status_data['status']
+    status_message = status_data['message']
 
     # Attempt to get the mass for today. If we can't, we are in trouble
     try:
         mass = do_get_office(CURRENT_VERSION, "prod", "messes", datetime.date(*[int(c) for c in (time.strftime("%Y:%m:%d").split(':'))]), 'romain')
         source = mass.get('source', '')
         if source != 'api':
-            status_data['message'] = "Mass office should come from API. Got: %s" % (source)
+            status_message = "Mass office should come from API. Got: %s" % (source)
             status_code = 500
     except:
-        status_data['message'] = "Can not load mass"
+        status_message = "Can not load mass"
         status_code = 500
 
     # All good !
-    return Response(status = max(status_code, status_data['status']), response=json.dumps(status_data), mimetype='application/json')
+    response = {
+        'status': status_code,
+        'message': status_message,
+        'offices': status_data['offices'],
+        'date': status_data['date'],
+        'office_names': OFFICES.keys(),
+    }
+    if format == "html":
+        return Response(status = status_code, response=render_template('status.html', **response))
+    else:
+        return Response(status = status_code, response=json.dumps(response), mimetype='application/json')
 
 @app.route('/robots.txt')
 def get_robots():
