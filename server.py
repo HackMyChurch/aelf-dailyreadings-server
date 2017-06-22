@@ -15,6 +15,7 @@ from lib.output import office_to_json, office_to_rss
 from lib.constants import DEFAULT_REGION, CURRENT_VERSION
 from keys import KEY_TO_OFFICE, SENTRY_DSN
 from office_controller import get as do_get_office, return_error
+import status
 
 #
 # Init sentry
@@ -47,18 +48,23 @@ def parse_date_or_abort(date):
 
 @app.route('/status')
 def get_status():
+    status_code = 200
+    status_data = status.get_status_data()
+    status_data['message'] = ""
+
     # Attempt to get the mass for today. If we can't, we are in trouble
     try:
         mass = do_get_office(CURRENT_VERSION, "prod", "messes", datetime.date(*[int(c) for c in (time.strftime("%Y:%m:%d").split(':'))]), 'romain')
+        source = mass.get('source', '')
+        if source != 'api':
+            status_data['message'] = "Mass office should come from API. Got: %s" % (source)
+            status_code = 500
     except:
-        return "Can not load mass", 500
-
-    source = mass.get('source', '')
-    if source != 'api':
-        return "Mass office should come from API. Got: %s" % (source), 500
+        status_data['message'] = "Can not load mass"
+        status_code = 500
 
     # All good !
-    return Response(json.dumps(int(time.time())), mimetype='application/json')
+    return Response(status = max(status_code, status_data['status']), response=json.dumps(status_data), mimetype='application/json')
 
 @app.route('/robots.txt')
 def get_robots():
@@ -101,5 +107,6 @@ def get_office_legacy(day, month, year, key):
     return Response(rss, mimetype='application/rss+xml')
 
 if __name__ == "__main__":
+    status.init()
     app.run(host="0.0.0.0", port=4000)
 
