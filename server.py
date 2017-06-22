@@ -32,6 +32,12 @@ else:
 office_controller.sentry = sentry
 
 #
+# Init status probe
+#
+
+status.init()
+
+#
 # Utils
 #
 
@@ -118,6 +124,5 @@ def get_office_legacy(day, month, year, key):
     return Response(rss, mimetype='application/rss+xml')
 
 if __name__ == "__main__":
-    status.init()
     app.run(host="0.0.0.0", port=4000)
 
