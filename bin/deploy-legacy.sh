@@ -16,5 +16,5 @@ fi
 docker run --name aelf-api -d -p 4001:4000 --restart always aelf-api
 
 # Follow
-docker logs -f aelf-api
+docker logs --tail 10 --follow aelf-api
 

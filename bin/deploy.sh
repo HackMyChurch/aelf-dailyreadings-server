@@ -43,5 +43,5 @@ fi
 
 # Follow
 echo "[INFO] All done!"
-docker service logs -f ${DOCKER_NAME}
+docker service logs --tail 10 --follow ${DOCKER_NAME}
 
