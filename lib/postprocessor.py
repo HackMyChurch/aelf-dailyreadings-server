@@ -311,7 +311,7 @@ def fix_common_typography(text):
     text = re.sub(ur'\s*»',          ur'\u00a0» ',  text) # Typographic quote
     text = re.sub(ur'«\s*',          ur' «\u00a0',  text)
     text = re.sub(ur'\s*([:?!])\s*', ur'\u00a0\1 ', text)
-    text = re.sub(ur'\s+;\s*',       ur'\u00a0 ',   text) # Semicolon, prefixed by a blank
+    text = re.sub(ur'\s+;\s*',       ur'\u00a0; ',  text) # Semicolon, prefixed by a blank
 
     return text
 

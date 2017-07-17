@@ -137,6 +137,7 @@ class TestPostprocessor(unittest.TestCase):
 
 	# Typography
         self.assertEqual(u'\xa0', fix_common_typography(u'&nbsp;'))
+        self.assertEqual(u'\xa0; ', fix_common_typography(u'    ;  '))
         self.assertEqual(u'\xa0;', fix_common_typography(u'&nbsp;;'))
         self.assertEqual(u'\xa0;', fix_common_typography(u'&nbsp; ;'))
         self.assertEqual(u'Hello world\xa0! ', fix_common_typography(u'Hello world!'))
