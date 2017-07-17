@@ -136,8 +136,8 @@ def return_error(status, message):
                 u'name': u'message',
                 u'lectures': [
                     {
-                        u'title':       title.format(status=status),
-                        u'description': description.format(status=status, message=message)
+                        u'title': title.format(status=status),
+                        u'text':  description.format(status=status, message=message)
                     },
                 ],
             }
