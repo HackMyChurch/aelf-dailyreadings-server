@@ -65,7 +65,8 @@ def validate_future_offices():
 
     for days_ahead in range(STATUS_DAYS_TO_MONITOR):
         _status['message'] = 'Refreshing day %s of %d. Please wait.' % (days_ahead+1, STATUS_DAYS_TO_MONITOR)
-        date += datetime.timedelta(days=1)
+        date = datetime.date.today()
+        date += datetime.timedelta(days=days_ahead)
         date_str = str(date)
         status['offices'][date_str] = {}
         for office_name in OFFICES.keys():
@@ -77,7 +78,7 @@ def validate_future_offices():
                 reason = (REASON_ERROR, str(e))
 
             if reason[0] == REASON_ERROR:
-                status['offices']['status'] = 500
+                status['status'] = 500
 
             status['offices'][date_str][office_name] = reason[0], reason[1], url
 
