@@ -47,7 +47,7 @@ ID_TO_TITLE = {
 }
 
 # Region specific settings
-REGION_NOTRE_PERE_NEW = ['belgique']
+REGION_NOTRE_PERE_NEW = ['belgique', 'afrique']
 
 # Internal Monitoring
 # The application syncs up to 30 days in the future. This gives 2 week to fix errors
