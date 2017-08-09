@@ -83,7 +83,8 @@ def get(version, mode, office, date, region):
     last_http_error = None
     for office_api_engine in office_api_engines:
         # Attempt to load for requested region and 'romain'
-        for r in set([region, "romain"]):
+        regions = [region] if region == "romain" else [region, 'romain']
+        for r in regions:
             # Attempt to load
             try:
                 data = office_api_engine(office, date, r)
