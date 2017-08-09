@@ -82,19 +82,27 @@ def get(version, mode, office, date, region):
     # Attempt all engines until we find one that works
     last_http_error = None
     for office_api_engine in office_api_engines:
-        # Attempt to load
-        try:
-            data = office_api_engine(office, date, region)
-        except AelfHttpError as http_err:
-            last_http_error = http_err
-            continue
-        except Exception as e:
-            last_http_error = AelfHttpError(500, str(e))
-            continue
+        # Attempt to load for requested region and 'romain'
+        for r in set([region, "romain"]):
+            # Attempt to load
+            try:
+                data = office_api_engine(office, date, r)
+            except AelfHttpError as http_err:
+                last_http_error = http_err
+                continue
+            except Exception as e:
+                last_http_error = AelfHttpError(500, str(e))
+                continue
 
-        # Does it look broken ?
-        if OFFICES[office].get('should_fallback', default_should_fallback)(version, mode, data):
-            last_http_error = AelfHttpError(500, u"L'office est trop court, c'est louche...")
+            # Does it look broken ?
+            if OFFICES[office].get('should_fallback', default_should_fallback)(version, mode, data):
+                last_http_error = AelfHttpError(500, u"L'office est trop court, c'est louche...")
+                continue
+
+            # Actually not, this looks OK
+            break
+        else:
+            # We did not break, that means no valid data: let's try the next engine
             continue
         break
     else:
