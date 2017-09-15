@@ -401,6 +401,10 @@ def postprocess_informations(informations):
     if 'couleur' in informations:
         text += u" La couleur liturgique est le %s." % informations['couleur']
 
+    if 'degre' in informations:
+        text += u" ( %s." % informations['degre']
+        text += " )"
+
     # Final cleanup: 1er, 1ère, 2ème, 2nd, ... --> exposant
     text = re.sub(ur'([0-9])(er|nd|ère|ème) ', r'\1<sup>\2</sup> ', text)
     text = text[:1].upper() + text[1:]
