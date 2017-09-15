@@ -401,7 +401,7 @@ def postprocess_informations(informations):
     if 'couleur' in informations:
         text += u" La couleur liturgique est le %s." % informations['couleur']
 
-    if 'degre' in informations:
+    if 'degre' in informations and informations['degre']!= "":
         text += u" ( %s." % informations['degre']
         text += " )"
 
