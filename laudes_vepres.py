@@ -22,10 +22,7 @@ def postprocess(version, mode, data):
         return data
 
     # Fix Notre Père
-    if data['informations']['zone'] in REGION_NOTRE_PERE_NEW:
-        notre_pere = get_asset('prayers/notre-pere-new')
-    else:
-        notre_pere = get_asset('prayers/notre-pere')
+    notre_pere = get_asset('prayers/notre-pere')
     notre_pere_item = get_lecture_by_type(data, u"office_notre_pere")
     notre_pere_lecture = {
         'title':     notre_pere['title'],
