@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, Response, abort, request, jsonify, render_template
-from raven.contrib.flask import Sentry
 app = Flask(__name__)
-sentry = Sentry()
 
 import os
 import time
@@ -13,23 +11,9 @@ import datetime
 import office_controller
 from lib.output import office_to_json, office_to_rss
 from lib.constants import DEFAULT_REGION, CURRENT_VERSION
-from keys import KEY_TO_OFFICE, SENTRY_DSN
+from keys import KEY_TO_OFFICE
 from office_controller import get as do_get_office, return_error, OFFICES
 import status
-
-#
-# Init sentry
-#
-
-if os.environ.get('AELF_DEBUG', False):
-    app.debug = True
-
-if app.debug:
-    sentry.init_app(app)
-else:
-    sentry.init_app(app, dsn=SENTRY_DSN)
-
-office_controller.sentry = sentry
 
 #
 # Init status probe

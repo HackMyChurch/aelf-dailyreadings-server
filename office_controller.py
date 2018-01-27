@@ -9,9 +9,6 @@ from lib.postprocessor import postprocess_office_common
 from lib.postprocessor import postprocess_office_html
 from lib.input import get_office_for_day_api, get_office_for_day_aelf_json
 
-# Placeholder: will be injected
-sentry = None
-
 # List of APIs engines + fallback path
 APIS = {
     'json':      [get_office_for_day_api, get_office_for_day_aelf_json],
@@ -61,22 +58,14 @@ def get(version, mode, office, date, region):
     data = None
     error = None
 
-    sentry_data = {
-        'application': version,
-        'office': office,
-        'date': date,
-    }
-
     # Validate office name
     if office not in OFFICES:
-        sentry.captureMessage("Invalid office", extra=sentry_data);
 	return return_error(404, u"Cet office (%s) est inconnu..." % office)
 
     # Validate API engine
     office_api_engine_name = OFFICES[office].get('api', 'json')
     office_api_engines = APIS.get(office_api_engine_name, None)
     if not office_api_engines:
-        sentry.captureMessage("Missing office engine", extra=sentry_data);
 	return return_error(500, u"Hmmm, où se trouve donc l'office %s ?" % office)
 
     # Attempt all engines until we find one that works
@@ -108,7 +97,6 @@ def get(version, mode, office, date, region):
         break
     else:
         # Report unrecoverable errors
-        sentry.captureException(extra=sentry_data)
         if last_http_error.status == 404:
 	    return return_error(404, u"Aucune lecture n'a été trouvée pour cette date.")
         return return_error(last_http_error.status, last_http_error.message)
@@ -118,7 +106,6 @@ def get(version, mode, office, date, region):
         for postprocessor in OFFICES[office]['postprocess']:
             data = postprocessor(version, mode, data)
     except Exception as e:
-        sentry.captureException(extra=sentry_data)
         return return_error(500, u"Erreur lors de la génération de l'office.")
 
     # Return
