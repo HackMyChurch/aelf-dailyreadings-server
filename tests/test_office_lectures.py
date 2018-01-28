@@ -64,12 +64,14 @@ class TestOfficeLectures(TestBase):
         items = self.parseItems(resp.data)
 
         # Validate 'Antiennes'
-        self.assertEqual(u'Hymne\xa0: «\xa0Voici la nuit\xa0»', items[1][0])
+        self.assertEqual(u'Hymne', items[1][0])
+        self.assertIn(u'«\xa0Voici la nuit\xa0»', items[1][1])
         self.assertNotIn(u'Antienne', items[1][1])
-        self.assertEqual(u'Psaume\xa0: 23', items[2][0])
+        self.assertEqual(u'Psaume\xa023', items[2][0])
+        self.assertIn(u'Psaume\xa023', items[2][1])
         self.assertIn(u'Antienne', items[2][1])
 
         # Validate 'Verset'
-        self.assertEqual(u'Psaume\xa0: 65-II', items[4][0])
+        self.assertEqual(u'Psaume\xa065-II', items[4][0])
         self.assertIn(u'V/', items[4][1])
 

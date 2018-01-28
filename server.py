@@ -84,7 +84,7 @@ def get_office_rss(version, office, date):
     date = parse_date_or_abort(date)
     mode = "beta" if request.args.get('beta', 0) else "prod"
     region = request.args.get('region', DEFAULT_REGION)
-    rss = office_to_rss(do_get_office(version, mode, office, date, region))
+    rss = office_to_rss(version, do_get_office(version, mode, office, date, region))
     return Response(rss, mimetype='application/rss+xml')
 
 @app.route('/<int:version>/office/<office>/<date>.json')
@@ -92,7 +92,7 @@ def get_office_json(version, office, date):
     date = parse_date_or_abort(date)
     mode = "beta" if request.args.get('beta', 0) else "prod"
     region = request.args.get('region', DEFAULT_REGION)
-    return jsonify(office_to_json(do_get_office(version, mode, office, date, region)))
+    return jsonify(office_to_json(version, do_get_office(version, mode, office, date, region)))
 
 #
 # Legacy API (keep compatible in case fallback is needed)
@@ -107,7 +107,7 @@ def get_office_legacy(day, month, year, key):
     region = request.args.get('region', DEFAULT_REGION)
     date = datetime.date(year, month, day)
     mode = "beta" if request.args.get('beta', 0) else "prod"
-    rss = office_to_rss(do_get_office(version, mode, KEY_TO_OFFICE[key], date, region))
+    rss = office_to_rss(version, do_get_office(version, mode, KEY_TO_OFFICE[key], date, region))
     return Response(rss, mimetype='application/rss+xml')
 
 if __name__ == "__main__":

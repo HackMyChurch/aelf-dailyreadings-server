@@ -751,6 +751,24 @@ def postprocess_office_html(version, mode, data):
 
     return data
 
+VERSE_REFERENCE_MATCH=re.compile('\(.*\)')
+def postprocess_office_title_46(version, mode, data):
+    '''
+    Server side title cleanup for API >= 46
+    '''
+    if version < 46:
+        return data
+
+    for variant in data['variants']:
+        for lecture in variant['lectures']:
+            lecture['title'] = re.sub(VERSE_REFERENCE_MATCH, '', lecture['title'])
+            lecture['title'] = lecture['title'].replace('Pericope', 'Parole de Dieu')
+            lecture['title'] = lecture['title'].replace('CANTIQUE', 'Cantique')
+            if lecture['title'].startswith('Psaume'):
+                lecture['title'] = lecture['title'].replace(': ', '')
+
+    return data
+
 def postprocess_office_common(version, mode, data):
     '''
     Run all office-specific postprocessing
@@ -758,5 +776,7 @@ def postprocess_office_common(version, mode, data):
     postprocess_office_careme(version, mode, data)
     postprocess_office_keys(version, mode, data)
     postprocess_office_html(version, mode, data)
+    postprocess_office_title_46(version, mode, data)
     return data
+    
 
