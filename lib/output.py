@@ -27,6 +27,9 @@ def office_to_rss(data):
                         "title":     "",
                         "reference": "",
                         "text":      "",
+                        "antienne":  "", // Optional
+                        "verset":    "", // Optional
+                        "repons":    "", // Optional
                         "key":       "",
                     },
                 ],
@@ -55,6 +58,14 @@ def office_to_rss(data):
         office   = variant['name']
         lectures = variant['lectures']
         for lecture in lectures:
+            text = lecture.get('text', '')
+            if 'antienne' in lecture:
+                text = u"<blockquote><b>Antienne&nbsp;:</b>%s</blockquote>%s" % (lecture['antienne'], text)
+            if 'verset' in lecture:
+                text = u"%s<blockquote>%s</blockquote>" % (text, lecture['verset'])
+            if 'repons' in lecture:
+                text = u"%s<blockquote>%s</blockquote>" % (text, lecture['repons'])
+
             out.append(u'''
             <item>
                 <variant>{office}</variant>
@@ -67,7 +78,7 @@ def office_to_rss(data):
                 title     = escape(lecture.get('title', '')),
                 reference = escape(lecture.get('reference', '')),
                 key       = escape(lecture.get('key', '')),
-                text      = lecture.get('text', ''),
+                text      = text,
             ))
 
     out.append(u'''</channel></rss>''')

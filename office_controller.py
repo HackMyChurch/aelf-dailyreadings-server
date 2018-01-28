@@ -7,6 +7,7 @@ import lectures
 from lib.exceptions import AelfHttpError
 from lib.postprocessor import postprocess_office_common
 from lib.postprocessor import postprocess_office_html
+from lib.group import group_related_items
 from lib.input import get_office_for_day_api, get_office_for_day_aelf_json
 
 # List of APIs engines + fallback path
@@ -107,6 +108,10 @@ def get(version, mode, office, date, region):
             data = postprocessor(version, mode, data)
     except Exception as e:
         return return_error(500, u"Erreur lors de la génération de l'office.")
+
+    # Server-side office merge
+    if version >= 46:
+        group_related_items(data)
 
     # Return
     return data

@@ -22,3 +22,28 @@ class TestOfficeLaudes(TestBase):
         self.assertEqual(u"Notre P&egrave;re", items[-3][0])
         self.assertEqual(u"Intercession", items[-4][0])
 
+    @mock.patch('lib.input.requests.Session.get')
+    def test_get_laudes_46(self, m_get):
+        m_get.side_effect = self.m_get
+
+        # Get laudes, make sure we have the Notre Pere
+        resp = self.app.get('/46/office/laudes/2018-01-28')
+        self.assertEqual(200, resp.status_code)
+        items = self.parseItems(resp.data)
+
+        # Basic validation
+        self.assertEqual(11, len(items))
+        self.assertEqual(u"Oraison et bénédiction", items[-1][0])
+        self.assertEqual(u"Notre Père", items[-2][0])
+        self.assertEqual(u"Intercession", items[-3][0])
+
+        # Validate 'Antiennes'
+        self.assertEqual(u'Psaume\xa0: 117', items[3][0])
+        self.assertIn(u'Antienne', items[3][1])
+        self.assertEqual(u'Cantique des trois enfants (Dn 3)', items[4][0])
+        self.assertNotIn(u'Antienne', items[4][1])
+
+        # Validate 'Repons'
+        self.assertEqual(u'Pericope\xa0: 2 Tm 2, 8.11-13', items[6][0])
+        self.assertIn(u'Il est notre salut, notre gloire éternelle', items[6][1])
+

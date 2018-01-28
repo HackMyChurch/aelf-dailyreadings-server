@@ -15,6 +15,9 @@ from keys import KEY_TO_OFFICE
 from office_controller import get as do_get_office, return_error, OFFICES
 import status
 
+if os.environ.get('AELF_DEBUG', False):
+    app.debug = True
+
 #
 # Init status probe
 #
