@@ -19,7 +19,7 @@ case $1 in
 esac
 
 # Build
-for machine in $(docker-machine ls --quiet | grep 'prod\.epitre\.co$')
+for machine in $(docker-machine ls --quiet | grep 'prod\.epitre\.co$' | grep -v '^mon')
 do
     (
         echo "[INFO] Starting build of '${DOCKER_NAME}:${TAG}' on $machine"

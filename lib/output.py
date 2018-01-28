@@ -60,6 +60,8 @@ def office_to_rss(version, data):
         for lecture in lectures:
             text = lecture.get('text', '')
             title = lecture.get('title', '')
+            reference = lecture.get('reference', '')
+
             if 'antienne' in lecture:
                 text = u"<blockquote><b>Antienne&nbsp;:</b>%s</blockquote>%s" % (lecture['antienne'], text)
             if 'verset' in lecture:
@@ -73,16 +75,18 @@ def office_to_rss(version, data):
                 chunks = title.split(':', 1)
                 if len(chunks) == 2:
                     title = chunks[0]
-                    long_title = chunks[1]
-                long_title = u"<h3>%s</h3>" % (long_title)
+                    if chunks[1].strip() == reference.strip():
+                        long_title = chunks[0]
+                    else:
+                        long_title = chunks[1]
 
-                # Append reference, if any
-                reference = lecture.get('reference', '')
+                # Prepare reference, if any
+                title_reference = u""
                 if reference:
-                    long_title += u"<small><i>— %s</i></small>" % reference
+                    title_reference = u"<small><i>— %s</i></small>" % (reference)
 
                 # Inject title
-                text = "%s%s" % (long_title, text)
+                text = "<h3>%s%s</h3><div style=\"clear: both;\"></div>%s" % (long_title, title_reference, text)
 
             out.append(u'''
             <item>
@@ -94,7 +98,7 @@ def office_to_rss(version, data):
             </item>'''.format(
                 office    = office,
                 title     = escape(title),
-                reference = escape(lecture.get('reference', '')),
+                reference = escape(reference),
                 key       = escape(lecture.get('key', '')),
                 text      = text,
             ))
