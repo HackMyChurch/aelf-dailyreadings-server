@@ -29,13 +29,13 @@ class TestRouteCompat(TestBase):
 
         # 404
         FakeResponse.status_code = 404
-        resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
+        resp = self.app.get('/28/office/complies/2017-02-20?beta=enabled')
         self.assertEqual(200, resp.status_code)
         self.assertIn("(404)", resp.data)
 
         # Teapot
         FakeResponse.status_code = 419
-        resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
+        resp = self.app.get('/28/office/complies/2017-02-21?beta=enabled')
         self.assertEqual(200, resp.status_code)
         self.assertIn("(419)", resp.data)
 

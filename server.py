@@ -11,6 +11,7 @@ import datetime
 import office_controller
 from lib.output import office_to_json, office_to_rss
 from lib.constants import DEFAULT_REGION, CURRENT_VERSION
+from lib.cache import Cache
 from keys import KEY_TO_OFFICE
 from office_controller import get as do_get_office, return_error, OFFICES
 import status
@@ -19,10 +20,11 @@ if os.environ.get('AELF_DEBUG', False):
     app.debug = True
 
 #
-# Init status probe
+# Init
 #
 
 status.init()
+cache = Cache()
 
 #
 # Utils
@@ -75,6 +77,41 @@ def get_robots():
     return Response("User-agent: *\nDisallow: /\n", mimetype='text/plain')
 
 #
+# Office API, common path
+#
+
+def get_office(version, office, date, format):
+    # Load common params
+    mode = "beta" if request.args.get('beta', 0) else "prod"
+    region = request.args.get('region', DEFAULT_REGION)
+    etag_remote = request.headers.get('If-None-Match', None)
+
+    # Attempt to load from cache
+    cache_key = (version, mode, office, date, region)
+    cache_entry = cache.get(cache_key, checksum=etag_remote)
+    if cache_entry is not None:
+        office = cache_entry.value
+        etag_local = cache_entry.checksum
+    else:
+        office = do_get_office(version, mode, office, date, region)
+        etag_local = cache.set(cache_key, office)
+
+    # Cached version is the same as the requested version
+    if etag_remote == etag_local:
+        return Response(status=304)
+
+    # Generate response
+    if format == 'rss':
+        response = Response(office_to_rss(version, office), mimetype='application/rss+xml')
+    elif format == 'json':
+        response = jsonify(office_to_json(version, office))
+    else:
+        raise ValueError("Invalid format %s" % format)
+
+    response.headers['ETag'] = etag_local
+    return response
+
+#
 # Modern API (beta)
 #
 
@@ -82,17 +119,12 @@ def get_robots():
 @app.route('/<int:version>/office/<office>/<date>.rss')
 def get_office_rss(version, office, date):
     date = parse_date_or_abort(date)
-    mode = "beta" if request.args.get('beta', 0) else "prod"
-    region = request.args.get('region', DEFAULT_REGION)
-    rss = office_to_rss(version, do_get_office(version, mode, office, date, region))
-    return Response(rss, mimetype='application/rss+xml')
+    return get_office(version, office, date, 'rss')
 
 @app.route('/<int:version>/office/<office>/<date>.json')
 def get_office_json(version, office, date):
     date = parse_date_or_abort(date)
-    mode = "beta" if request.args.get('beta', 0) else "prod"
-    region = request.args.get('region', DEFAULT_REGION)
-    return jsonify(office_to_json(version, do_get_office(version, mode, office, date, region)))
+    return get_office(version, office, date, 'json')
 
 #
 # Legacy API (keep compatible in case fallback is needed)
@@ -104,11 +136,8 @@ def get_office_legacy(day, month, year, key):
 	return office_to_rss(return_error(404, u"Aucune lecture n'a été trouvée pour cet office."))
     office = KEY_TO_OFFICE[key]
     version = int(request.args.get('version', 0))
-    region = request.args.get('region', DEFAULT_REGION)
     date = datetime.date(year, month, day)
-    mode = "beta" if request.args.get('beta', 0) else "prod"
-    rss = office_to_rss(version, do_get_office(version, mode, KEY_TO_OFFICE[key], date, region))
-    return Response(rss, mimetype='application/rss+xml')
+    return get_office(version, office, date, 'rss')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000)
