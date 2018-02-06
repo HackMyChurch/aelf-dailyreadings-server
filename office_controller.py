@@ -5,9 +5,9 @@ import messes
 import laudes_vepres
 import lectures
 from lib.exceptions import AelfHttpError
-from lib.postprocessor import postprocess_office_common
+from lib.postprocessor import postprocess_office_pre
+from lib.postprocessor import postprocess_office_post
 from lib.postprocessor import postprocess_office_html
-from lib.group import group_related_items
 from lib.input import get_office_for_day_api, get_office_for_day_aelf_json
 
 # List of APIs engines + fallback path
@@ -25,28 +25,28 @@ OFFICES = {
         'api': 'json_only',
     },
     "lectures": {
-        'postprocess': [postprocess_office_common, lectures.postprocess],
+        'postprocess': [postprocess_office_pre, lectures.postprocess, postprocess_office_post],
     },
     "tierce": {
-        'postprocess': [postprocess_office_common],
+        'postprocess': [postprocess_office_pre, postprocess_office_post],
     },
     "sexte": {
-        'postprocess': [postprocess_office_common],
+        'postprocess': [postprocess_office_pre, postprocess_office_post],
     },
     "none": {
-        'postprocess': [postprocess_office_common],
+        'postprocess': [postprocess_office_pre, postprocess_office_post],
     },
     "laudes": {
-        'postprocess': [postprocess_office_common, laudes_vepres.postprocess],
+        'postprocess': [postprocess_office_pre, laudes_vepres.postprocess, postprocess_office_post],
     },
     "vepres": {
-        'postprocess': [postprocess_office_common, laudes_vepres.postprocess],
+        'postprocess': [postprocess_office_pre, laudes_vepres.postprocess, postprocess_office_post],
     },
     "complies": {
-        'postprocess': [postprocess_office_common],
+        'postprocess': [postprocess_office_pre, postprocess_office_post],
     },
     "messes": {
-        'postprocess': [postprocess_office_html, messes.postprocess],
+        'postprocess': [postprocess_office_html, messes.postprocess, postprocess_office_post],
         'should_fallback': messes.should_fallback,
     },
 }
@@ -108,10 +108,6 @@ def get(version, mode, office, date, region):
             data = postprocessor(version, mode, data)
     except Exception as e:
         return return_error(500, u"Erreur lors de la génération de l'office.")
-
-    # Server-side office merge
-    if version >= 47:
-        group_related_items(data)
 
     # Return
     return data

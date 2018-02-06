@@ -8,6 +8,7 @@ from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
 from .constants import HTML_BLOCK_ELEMENTS
 from .office import get_lecture_by_type, insert_lecture_before, insert_lecture_after
+from .group import group_related_items
 
 #
 # Utils
@@ -751,6 +752,15 @@ def postprocess_office_html(version, mode, data):
 
     return data
 
+def postprocess_office_group_47(version, mode, data):
+    '''
+    Group related lectures like the antienne into the psalm
+    '''
+    if version < 47:
+        return data
+
+    group_related_items(data)
+
 VERSE_REFERENCE_MATCH=re.compile('\(.*\)')
 def postprocess_office_title_47(version, mode, data):
     '''
@@ -761,21 +771,36 @@ def postprocess_office_title_47(version, mode, data):
 
     for variant in data['variants']:
         for lecture in variant['lectures']:
+            # Clean title
             lecture['title'] = re.sub(VERSE_REFERENCE_MATCH, '', lecture['title'])
             lecture['title'] = lecture['title'].replace('Pericope', 'Parole de Dieu')
             lecture['title'] = lecture['title'].replace('CANTIQUE', 'Cantique')
             if lecture['title'].startswith('Psaume'):
                 lecture['title'] = lecture['title'].replace(': ', '')
 
+            # Prepare short / long variants
+            chunks = lecture['title'].split(':', 1)
+            lecture['short_title'] = chunks[0]
+            lecture['long_title']  = chunks[0]
+            if len(chunks) == 2 and chunks[1].strip() != lecture['reference'].strip():
+                lecture['long_title'] = chunks[1]
+
     return data
 
-def postprocess_office_common(version, mode, data):
+def postprocess_office_pre(version, mode, data):
     '''
-    Run all office-specific postprocessing
+    Run all postprocessing, running before the office specific code
     '''
     postprocess_office_careme(version, mode, data)
     postprocess_office_keys(version, mode, data)
     postprocess_office_html(version, mode, data)
+    return data
+
+def postprocess_office_post(version, mode, data):
+    '''
+    Run all postprocessing, running after the office specific code
+    '''
+    postprocess_office_group_47(version, mode, data)
     postprocess_office_title_47(version, mode, data)
     return data
     

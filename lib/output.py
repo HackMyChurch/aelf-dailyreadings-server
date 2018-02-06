@@ -71,14 +71,8 @@ def office_to_rss(version, data):
 
             if version >= 47:
                 # Build slide title
-                long_title = title
-                chunks = title.split(':', 1)
-                if len(chunks) == 2:
-                    title = chunks[0]
-                    if chunks[1].strip() == reference.strip():
-                        long_title = chunks[0]
-                    else:
-                        long_title = chunks[1]
+                title = lecture.get('short_title', '')
+                long_title = lecture.get('long_title', '')
 
                 # Prepare reference, if any
                 title_reference = u""
