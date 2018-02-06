@@ -752,11 +752,11 @@ def postprocess_office_html(version, mode, data):
     return data
 
 VERSE_REFERENCE_MATCH=re.compile('\(.*\)')
-def postprocess_office_title_46(version, mode, data):
+def postprocess_office_title_47(version, mode, data):
     '''
-    Server side title cleanup for API >= 46
+    Server side title cleanup for API >= 47
     '''
-    if version < 46:
+    if version < 47:
         return data
 
     for variant in data['variants']:
@@ -776,7 +776,7 @@ def postprocess_office_common(version, mode, data):
     postprocess_office_careme(version, mode, data)
     postprocess_office_keys(version, mode, data)
     postprocess_office_html(version, mode, data)
-    postprocess_office_title_46(version, mode, data)
+    postprocess_office_title_47(version, mode, data)
     return data
     
 

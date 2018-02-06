@@ -55,11 +55,11 @@ class TestOfficeLectures(TestBase):
         self.assertIn(u"Voyant qu\u2019il \xe9tait beau", items[-5][1])
 
     @mock.patch('lib.input.requests.Session.get')
-    def test_get_lectures_46(self, m_get):
+    def test_get_lectures_47(self, m_get):
         m_get.side_effect = self.m_get
 
         # Get laudes, make sure we have the Notre Pere
-        resp = self.app.get('/46/office/lectures/2018-01-28')
+        resp = self.app.get('/47/office/lectures/2018-01-28')
         self.assertEqual(200, resp.status_code)
         items = self.parseItems(resp.data)
 

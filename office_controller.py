@@ -110,7 +110,7 @@ def get(version, mode, office, date, region):
         return return_error(500, u"Erreur lors de la génération de l'office.")
 
     # Server-side office merge
-    if version >= 46:
+    if version >= 47:
         group_related_items(data)
 
     # Return

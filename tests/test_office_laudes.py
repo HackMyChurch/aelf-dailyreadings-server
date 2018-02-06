@@ -23,11 +23,11 @@ class TestOfficeLaudes(TestBase):
         self.assertEqual(u"Intercession", items[-4][0])
 
     @mock.patch('lib.input.requests.Session.get')
-    def test_get_laudes_46(self, m_get):
+    def test_get_laudes_47(self, m_get):
         m_get.side_effect = self.m_get
 
         # Get laudes, make sure we have the Notre Pere
-        resp = self.app.get('/46/office/laudes/2018-01-28')
+        resp = self.app.get('/47/office/laudes/2018-01-28')
         self.assertEqual(200, resp.status_code)
         items = self.parseItems(resp.data)
 

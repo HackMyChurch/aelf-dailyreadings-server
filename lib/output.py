@@ -69,7 +69,7 @@ def office_to_rss(version, data):
             if 'repons' in lecture:
                 text = u"%s<blockquote>%s</blockquote>" % (text, lecture['repons'])
 
-            if version >= 46:
+            if version >= 47:
                 # Build slide title
                 long_title = title
                 chunks = title.split(':', 1)
