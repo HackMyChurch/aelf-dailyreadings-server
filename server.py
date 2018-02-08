@@ -77,6 +77,58 @@ def get_robots():
     return Response("User-agent: *\nDisallow: /\n", mimetype='text/plain')
 
 #
+# Batch API
+#
+
+@app.route('/batch', methods=['POST'])
+def batch():
+    """
+    Execute multiple requests, submitted as a batch.
+    source: http://flask.pocoo.org/snippets/131/
+
+    :statuscode 207: Multi status
+    """
+    try:
+        requests = json.loads(request.data)
+    except ValueError as e:
+        abort(400)
+
+    responses = []
+
+    for index, req in enumerate(requests):
+        method = req['method']
+        path = req['path']
+        body = req.get('body', None)
+        headers = req.get('headers', None)
+
+        with app.app_context():
+            with app.test_request_context(path, method=method, data=body, headers=headers):
+                try:
+                    # Pre process Request
+                    rv = app.preprocess_request()
+
+                    if rv is None:
+                        # Main Dispatch
+                        rv = app.dispatch_request()
+
+                except Exception as e:
+                    rv = app.handle_user_exception(e)
+
+                response = app.make_response(rv)
+
+                # Post process Request
+                response = app.process_response(response)
+
+        # Build complete response
+        responses.append({
+            "status": response.status_code,
+            "response": response.data,
+            "headers": dict(response.headers),
+        })
+
+    return Response(json.dumps(responses), status=207, mimetype="application/json")
+
+#
 # Office API, common path
 #
 
