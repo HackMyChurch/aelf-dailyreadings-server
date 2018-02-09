@@ -32,8 +32,8 @@ class TestBatch(TestBase):
         # Validate first response
         self.assertEqual(200, data[0]['status'])
         self.assertEqual({
-            "Content-Length": "21505",
-            "ETag": "9bcdc54442a97b294cd29acbab77b197eae787794ab420fbe4690d1db0cd1d04",
+            "Content-Length": "22030",
+            "ETag": "870c861578c61d4a90baa84af7933c518ed6b055f71ff8da9e0b801e5108406b",
             "Content-Type": "application/rss+xml; charset=utf-8"
         }, data[0]['headers'])
 
@@ -46,13 +46,13 @@ class TestBatch(TestBase):
                     "method": "GET",
                     "path": "/47/office/laudes/2017-02-06.rss",
                     "headers": {
-                        "If-None-Match": "9bcdc54442a97b294cd29acbab77b197eae787794ab420fbe4690d1db0cd1d04",
+                        "If-None-Match": "870c861578c61d4a90baa84af7933c518ed6b055f71ff8da9e0b801e5108406b",
                     },
                 }, {
                     "method": "GET",
                     "path": "/47/office/laudes/2017-02-06.json",
                     "headers": {
-                        "If-None-Match": "9bcdc54442a97b294cd29acbab77b197eae787794ab420fbe4690d1db0cd1d04",
+                        "If-None-Match": "870c861578c61d4a90baa84af7933c518ed6b055f71ff8da9e0b801e5108406b",
                     },
                 },
             ]),

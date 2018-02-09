@@ -63,11 +63,12 @@ def office_to_rss(version, data):
             reference = lecture.get('reference', '')
 
             if 'antienne' in lecture:
-                text = u"<blockquote><b>Antienne&nbsp;:</b>%s</blockquote>%s" % (lecture['antienne'], text)
+                antienne = u"<blockquote class=\"antienne\"><b>Antienne&nbsp;:</b> %s</blockquote>" % (lecture['antienne'])
+                text = u"%s%s%s" % (antienne, text, antienne)
             if 'verset' in lecture:
-                text = u"%s<blockquote>%s</blockquote>" % (text, lecture['verset'])
+                text = u"%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
             if 'repons' in lecture:
-                text = u"%s<blockquote>%s</blockquote>" % (text, lecture['repons'])
+                text = u"%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
 
             if version >= 47:
                 # Build slide title

@@ -3,6 +3,12 @@
 Grouping functions
 '''
 
+from bs4 import BeautifulSoup
+
+def _html_to_text(text):
+    soup = BeautifulSoup(text, 'html5lib')
+    return soup.get_text()
+
 def _group_before(data, title):
     '''
     Find items with title ``title`` and merge them in the ``title`` fiels of
@@ -42,7 +48,7 @@ def group_antienne(data):
         antienne = None
         for lecture in variant['lectures']:
             if lecture['title'].lower() == 'antienne':
-                antienne = lecture['text']
+                antienne = _html_to_text(lecture['text'])
                 continue
 
             if antienne:
