@@ -8,7 +8,32 @@ from utils import get_lectures_by_type, get_lecture_by_type, insert_lecture_befo
 from lib.postprocessor import postprocess_office_html_lecture
 from lib.postprocessor import postprocess_office_lecture_text
 
+def postprocess_easter(version, mode, data):
+    text = u"""<p>
+    Le jour de Pâques est un jour spécial. C'est le jour de la résurrection
+    du Christ. Il n'y a pas d'office des lectures ce jour là.
+    </p>"""
+
+    data['source'] = "api"
+    data['variants'] = [
+        {
+            'name': 'Dimanche de Pâques',
+            'lectures': [
+                {
+                    'title':     'Lectures: Le saviez-vous ?',
+                    'text':      text,
+                    'reference': '',
+                    'key':       '',
+                }
+            ]
+        }
+    ]
+    return data
+
 def postprocess(version, mode, data):
+    if data['informations'].get('temps_liturgique', '') == "triduum" and data['informations'].get('jour', '') == "dimanche":
+        return postprocess_easter(version, mode, data)
+
     # Do not enable postprocessing for versions before 20, unless beta mode
     if mode != "beta" and version < 20:
         return data

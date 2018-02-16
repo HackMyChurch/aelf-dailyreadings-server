@@ -86,7 +86,7 @@ def get(version, mode, office, date, region):
                 continue
 
             # Does it look broken ?
-            if OFFICES[office].get('should_fallback', default_should_fallback)(version, mode, data):
+            if last_http_error is None and OFFICES[office].get('should_fallback', default_should_fallback)(version, mode, data):
                 last_http_error = AelfHttpError(500, u"L'office est trop court, c'est louche...")
                 continue
 

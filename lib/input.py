@@ -231,12 +231,19 @@ def get_office_for_day_aelf_json(office, date, region):
 
     # Start to build our json format from API's format
     out = {
-        u'informations': {}, # TODO...
+        u'informations': {},
         u'variants': [],
         u'source': 'website',
         u'office': office,
         u'date': date,
     }
+
+    # Load informations from the API, if available
+    try:
+        data_info = _do_get_request(AELF_JSON.format(office="informations", day=date.day, month=date.month, year=date.year, region=region)).json(object_pairs_hook=OrderedDict)
+        out[u'informations'] = dict(data_info.pop('informations'))
+    except:
+        pass
 
     # Force 'zone' in 'informations'
     out['informations']['zone'] = region
