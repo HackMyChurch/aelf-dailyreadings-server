@@ -239,6 +239,9 @@ def fix_case(sentence):
     '''
     sentence = fix_abbrev(sentence)
 
+    # Make the first letter a capital
+    sentence = sentence[0].upper() + sentence[1:]
+
     # Heuristic: Only apply if the sentence has more than 5 char AND more than half capital letters
     if len(sentence) < 5:
         return sentence

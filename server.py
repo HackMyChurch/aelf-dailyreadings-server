@@ -23,7 +23,7 @@ if os.environ.get('AELF_DEBUG', False):
 # Init
 #
 
-status.init()
+# status.init()
 cache = Cache()
 
 #
