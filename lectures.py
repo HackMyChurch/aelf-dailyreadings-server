@@ -17,13 +17,13 @@ def postprocess_easter(version, mode, data):
     data['source'] = "api"
     data['variants'] = [
         {
-            'name': 'Dimanche de Pâques',
-            'lectures': [
+            u'name': u'Dimanche de Pâques',
+            u'lectures': [
                 {
-                    'title':     'Lectures: Le saviez-vous ?',
-                    'text':      text,
-                    'reference': '',
-                    'key':       '',
+                    u'title':     u'Lectures: Le saviez-vous ?',
+                    u'text':      text,
+                    u'reference': '',
+                    u'key':       '',
                 }
             ]
         }

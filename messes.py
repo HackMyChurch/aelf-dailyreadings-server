@@ -29,13 +29,13 @@ def postprocess_holly_saturday(version, mode, data):
 
     data['variants'] = [
         {
-            'name': 'Samedi saint',
-            'lectures': [
+            u'name': u'Samedi saint',
+            u'lectures': [
                 {
-                    'title':     'Messe: Le saviez-vous ?',
-                    'text':      text,
-                    'reference': '',
-                    'key':       '',
+                    u'title':     u'Messe: Le saviez-vous ?',
+                    u'text':      text,
+                    u'reference': u'',
+                    u'key':       u'',
                 }
             ]
         }
