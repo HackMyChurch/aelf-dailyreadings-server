@@ -62,15 +62,23 @@ def office_to_rss(version, data):
             title = lecture.get('title', '')
             reference = lecture.get('reference', '')
 
-            if 'antienne' in lecture:
-                antienne = u"<blockquote class=\"antienne\"><b>Antienne&nbsp;:</b> %s</blockquote>" % (lecture['antienne'])
-                text = u"%s%s%s" % (antienne, text, antienne)
-            if 'verset' in lecture:
-                text = u"%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
-            if 'repons' in lecture:
-                text = u"%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
+            if version < 47:
+                if 'antienne' in lecture:
+                    antienne = u"<blockquote class=\"antienne\"><b>Antienne&nbsp;:</b> %s</blockquote>" % (lecture['antienne'])
+                    text = u"%s%s%s" % (antienne, text, antienne)
+                if 'verset' in lecture:
+                    text = u"%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
+                if 'repons' in lecture:
+                    text = u"%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
+            else:
+                if 'antienne' in lecture:
+                    antienne = u"<div class=\"antienne\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</div>" % (lecture['antienne'])
+                    text = u"%s%s%s" % (antienne, text, antienne)
+                if 'verset' in lecture:
+                    text = u"%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
+                if 'repons' in lecture:
+                    text = u"%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
 
-            if version >= 47:
                 # Build slide title
                 title = lecture.get('short_title', '')
                 long_title = lecture.get('long_title', '')
