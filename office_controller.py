@@ -107,6 +107,7 @@ def get(version, mode, office, date, region):
         for postprocessor in OFFICES[office]['postprocess']:
             data = postprocessor(version, mode, data)
     except Exception as e:
+        raise
         return return_error(500, u"Erreur lors de la génération de l'office.")
 
     # Return

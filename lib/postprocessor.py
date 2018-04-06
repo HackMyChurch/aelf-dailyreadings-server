@@ -517,7 +517,7 @@ def postprocess_office_keys(version, mode, data):
 # Text cleaners
 #
 
-def html_fix_comments(soup):
+def html_fix_comments(key, soup):
     '''
     Detect and remove any HTML comments. HTML comments may just come from MS WORD copy
     and paste. They may break the processing and also increase the output size.
@@ -525,7 +525,7 @@ def html_fix_comments(soup):
     comments = soup.findAll(text=lambda text:isinstance(text, Comment))
     [comment.extract() for comment in comments]
 
-def html_fix_verse(soup):
+def html_fix_verse(key, soup):
     '''
     Detect 'font' type objects, remove all attributes, except the color.
     - red, with reference --> convert to verse reference
@@ -571,7 +571,7 @@ def html_fix_verse(soup):
             'aria-hidden': 'true',
         }
 
-def html_fix_paragraph(soup):
+def html_fix_paragraph(key, soup):
     '''
     Detect paragraphs from line breaks. There should be no empty paragraphs. 2 Consecutives
     line breaks indicates a paragraph. There should be no nested paragraphs. Every <br> should
@@ -656,7 +656,7 @@ def html_fix_paragraph(soup):
         if not ' '.join(p.strings).strip():
             p.extract()
 
-def html_fix_lines(soup):
+def html_fix_lines(key, soup):
     '''
     Detect lines and wrap them in "<line>" tags so that we can properly wrap them
     via CSS. At this stage, we have the guarantee that all br live in a p and are
@@ -673,6 +673,7 @@ def html_fix_lines(soup):
     # Convert <br> to <span class="line">
     node = soup.find('br')
     while node:
+
         # Get a pointer on next iteration node, while we have valid references
         next_iteration_node = node.find_next('br')
 
@@ -681,6 +682,19 @@ def html_fix_lines(soup):
 
         # Move on
         node = next_iteration_node
+
+    # Remove empty line
+    for line in soup.find_all('span', class_="line"):
+        if not ' '.join(line.strings).strip():
+            line.extract()
+
+    # Make line focusables
+    for n, line in enumerate(soup.find_all('span', class_="line")):
+        # Attributes field is shared among tag instances which causes the unique ids to be not so unique
+        # hence the copy.
+        line.attrs = line.attrs.copy()
+        line.attrs['id'] = "%s-%s" % (key, n)
+        line.attrs['tabindex'] = '0'
 
     # Decide if we should wrap lines
     lines = soup.find_all('span', class_="line") or []
@@ -697,17 +711,11 @@ def html_fix_lines(soup):
         for line in lines:
             line['class'] = 'line line-wrap'
 
-    # Remove empty line
-    for line in soup.find_all('span', class_="line"):
-        if not ' '.join(line.strings).strip():
-            line.extract()
-
-
 #
 # Postprocessors
 #
 
-def postprocess_office_lecture_title(version, mode, title):
+def postprocess_office_lecture_title(version, mode, key, title):
     '''
     Run all title cleaners
     '''
@@ -719,7 +727,7 @@ def postprocess_office_lecture_title(version, mode, title):
 
     return title
 
-def postprocess_office_lecture_text(version, mode, text):
+def postprocess_office_lecture_text(version, mode, key, text):
     '''
     Run all text cleaners
     '''
@@ -727,10 +735,10 @@ def postprocess_office_lecture_text(version, mode, text):
         return text
 
     soup = BeautifulSoup(text, 'html5lib')
-    html_fix_comments(soup)
-    html_fix_verse(soup)
-    html_fix_paragraph(soup)
-    html_fix_lines(soup)
+    html_fix_comments(key, soup)
+    html_fix_verse(key, soup)
+    html_fix_paragraph(key, soup)
+    html_fix_lines(key, soup)
     text = unicode(soup.body)[6:-7]
     text = fix_common_typography(text)
     text = fix_rv(text)
@@ -742,8 +750,8 @@ def postprocess_office_html_lecture(version, mode, lecture):
     Run all cleaners on a lecture, typically used when loading an asset which is
     supposed to be compatible with the broken AELF format.
     '''
-    lecture['title'] = postprocess_office_lecture_title(version, mode, lecture['title'])
-    lecture['text']  = postprocess_office_lecture_text (version, mode, lecture['text'])
+    lecture['title'] = postprocess_office_lecture_title(version, mode, lecture['key'], lecture['title'])
+    lecture['text']  = postprocess_office_lecture_text (version, mode, lecture['key'], lecture['text'])
 
 def postprocess_office_html(version, mode, data):
     '''

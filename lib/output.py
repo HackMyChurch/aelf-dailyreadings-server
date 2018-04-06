@@ -58,6 +58,7 @@ def office_to_rss(version, data):
         office   = variant['name']
         lectures = variant['lectures']
         for lecture in lectures:
+            key = lecture.get('key', '')
             text = lecture.get('text', '')
             title = lecture.get('title', '')
             reference = lecture.get('reference', '')
@@ -72,8 +73,9 @@ def office_to_rss(version, data):
                     text = u"%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
             else:
                 if 'antienne' in lecture:
-                    antienne = u"<div class=\"antienne\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</div>" % (lecture['antienne'])
-                    text = u"%s%s%s" % (antienne, text, antienne)
+                    antienne_1 = u"<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-1\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
+                    antienne_2 = u"<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-2\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
+                    text = u"%s%s%s" % (antienne_1, text, antienne_2)
                 if 'verset' in lecture:
                     text = u"%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
                 if 'repons' in lecture:
