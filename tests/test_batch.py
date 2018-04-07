@@ -32,8 +32,8 @@ class TestBatch(TestBase):
         # Validate first response
         self.assertEqual(200, data[0]['status'])
         self.assertEqual({
-            "Content-Length": "29199",
-            "ETag": "cb93801599bafc010e0dac741a43bffa897299cceb8faeefeeeb5c6d9a41c925",
+            "Content-Length": "29060",
+            "ETag": "c4f433d6c4eb959160cf3b251463e2e4f056162bc63ddfaff4fc5cc5bb2a7d87",
             "Content-Type": "application/rss+xml; charset=utf-8"
         }, data[0]['headers'])
 
@@ -46,13 +46,13 @@ class TestBatch(TestBase):
                     "method": "GET",
                     "path": "/47/office/laudes/2017-02-06.rss",
                     "headers": {
-                        "If-None-Match": "cb93801599bafc010e0dac741a43bffa897299cceb8faeefeeeb5c6d9a41c925",
+                        "If-None-Match": "c4f433d6c4eb959160cf3b251463e2e4f056162bc63ddfaff4fc5cc5bb2a7d87",
                     },
                 }, {
                     "method": "GET",
                     "path": "/47/office/laudes/2017-02-06.json",
                     "headers": {
-                        "If-None-Match": "cb93801599bafc010e0dac741a43bffa897299cceb8faeefeeeb5c6d9a41c925",
+                        "If-None-Match": "c4f433d6c4eb959160cf3b251463e2e4f056162bc63ddfaff4fc5cc5bb2a7d87",
                     },
                 },
             ]),

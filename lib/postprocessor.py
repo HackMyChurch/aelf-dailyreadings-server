@@ -607,18 +607,26 @@ def html_fix_paragraph(key, soup):
     # If node is a p --> next
     # If node is not a p --> wrap it in a p *and* collect all the new non p neighbors and put them in the paragraph
     # TODO: what if the element itself contains a p ? --> if it's a blockelem --> skip
+    # FIXME: if we have a sequence like:
+    #        --> <p>1</p>some text<p>2</p>
+    #        we will end up with
+    #        --> <p><p>1</p>some text<p>2</p></p>
+    #        The most affected part is the Intercession
 
     # Ensure each text element is in a p
     node = soup.find(text=lambda text:isinstance(text, NavigableString))
     while node:
-        parent = node.parent
-        while parent:
-            if parent.name in HTML_BLOCK_ELEMENTS:
-                break
-            parent = parent.parent
+        if not unicode(node).strip():
+            node.extract()
+        else:
+            parent = node.parent
+            while parent:
+                if parent.name in HTML_BLOCK_ELEMENTS:
+                    break
+                parent = parent.parent
 
-        if parent.name != 'p':
-            _wrap_node_children(soup, parent, 'p')
+            if parent.name != 'p':
+                _wrap_node_children(soup, parent, 'p')
         node = node.find_next(text=lambda text:isinstance(text, NavigableString))
 
     # Convert sequences of <br/> to <p>
