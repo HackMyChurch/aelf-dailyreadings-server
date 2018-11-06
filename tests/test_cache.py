@@ -18,14 +18,14 @@ class TestCache(TestBase):
         # Warm up cache
         resp = self.app.get('/47/office/laudes/2018-01-28')
         self.assertEqual(200, resp.status_code)
-        self.assertEqual('e46efa8f0369b2ea50eeed77664cea0a285d3acc3abf3bc90ec63d6e195e8ad6', resp.headers['Etag'])
+        self.assertEqual('c9acb612a00765b8b42e8e03243cb757baf6166f53300691cd4cd9747f46aeec', resp.headers['Etag'])
 
         # Test cache miss
         resp = self.app.get('/47/office/laudes/2018-01-28', headers={'If-None-Match': 'miss'})
         self.assertEqual(200, resp.status_code)
-        self.assertEqual('e46efa8f0369b2ea50eeed77664cea0a285d3acc3abf3bc90ec63d6e195e8ad6', resp.headers['Etag'])
+        self.assertEqual('c9acb612a00765b8b42e8e03243cb757baf6166f53300691cd4cd9747f46aeec', resp.headers['Etag'])
 
         # Test cache hit
-        resp = self.app.get('/47/office/laudes/2018-01-28', headers={'If-None-Match': 'e46efa8f0369b2ea50eeed77664cea0a285d3acc3abf3bc90ec63d6e195e8ad6'})
+        resp = self.app.get('/47/office/laudes/2018-01-28', headers={'If-None-Match': 'c9acb612a00765b8b42e8e03243cb757baf6166f53300691cd4cd9747f46aeec'})
         self.assertEqual(304, resp.status_code)
 

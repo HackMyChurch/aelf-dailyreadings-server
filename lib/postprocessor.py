@@ -53,22 +53,18 @@ def _is_roman_number(data):
 
 
 # FIXME: this is very hackish. We'll need to replace this with a real parser
-def clean_ref(ref):
+def clean_ref(ref, lecture_type=None):
     ref = ref.strip()
 
     # Remove any leading 'cf.'
     if ref.lower().startswith('cf.'):
         ref = ref[3:].lstrip()
 
-    if not ref:
-        return ref
+    # Add 'Ps' if missing
+    if lecture_type == "psaume" and not ref.lower().startswith('ps') and not _is_letter(ref[0]):
+        ref = 'Ps %s' % ref
 
-    # Add 'Ps' if missing (HACK: manage 1Jn and similar)
-    chunks = ref.split(' ')
-    if _is_letter(chunks[0]) or (len(chunks[0]) >= 3 and _is_letter(chunks[0][1:])) or (len(chunks) > 1 and _is_letter(chunks[1])):
-        return ref
-
-    return 'Ps %s' % ref
+    return ref
 
 def _filter_fete(fete):
     '''fete can be proceesed from 2 places. Share common filtering code'''
@@ -435,12 +431,16 @@ def lectures_common_cleanup(data):
             else:
                 lecture['title'] = _id_to_title(name)
 
+            # Extract the office type from the key
+            key = lecture['key']
+            lecture['type'] = key.split('_')[0]
+
             # Remove number abbreviations from titles
             lecture['title'] = fix_abbrev(lecture['title'])
 
             if lecture['reference']:
                 raw_ref = lecture['reference']
-                lecture['reference'] = clean_ref(raw_ref)
+                lecture['reference'] = clean_ref(raw_ref, lecture['type'])
 
                 if 'cantique' in lecture['reference'].lower():
                     lecture['title'] = lecture['reference']

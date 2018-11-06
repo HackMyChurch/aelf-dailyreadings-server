@@ -33,7 +33,7 @@ class TestBatch(TestBase):
         self.assertEqual(200, data[0]['status'])
         self.assertEqual({
             "Content-Length": "29060",
-            "ETag": "c4f433d6c4eb959160cf3b251463e2e4f056162bc63ddfaff4fc5cc5bb2a7d87",
+            "ETag": "6f57ce1b9cc1699f96143f5f34f36b1fd7268327813bc060163ee884b0dd91ba",
             "Content-Type": "application/rss+xml; charset=utf-8"
         }, data[0]['headers'])
 
@@ -46,13 +46,13 @@ class TestBatch(TestBase):
                     "method": "GET",
                     "path": "/47/office/laudes/2017-02-06.rss",
                     "headers": {
-                        "If-None-Match": "c4f433d6c4eb959160cf3b251463e2e4f056162bc63ddfaff4fc5cc5bb2a7d87",
+                        "If-None-Match": "6f57ce1b9cc1699f96143f5f34f36b1fd7268327813bc060163ee884b0dd91ba",
                     },
                 }, {
                     "method": "GET",
                     "path": "/47/office/laudes/2017-02-06.json",
                     "headers": {
-                        "If-None-Match": "c4f433d6c4eb959160cf3b251463e2e4f056162bc63ddfaff4fc5cc5bb2a7d87",
+                        "If-None-Match": "6f57ce1b9cc1699f96143f5f34f36b1fd7268327813bc060163ee884b0dd91ba",
                     },
                 },
             ]),

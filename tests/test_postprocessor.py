@@ -173,6 +173,11 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual(u'', clean_ref(u''))
         self.assertEqual(u'Luc 1,32', clean_ref(u'Luc 1,32'))
         self.assertEqual(u'1jn 4, 11-21', clean_ref(u'1jn 4, 11-21'))
-        self.assertEqual(u'Ps 1A', clean_ref(u'1A'))
-        self.assertEqual(u'Ps 1 12-13', clean_ref(u'1 12-13'))
+        self.assertEqual(u'1M 1, 41-64', clean_ref(u'1M 1, 41-64'))
+
+        self.assertEqual(u'1A', clean_ref(u'1A'))
+        self.assertEqual(u'1 12-13', clean_ref(u'1 12-13'))
+
+        self.assertEqual(u'Ps 1A', clean_ref(u'1A', lecture_type='psaume'))
+        self.assertEqual(u'Ps 1 12-13', clean_ref(u'1 12-13', lecture_type='psaume'))
 
