@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-
-os.environ['AELF_DEBUG'] = "1"
-
 import unittest
 import server
 import mock
@@ -38,13 +35,15 @@ class TestBase(unittest.TestCase):
         found, load it from the Internet and save it for future use. An existing resource
         will never be overwriten.
         '''
-        path = './test_fixtures/'+url.replace('/', ':')
+        filename = url.replace('/', ':')
+        path = './test_fixtures/'+filename
         res = FakeResponse()
         try:
             with open(path, 'r') as f:
                 res.text = f.read()
         except:
-            if 'AELF_DEBUG' not in os.environ:
+            if filename not in os.environ.get('AELF_DEBUG', ''):
+                print('Lecture not found, please set AELF_DEBUG="%s" to load it' % (filename))
                 raise
             res.text = request_get(url, **kwargs).text
             with open(path, 'w') as f:
