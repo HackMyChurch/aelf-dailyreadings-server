@@ -44,7 +44,7 @@ def _is_verse_ref(data):
 
     return re.match(VERSE_REF_MATCH, data.replace(' ', ''))
 
-ROMAN_NUMBER_MATCH=re.compile('^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$')
+ROMAN_NUMBER_MATCH=re.compile('^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})[°\xb0]?$')
 def _is_roman_number(data):
     if not data:
         return False
