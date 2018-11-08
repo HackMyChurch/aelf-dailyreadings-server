@@ -229,6 +229,13 @@ def fix_abbrev(sentence):
 
     return sentence
 
+HTML_TAG_MATCH=re.compile('(<!--.*?-->|<[^>]*>)')
+def strip_html(sentence):
+    '''
+    Remove all HTML tags from sentence
+    '''
+    return HTML_TAG_MATCH.sub(' ', sentence)
+
 def fix_case(sentence):
     '''
     Take a potentially all caps sentence as input and make it readable
@@ -730,6 +737,7 @@ def postprocess_office_lecture_title(version, mode, key, title):
     if version < 30:
         return title
 
+    title = strip_html(title)
     title = fix_case(title)
     title = fix_common_typography(title)
 
