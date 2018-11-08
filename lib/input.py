@@ -117,7 +117,7 @@ def get_office_for_day_api(office, date, region):
             if isinstance(lecture, basestring):
                 # Re-assemble patristique text...
                 if name == 'titre_patristique':
-                    patristique['titre'] = u'Lecture patristique: %s' % lecture
+                    patristique['titre'] = lecture
                     continue
                 elif name == 'texte_patristique':
                     patristique['texte'] = lecture
