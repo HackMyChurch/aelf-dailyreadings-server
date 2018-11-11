@@ -5,3 +5,5 @@ PyYAML==3.11
 CherryPy==10.0.0
 Paste==2.0.3
 html5lib
+hunspell==0.5.5
+Unidecode==1.0.22

@@ -5,3 +5,8 @@ keys.py
 *.swp
 *.pyc
 
+# Dict
+hunspell-*
+*.aff
+*.dic
+

@@ -147,14 +147,10 @@ class TestPostprocessor(unittest.TestCase):
     def test_fix_case(self):
         from lib.postprocessor import fix_case
 
-        self.assertEqual(u'Homelie d\'Origène sur le Lévitique', fix_case(u'HOMELIE D\'ORIGÈNE SUR LE LÉVITIQUE'))
+        self.assertEqual(u'Homélie d\'Origène sur le Lévitique', fix_case(u'HOMELIE D\'ORIGÈNE SUR LE LÉVITIQUE'))
         self.assertEqual(u'Sermon de saint L\xe9on le grand pour l\'anniversaire de son ordination', fix_case(u'SERMON DE S. LÉON LE GRAND POUR L\'ANNIVERSAIRE DE SON ORDINATION'))
-        self.assertEqual(u'Homelie du II° Siecle', fix_case(u'HOMELIE DU II° SIECLE'))
-        #self.assertEqual(u'Actes du Concile Vatican II', fix_case(u'Actes Du Concile Vatican ii'))
-        #self.assertEqual(u'Psaume IV', fix_case(u'pSauMe iv'))
-        #self.assertEqual(
-        #         u'Evangile : « Celui qui perdra sa vie à cause de moi la sauvera » (Lc 9, 22-25)',
-        #fix_case(u'Evangile : « Celui qui perdra sa vie à cause de moi la sauvera » (Lc  9, 22-25)'))
+        self.assertEqual(u'Homélie du II° siècle', fix_case(u'HOMELIE DU II° SIECLE'))
+        self.assertEqual(u'Jean-Paul II', fix_case(u'JEAN-PAUL II'))
 
     def test_fix_abbrev(self):
         from lib.postprocessor import fix_abbrev

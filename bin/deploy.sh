@@ -2,7 +2,15 @@
 
 set -e
 
-TAG=$(date +"%Y-%m-%d-%H-%M-%S")
+# Make sure we have the dicts
+DICT_VERSION="6.3"
+DICT_ARCHIVE="hunspell-french-dictionaries-v${DICT_VERSION}.zip"
+if [ -f "${DICT_ARCHIVE}" ]
+then
+    wget "http://www.dicollecte.org/download/fr/${DICT_ARCHIVE}"
+fi
+
+unzip -o "${DICT_ARCHIVE}" "fr-classique.aff" "fr-classique.dic"
 
 # Determine environment
 case $1 in
@@ -19,6 +27,7 @@ case $1 in
 esac
 
 # Build
+TAG=$(date +"%Y-%m-%d-%H-%M-%S")
 for machine in $(docker-machine ls --quiet | grep 'prod\.epitre\.co$' | grep -v '^mon')
 do
     (

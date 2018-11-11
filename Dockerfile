@@ -1,7 +1,7 @@
 FROM alpine:3.6
 MAINTAINER Jean-Tiare Le Bigot <jt@yadutaf.fr>
 
-RUN apk add --no-cache python py-lxml py-pip
+RUN apk add --no-cache python py-lxml py-pip hunspell
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 

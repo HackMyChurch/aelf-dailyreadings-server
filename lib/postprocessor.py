@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import re
+import hunspell
+import unidecode
 from bs4 import BeautifulSoup, NavigableString, Tag, Comment
 from HTMLParser import HTMLParser
 
@@ -236,6 +238,7 @@ def strip_html(sentence):
     '''
     return HTML_TAG_MATCH.sub(' ', sentence)
 
+FR_DICT=hunspell.HunSpell('fr-classique.dic', 'fr-classique.aff')
 def _fix_word_case(match):
     word = match.group()
     sentence = match.string
@@ -249,12 +252,24 @@ def _fix_word_case(match):
     if _is_roman_number(word) and next_char != "'":
         return word.upper()
 
-    # Lower case determinants
-    if word.lower() in DETERMINANTS:
+    # Check if the word is correctly spelled
+    if not FR_DICT.spell(word):
+        for suggestion in FR_DICT.suggest(word):
+            # Accept suggestion if only diacritics changed
+            if unidecode.unidecode(word) == unidecode.unidecode(suggestion):
+                word = suggestion
+                break
+
+    # If there is a single letter, lower case
+    if len(word) <= 1:
         return word.lower()
 
-    # Capitalize remaining words
-    return word.capitalize()
+    # If any of the possible word stem start with upper case, capitalize
+    for stem in FR_DICT.stem(word):
+        if stem[0].isupper():
+            return word.capitalize()
+    else:
+        return word.lower()
 
 WORD_MATCH=re.compile('\w+', re.UNICODE)
 def fix_case(sentence):
