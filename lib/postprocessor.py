@@ -44,7 +44,7 @@ def _is_verse_ref(data):
 
     return re.match(VERSE_REF_MATCH, data.replace(' ', ''))
 
-ROMAN_NUMBER_MATCH=re.compile('^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})[°\xb0]?$')
+ROMAN_NUMBER_MATCH=re.compile('^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$')
 def _is_roman_number(data):
     if not data:
         return False
@@ -236,14 +236,32 @@ def strip_html(sentence):
     '''
     return HTML_TAG_MATCH.sub(' ', sentence)
 
+def _fix_word_case(match):
+    word = match.group()
+    sentence = match.string
+
+    # Get char following the match, this is used for roman number disambiguation
+    next_char = ''
+    if match.end() < len(sentence):
+        next_char = sentence[match.end()]
+
+    # Skip roman number
+    if _is_roman_number(word) and next_char != "'":
+        return word.upper()
+
+    # Lower case determinants
+    if word.lower() in DETERMINANTS:
+        return word.lower()
+
+    # Capitalize remaining words
+    return word.capitalize()
+
+WORD_MATCH=re.compile('\w+', re.UNICODE)
 def fix_case(sentence):
     '''
     Take a potentially all caps sentence as input and make it readable
     '''
     sentence = fix_abbrev(sentence)
-
-    # Make the first letter a capital
-    sentence = sentence[0].upper() + sentence[1:]
 
     # Heuristic: Only apply if the sentence has more than 5 char AND more than half capital letters
     if len(sentence) < 5:
@@ -262,33 +280,15 @@ def fix_case(sentence):
     if (upper_case_letters_count < all_letters_count / 3):
         return sentence
 
-    chunks = sentence.split(' ')
-    cleaned = []
-
-    # Remove as many upper case letters as possible
-    for i, chunk in enumerate(chunks):
-        if not chunk:
-            continue
-
-        if _is_roman_number(chunk):
-            cleaned.append(chunk.upper())
-            continue
-
-        word_chunks = []
-        for word in chunk.split('\''):
-            c = word[0]
-            word = word.lower()
-            if c != word[0] and (word not in DETERMINANTS or i == 0):
-                word = '-'.join([w.capitalize() for w in word.split('-')])
-            word_chunks.append(word)
-
-        cleaned.append('\''.join(word_chunks))
-        if cleaned:
-            cleaned[0] = cleaned[0].capitalize()
-    sentence = ' '.join(cleaned)
+    # Fix individual words case
+    sentence = re.sub(WORD_MATCH, _fix_word_case, sentence)
 
     # Make sure punctuation is followed by an upper case letter
     sentence = re.sub(r'([.:!?«»()]\s*)([a-z])', lambda match: match.group(1) + match.group(2).upper(), sentence)
+
+    # Make sure to start with a upper letter
+    sentence = sentence[0].upper() + sentence[1:]
+
     return sentence
 
 def fix_common_typography(text):
