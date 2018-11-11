@@ -34,10 +34,10 @@ wait
 eval $(docker-machine env gra-01.prod.epitre.co)
 if docker service inspect ${DOCKER_NAME} &>/dev/null
 then
-    echo "[INFO] Updating service '${DOCKER_NAME}:${TAG}:$TAG'"
-    docker service update --image ${DOCKER_NAME}:${TAG} --publish-add published=${DOCKER_PORT},target=4000,mode=host ${DOCKER_NAME}
+    echo "[INFO] Updating service '${DOCKER_NAME}:${TAG}'"
+    docker service update --image ${DOCKER_NAME}:${TAG} ${DOCKER_NAME}
 else
-    echo "[INFO] Creating service '${DOCKER_NAME}:${TAG}:$TAG'"
+    echo "[INFO] Creating service '${DOCKER_NAME}:${TAG}'"
     docker service create --mode global --restart-condition any --name ${DOCKER_NAME} --publish published=${DOCKER_PORT},target=4000,mode=host ${DOCKER_NAME}:${TAG}
 fi
 
