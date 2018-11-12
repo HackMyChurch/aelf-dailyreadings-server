@@ -264,12 +264,16 @@ def _fix_word_case(match):
     if len(word) <= 1:
         return word.lower()
 
-    # If any of the possible word stem start with upper case, capitalize
-    for stem in FR_DICT.stem(word):
-        if stem[0].isupper():
-            return word.capitalize()
-    else:
+    # If there are no known stems, assume proper name and capitalize
+    stems = FR_DICT.stem(word)
+    if not stems:
+        return word.capitalize()
+
+    # If all the possible stem word start with a lowercase, lower
+    if all((stem[0].islower() for stem in stems)):
         return word.lower()
+    else:
+        return word.capitalize()
 
 WORD_MATCH=re.compile('\w+', re.UNICODE)
 def fix_case(sentence):

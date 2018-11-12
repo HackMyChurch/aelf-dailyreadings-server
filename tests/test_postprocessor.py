@@ -151,6 +151,7 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual(u'Sermon de saint L\xe9on le grand pour l\'anniversaire de son ordination', fix_case(u'SERMON DE S. LÉON LE GRAND POUR L\'ANNIVERSAIRE DE SON ORDINATION'))
         self.assertEqual(u'Homélie du II° siècle', fix_case(u'HOMELIE DU II° SIECLE'))
         self.assertEqual(u'Jean-Paul II', fix_case(u'JEAN-PAUL II'))
+        self.assertEqual(u'Lettre encyclique du pape Pie XI pour le III° centenaire de la mort de saint Josaphat', fix_case(u'LETTRE ENCYCLIQUE DU PAPE PIE XI POUR LE III° CENTENAIRE DE LA MORT DE SAINT JOSAPHAT'))
 
     def test_fix_abbrev(self):
         from lib.postprocessor import fix_abbrev
