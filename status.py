@@ -68,7 +68,7 @@ def validate_future_offices():
         date = datetime.date.today()
         date += datetime.timedelta(days=days_ahead)
         date_str = str(date)
-        status['offices'][date_str] = {}
+        day_status = {}
         for office_name in OFFICES.keys():
             url = "/%s/office/%s/%s.json" % (CURRENT_VERSION, office_name, date_str)
             try:
@@ -80,10 +80,8 @@ def validate_future_offices():
             if reason[0] == REASON_ERROR:
                 status['status'] = 500
 
-            status['offices'][date_str][office_name] = reason[0], reason[1], url
-
-    # Commit
-    _status = status
+            day_status[office_name] = reason[0], reason[1], url
+        _status['offices'][date_str] = day_status
 
 def runner():
     while True:
