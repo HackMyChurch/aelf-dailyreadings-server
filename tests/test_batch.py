@@ -7,6 +7,8 @@ import mock
 
 from base import TestBase, FakeResponse
 
+EXPECTED_ETAG = 'bd94534591a1e80cffd9eefcda5b1f7aa11a100feb7c391911b3084a9729deb1'
+
 class TestBatch(TestBase):
 
     @mock.patch('lib.input.requests.Session.get')
@@ -32,8 +34,8 @@ class TestBatch(TestBase):
         # Validate first response
         self.assertEqual(200, data[0]['status'])
         self.assertEqual({
-            "Content-Length": "29060",
-            "ETag": "6f57ce1b9cc1699f96143f5f34f36b1fd7268327813bc060163ee884b0dd91ba",
+            "Content-Length": "29059",
+            "ETag": EXPECTED_ETAG,
             "Content-Type": "application/rss+xml; charset=utf-8"
         }, data[0]['headers'])
 
@@ -46,13 +48,13 @@ class TestBatch(TestBase):
                     "method": "GET",
                     "path": "/47/office/laudes/2017-02-06.rss",
                     "headers": {
-                        "If-None-Match": "6f57ce1b9cc1699f96143f5f34f36b1fd7268327813bc060163ee884b0dd91ba",
+                        "If-None-Match": EXPECTED_ETAG,
                     },
                 }, {
                     "method": "GET",
                     "path": "/47/office/laudes/2017-02-06.json",
                     "headers": {
-                        "If-None-Match": "6f57ce1b9cc1699f96143f5f34f36b1fd7268327813bc060163ee884b0dd91ba",
+                        "If-None-Match": EXPECTED_ETAG,
                     },
                 },
             ]),

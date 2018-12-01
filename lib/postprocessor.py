@@ -642,6 +642,7 @@ def html_fix_paragraph(key, soup):
     # Ensure each text element is in a p
     node = soup.find(text=lambda text:isinstance(text, NavigableString))
     while node:
+        node_next = node.find_next(text=lambda text:isinstance(text, NavigableString))
         if not unicode(node).strip():
             node.extract()
         else:
@@ -653,7 +654,7 @@ def html_fix_paragraph(key, soup):
 
             if parent.name != 'p':
                 _wrap_node_children(soup, parent, 'p')
-        node = node.find_next(text=lambda text:isinstance(text, NavigableString))
+        node = node_next
 
     # Convert sequences of <br/> to <p>
     node = soup.find('br')

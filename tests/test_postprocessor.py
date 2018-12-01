@@ -101,6 +101,11 @@ class TestPostprocessor(unittest.TestCase):
         # Regression test for lecture / 23/06/2017
         self.assertEqual(u'<p>J\'ai vu l\'eau vive!</p>', bs(html_fix_paragraph, u'<br /><br /><p>J\'ai vu l\'eau vive!</p>'))
 
+        # Regression test for vepre/intercession 12/01/2019
+        # Some "br" elems were not wrapped in "p", thus causing the line fixer to crash
+        # FIXME: The result is still invalid (p in p) but, at least, it does not crash!
+        self.assertEqual(u'<p><p>begin</p><br/>end</p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/>end'))
+
     def test_html_fix_lines(self):
         from lib.postprocessor import html_fix_lines
 
