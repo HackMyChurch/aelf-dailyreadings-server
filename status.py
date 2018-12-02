@@ -54,15 +54,6 @@ def validate_future_offices():
     '''
     Loop over upcomming STATUS_DAYS_TO_MONITOR days and OFFICES and make sure they are valid
     '''
-    global _status
-    date = datetime.date.today()
-    status = {
-        'offices': {},
-        'status': 200,
-        'date': str(datetime.datetime.today()),
-        'message': '',
-    }
-
     for days_ahead in range(STATUS_DAYS_TO_MONITOR):
         _status['message'] = 'Refreshing day %s of %d. Please wait.' % (days_ahead+1, STATUS_DAYS_TO_MONITOR)
         date = datetime.date.today()
@@ -82,6 +73,11 @@ def validate_future_offices():
 
             day_status[office_name] = reason[0], reason[1], url
         _status['offices'][date_str] = day_status
+
+    # All done !
+    _status['message'] = ''
+    _status['status'] = 200
+    _status['date'] = str(datetime.datetime.today())
 
 def runner():
     while True:
