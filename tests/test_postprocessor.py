@@ -103,8 +103,13 @@ class TestPostprocessor(unittest.TestCase):
 
         # Regression test for vepre/intercession 12/01/2019
         # Some "br" elems were not wrapped in "p", thus causing the line fixer to crash
-        # FIXME: The result is still invalid (p in p) but, at least, it does not crash!
-        self.assertEqual(u'<p><p>begin</p><br/>end</p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/>end'))
+        self.assertEqual(u'<p>begin</p><p><br/>end</p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/>end'))
+
+        # Validate complex paragraph reconstruction where paragraphs are in the middle of text
+        self.assertEqual(u'<p>begin</p><p><br/>end</p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/>end'))
+        self.assertEqual(u'<p>begin</p><p><br/><i>end</i></p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/><i>end</i>'))
+        self.assertEqual(u'<p>begin</p><p><br/><i>middle</i></p><p>end</p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/><i>middle</i><p>end</p>'))
+        self.assertEqual(u'<p><i>begin</i></p><p>end</p>', bs(html_fix_paragraph, u'\n<br/><i>begin</i><p>end</p>'))
 
     def test_html_fix_lines(self):
         from lib.postprocessor import html_fix_lines

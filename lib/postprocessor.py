@@ -628,32 +628,60 @@ def html_fix_paragraph(key, soup):
         else:
             tag.extract()
 
-    # TODO: we must not nest p. If any element is not in a p, we should collect all its siblings and move them to a paragraph
-    # loop on *all* nodes. 
-    # If node is a p --> next
-    # If node is not a p --> wrap it in a p *and* collect all the new non p neighbors and put them in the paragraph
-    # TODO: what if the element itself contains a p ? --> if it's a blockelem --> skip
-    # FIXME: if we have a sequence like:
-    #        --> <p>1</p>some text<p>2</p>
-    #        we will end up with
-    #        --> <p><p>1</p>some text<p>2</p></p>
-    #        The most affected part is the Intercession
-
     # Ensure each text element is in a p
     node = soup.find(text=lambda text:isinstance(text, NavigableString))
     while node:
         node_next = node.find_next(text=lambda text:isinstance(text, NavigableString))
         if not unicode(node).strip():
             node.extract()
-        else:
-            parent = node.parent
-            while parent:
-                if parent.name in HTML_BLOCK_ELEMENTS:
-                    break
-                parent = parent.parent
+            node = node_next
+            continue
 
-            if parent.name != 'p':
-                _wrap_node_children(soup, parent, 'p')
+        # Find the earliest ancestor of the element that is block element
+        block_parent = node.parent
+        while block_parent:
+            if block_parent.name in HTML_BLOCK_ELEMENTS:
+                break
+            block_parent = block_parent.parent
+
+        # Wrapped in a p, all good, move next
+        if block_parent.name == 'p':
+            node = node_next
+            continue
+
+        # Find the first element ancestor or elemnt itself who has a 'p' as a
+        # sibling to find the level to wrap. This is imporant to find the
+        # appropriate wrap level: maybe this string is wrapped in a bold
+        # text for example.
+        node_to_wrap = node
+        previous_p_sibling = None
+        next_p_sibling = None
+
+        while True:
+            previous_p_sibling = node_to_wrap.find_previous_sibling("p")
+            next_p_sibling = node_to_wrap.find_next_sibling("p")
+            if previous_p_sibling is not None or next_p_sibling is not None or node_to_wrap.parent == block_parent:
+                break
+            node_to_wrap = node_to_wrap.parent
+
+        # Create 'p' element
+        new_p = soup.new_tag('p')
+
+        # Insert the new 'p' immediately after the previous 'p' element or as
+        # the first child of the parent.
+        if previous_p_sibling is not None:
+            previous_p_sibling.insert_after(new_p)
+        else:
+            block_parent.insert(0, new_p)
+
+        # Move all elements immediately after the new 'p' to the new 'p' until the next 'p'
+        for sibling in list(new_p.next_siblings):
+            if sibling.name == 'p':
+                continue
+            sibling.extract()
+            new_p.append(sibling)
+
+        # All done :)
         node = node_next
 
     # Convert sequences of <br/> to <p>
