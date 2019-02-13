@@ -69,7 +69,7 @@ def validate_future_offices():
                 reason = (REASON_ERROR, str(e))
 
             if reason[0] == REASON_ERROR:
-                status['status'] = 500
+                _status['status'] = 500
 
             day_status[office_name] = reason[0], reason[1], url
         _status['offices'][date_str] = day_status
