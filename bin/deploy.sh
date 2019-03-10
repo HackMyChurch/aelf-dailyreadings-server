@@ -5,7 +5,7 @@ set -e
 # Make sure we have the dicts
 DICT_VERSION="6.3"
 DICT_ARCHIVE="hunspell-french-dictionaries-v${DICT_VERSION}.zip"
-if [ -f "${DICT_ARCHIVE}" ]
+if ! [ -f "${DICT_ARCHIVE}" ]
 then
     wget "http://www.dicollecte.org/download/fr/${DICT_ARCHIVE}"
 fi
