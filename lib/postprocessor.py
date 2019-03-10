@@ -80,7 +80,7 @@ def _filter_fete(fete):
     if fete and ' ' not in fete and fete.lower() not in [u'ascension', u'pentecôte']:
         text += u" Nous %s %s" % (verbe, fete)
     # Standard fete
-    elif fete and u'férie' not in fete:
+    elif fete and u'férie' not in fete.lower():
         pronoun = get_pronoun_for_sentence(fete)
         text += u' Nous %s %s%s' % (verbe, pronoun, fete)
     else:
@@ -358,7 +358,7 @@ def get_pronoun_for_sentence(sentence):
     words = [w.lower() for w in sentence.split(" ")]
 
     # Argh, hard coded exception
-    if words[0] in ['saint', 'sainte'] and u"trinité" not in sentence:
+    if words[0] in ['saint', 'sainte'] and u"trinité" not in sentence.lower():
         return ''
 
     # Already a determinant or equivalent
@@ -370,7 +370,8 @@ def get_pronoun_for_sentence(sentence):
         return "l'"
 
     # Attempt to guess M/F by checking if 1st words ends with 'e'. Default on F
-    if words[0] in [u'sacré-c\u0153ur', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']:
+    masc = [u'sacré-c\u0153ur', u'lundi', u'mardi', u'mercredi', u'jeudi', u'vendredi', u'samedi', u'dimanche']
+    if (words[0] in masc) or (len(words) > 1 and words[1] in masc):
         return u"le "
 
     return u"la "
@@ -389,12 +390,12 @@ def postprocess_informations(informations):
     # Never print fete if this is the semaine
     if informations.get('jour_liturgique_nom', '').split(' ')[0] == informations.get('semaine', '').split(' ')[0]:
         jour_lit_skip = True
-    if informations.get('jour_liturgique_nom', '') == informations.get('fete', '') and u'férie' not in informations.get('fete', ''):
+    if informations.get('jour_liturgique_nom', '') == informations.get('fete', '') and u'férie' not in informations.get('fete', '').lower():
         jour_lit_skip = True
     if informations['fete'] == informations.get('degre', ''):
         fete_skip = True
 
-    if not jour_lit_skip and 'jour_liturgique_nom' in informations and u'férie' not in informations.get('jour_liturgique_nom', ''):
+    if not jour_lit_skip and 'jour_liturgique_nom' in informations and u'férie' not in informations.get('jour_liturgique_nom', '').lower():
         text += _filter_fete(informations['jour_liturgique_nom'])
     elif 'jour' in informations:
         text += informations['jour'].strip()
@@ -424,7 +425,7 @@ def postprocess_informations(informations):
 
     if not fete_skip and 'fete' in informations and ('jour' not in informations or informations['jour'] not in informations['fete']):
         fete = _filter_fete(informations['fete'])
-        if fete and not u'férie' in fete:
+        if fete and not u'férie' in fete.lower():
             text += "%s." % fete
 
     if 'couleur' in informations:
@@ -435,7 +436,7 @@ def postprocess_informations(informations):
     text = text[:1].upper() + text[1:]
 
     # Inject text
-    informations['text'] = text
+    informations['text'] = text.strip()
     return informations
 
 # FIXME: this function is only used by the libs and does not follow te same convention as the otthers
