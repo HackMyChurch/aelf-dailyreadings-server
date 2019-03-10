@@ -82,7 +82,7 @@ def office_to_rss(version, data):
                     text = u"%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
 
                 # Build slide title
-                title = lecture.get('short_title', '')
+                title = lecture.get('short_title', title)
                 long_title = lecture.get('long_title', '')
 
                 # Prepare reference, if any
