@@ -516,7 +516,8 @@ def postprocess_office_careme(version, mode, data):
         return
 
     introduction_item = get_lecture_by_type(data, u"introduction")
-    introduction_item.lecture['text'] = introduction_item.lecture['text'].replace(u'(Alléluia.)', '')
+    if introduction_item is not None:
+        introduction_item.lecture['text'] = introduction_item.lecture['text'].replace(u'(Alléluia.)', '')
 
 def postprocess_office_keys(version, mode, data):
     '''

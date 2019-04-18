@@ -48,9 +48,6 @@ def _do_get_request(url):
 # API
 #
 
-def get_office_for_day_aelf(office, date, region):
-    return _do_get_request(AELF_SITE.format(office=office, day=date.day, month=date.month, year=date.year, region=region)).text
-
 def get_office_for_day_api(office, date, region):
     '''
     Grab data from api.aelf.org and format it in a consistent way. This api is very creative in
@@ -210,101 +207,6 @@ def get_office_for_day_api(office, date, region):
 
             out_variant['lectures'].append(cleaned)
 
-    return lectures_common_cleanup(out)
-
-LAST = object()
-def get_office_for_day_aelf_json(office, date, region):
-    '''
-    This is an alternative method to the API to get the offices. It works by scrapping
-    the website and returning the same internal format as the API.
-    This method is also used as a fallback in case a lecture or full office is missing
-    '''
-    data = get_office_for_day_aelf(office, date, region)
-    soup = BeautifulSoup(data, 'html5lib')
-    lectures = soup.find_all("div", class_="lecture")
-    variant_titles = [title.string.capitalize() for title in soup.find_all('h1')]
-    variant_current = -1
-    variant_current_str = ''
-
-    if not variant_titles:
-        variant_titles = [office.capitalize()]
-
-    # Start to build our json format from API's format
-    out = {
-        u'informations': {},
-        u'variants': [],
-        u'source': 'website',
-        u'office': office,
-        u'date': date,
-    }
-
-    # Load informations from the API, if available
-    try:
-        data_info = _do_get_request(AELF_JSON.format(office="informations", day=date.day, month=date.month, year=date.year, region=region)).json(object_pairs_hook=OrderedDict)
-        out[u'informations'] = dict(data_info.pop('informations'))
-    except:
-        pass
-
-    # Force 'zone' in 'informations'
-    out['informations']['zone'] = region
-
-    for lecture in lectures:
-        # Compute the variant id, go to next variant if needed
-        lecture_key = lecture.attrs.get('id', office)
-        variant_key = lecture_key.split('_', 1)[0]
-        if variant_key != variant_current_str:
-            variant_current += 1
-            variant_current_str = variant_key
-
-        # Compute the name of the variant
-        if variant_current >= len(variant_titles):
-            variant_name = office.capitalize()
-            if variant_current > 0:
-                variant_name  = "%s %d" % (variant_name, variant_current)
-        else:
-            variant_name = variant_titles[variant_current]
-
-        # Is it the last known variant or do we need to create a new one ?
-        if out['variants'] and out['variants'][-1]['name'] == variant_name:
-            variant = out['variants'][-1]
-        else:
-            variant = {
-                'name': variant_name,
-                'lectures': [],
-            }
-            out['variants'].append(variant)
-
-        # Lectures can be composed of sub-lectures. De-aggregate them
-        l = {
-            u'title':     u'',
-            u'text':      u'',
-        }
-        for balise in lecture.contents + [LAST]:
-            if balise == LAST or balise.name == 'h4':
-                # Flush reading IF there is some content (title or text)
-                if l['title'].strip() or l['text'].strip():
-                    title, reference =  _extract_title_reference(l['title'].strip(' \t\n\r'))
-                    text  =  l['text'].strip(' \t\n\r')
-                    variant['lectures'].append({
-                        u'title':     title,
-                        u'text':      text,
-                        u'reference': reference,
-                        u'key':       lecture_key,
-                    })
-
-            if balise is LAST:
-                # This is a hack to share flush path. I'm in a hurry. AELF is one again broken.
-                break
-
-            if balise.name == 'h4':
-                # Next reading
-                l['title'] = lecture.h4.extract().text.strip()
-                l['text'] = u''
-            else:
-                # Reading content
-                l['text'] += unicode(balise)
-
-    # All done!
     return lectures_common_cleanup(out)
 
 def get_lecture_text_from_epitre(reference):

@@ -44,10 +44,11 @@ class TestBase(unittest.TestCase):
         except:
             if filename not in os.environ.get('AELF_DEBUG', ''):
                 print('Lecture not found, please set AELF_DEBUG="%s" to load it' % (filename))
-                raise
-            res.text = request_get(url, **kwargs).text
-            with open(path, 'w') as f:
-                f.write(res.text.encode('utf8'))
+                res.text = ''
+            else:
+                res.text = request_get(url, **kwargs).text
+                with open(path, 'w') as f:
+                    f.write(res.text.encode('utf8'))
 
         return res
 

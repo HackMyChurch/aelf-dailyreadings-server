@@ -3,7 +3,7 @@
 import re
 import datetime
 
-from utils import get_asset, get_office_for_day_aelf_json, get_lecture_text_from_epitre
+from utils import get_asset, get_lecture_text_from_epitre
 from utils import get_lectures_by_type, get_lecture_by_type, insert_lecture_before
 from lib.postprocessor import postprocess_office_html_lecture
 from lib.postprocessor import postprocess_office_lecture_text
@@ -43,19 +43,6 @@ def postprocess(version, mode, data):
     lecture_item = get_lecture_by_type(data, u"office_lecture")
     repons_item  = get_lecture_by_type(data, u"office_repons_lecture")
     oraison_item = get_lecture_by_type(data, u"office_oraison")
-
-    # Fix missing "Lecture"
-    if lecture_item is None and repons_item is not None:
-        # Grab lectures from the website, still json format
-        data_aelf = get_office_for_day_aelf_json("lectures", date, data['informations']['zone'])
-
-        # Attempt to get the lecture
-        lecture_items = get_lectures_by_type(data_aelf, u"office_lecture")
-        lecture_items = [l for l in lecture_items if l.lecture['title'].lower() not in ['verset', 'repons']]
-        lecture_item = lecture_items[0] if lecture_items else None
-
-        # If we've got a lecture item, insert it before the repons
-        insert_lecture_before(data, lecture_item.lecture, repons_item)
 
     # Fix empty "Lecture"..., try to load it from epitre.co
     # FIXME: embark these data and NEVER load from AELF, too much broken

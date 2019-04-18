@@ -21,12 +21,6 @@ class TestRouteCompat(TestBase):
         resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
         self.assertEqual(200, resp.status_code)
 
-        # Fallback path (was completely broken on 2017-02-18)
-        FakeResponse.status_code = 200
-        resp = self.app.get('/28/office/complies/2017-02-18?beta=enabled')
-        self.assertEqual(200, resp.status_code)
-        self.assertIn("<source>website</source>", resp.data)
-
         # 404
         FakeResponse.status_code = 404
         resp = self.app.get('/28/office/complies/2017-02-20?beta=enabled')
@@ -55,5 +49,3 @@ class TestRouteCompat(TestBase):
         self.assertIn("<source>mock</source>", self.app.get('/01/02/2016/'+key+'?version=19&beta=1').data)
         m_do_get_office.assert_called_once_with(19, 'beta', office, datetime.date(2016, 02, 01), 'romain')
         m_do_get_office.reset_mock()
-
-

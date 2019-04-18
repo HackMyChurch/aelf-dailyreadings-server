@@ -37,24 +37,6 @@ class TestOfficeLectures(TestBase):
             self.assertNotEqual(u"Te Deum", item[0])
 
     @mock.patch('lib.input.requests.Session.get')
-    def test_get_lectures_fallback_missing_lecture(self, m_get):
-        m_get.side_effect = self.m_get
-
-        # Get lectures, make sure we have the Te Deum on a (not so) random day
-        resp = self.app.get('/20/office/lectures/2017-03-03')
-        self.assertEqual(200, resp.status_code)
-        items = self.parseItems(resp.data)
-
-        # Validate: No Te Deum
-        self.assertEqual(14, len(items))
-        for item in items:
-            self.assertNotEqual(u"Te Deum", item[0])
-
-        # Has a valid lecture
-        self.assertEqual(u"Lecture : Mo\xefse, le d\xe9fenseur des H\xe9breux pers\xe9cut\xe9s  (Exode 2, 1 - 22)", items[-5][0])
-        self.assertIn(u"Voyant qu\u2019il \xe9tait beau", items[-5][1])
-
-    @mock.patch('lib.input.requests.Session.get')
     def test_get_lectures_47(self, m_get):
         m_get.side_effect = self.m_get
 
