@@ -74,8 +74,9 @@ def office_to_rss(version, data):
             else:
                 if 'antienne' in lecture:
                     antienne_1 = u"<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-1\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
+                    gloria_patri = u"<div class=\"gloria_patri\"><span tabindex=\"0\" id=\"%s-gloria_patri\" class=\"line\">Gloire au Père, ...</span></div>" % (key)
                     antienne_2 = u"<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-2\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
-                    text = u"%s%s%s" % (antienne_1, text, antienne_2)
+                    text = u"%s%s%s%s" % (antienne_1, text, gloria_patri, antienne_2)
                 if 'verset' in lecture:
                     text = u"%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
                 if 'repons' in lecture:
