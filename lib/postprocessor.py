@@ -270,7 +270,7 @@ def _fix_word_case(match):
         return word.capitalize()
 
     # If all the possible stem word start with a lowercase, lower
-    if all((stem[0].islower() for stem in stems)):
+    if all((stem.decode('utf8')[0].islower() for stem in stems)):
         return word.lower()
     else:
         return word.capitalize()
@@ -328,19 +328,19 @@ def fix_common_typography(text):
                .replace('n\\est', 'n\'est')\
 
     # Preg replaces
-    text = re.sub(r'([Pp])ere', r'\1ère', text)
-    text = re.sub(r'[Ee]glise', 'Église', text)
+    text = re.sub('([Pp])ere', '\1ère', text)
+    text = re.sub('[Ee]glise', 'Église', text)
 
     # Typography
-    text = re.sub(r'\s*-\s*',      '-',    text)
-    text = re.sub(r':\s+(\s+)'  ,  '',     text)
-    text = re.sub(r'\s*\(',        ' (',   text)
-    text = re.sub(r'\s*\u00a0\s*', '\xa0', text) # Mixed type of blanks
+    text = re.sub('\s*-\s*',      '-',    text)
+    text = re.sub(':\s+(\s+)'  ,  '',     text)
+    text = re.sub('\s*\(',        ' (',   text)
+    text = re.sub('\s*\u00a0\s*', '\xa0', text) # Mixed type of blanks
 
-    text = re.sub(r'\s*»',          r'\u00a0» ',  text) # Typographic quote
-    text = re.sub(r'«\s*',          r' «\u00a0',  text)
-    text = re.sub(r'\s*([:?!])\s*', r'\u00a0\1 ', text)
-    text = re.sub(r'\s+;\s*',       r'\u00a0; ',  text) # Semicolon, prefixed by a blank
+    text = re.sub('\s*»',          '\u00a0» ',  text) # Typographic quote
+    text = re.sub('«\s*',          ' «\u00a0',  text)
+    text = re.sub('\s*([:?!])\s*', '\u00a0\1 ', text)
+    text = re.sub('\s+;\s*',       '\u00a0; ',  text) # Semicolon, prefixed by a blank
 
     return text
 
