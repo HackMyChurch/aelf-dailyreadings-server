@@ -56,15 +56,10 @@ def get(version, mode, office, date, region):
         if http_err.status == 404:
             return return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
         return return_error(http_err.status, http_err.message)
-    except Exception as e:
-        return return_error(500, str(e))
 
     # Apply office specific postprocessor
-    try:
-        for postprocessor in OFFICES[office]['postprocess']:
-            data = postprocessor(version, mode, data)
-    except Exception as e:
-        return return_error(500, "Erreur lors de la génération de l'office.")
+    for postprocessor in OFFICES[office]['postprocess']:
+        data = postprocessor(version, mode, data)
 
     # Return
     return data
