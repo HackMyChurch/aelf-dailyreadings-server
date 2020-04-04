@@ -328,18 +328,18 @@ def fix_common_typography(text):
                .replace('n\\est', 'n\'est')\
 
     # Preg replaces
-    text = re.sub('([Pp])ere', '\1ère', text)
+    text = re.sub('([Pp])ere', '\\1ère', text)
     text = re.sub('[Ee]glise', 'Église', text)
 
     # Typography
     text = re.sub('\s*-\s*',      '-',    text)
     text = re.sub(':\s+(\s+)'  ,  '',     text)
     text = re.sub('\s*\(',        ' (',   text)
-    text = re.sub('\s*\u00a0\s*', '\xa0', text) # Mixed type of blanks
+    text = re.sub('\s*\u00a0\s*', '\u00a0', text) # Mixed type of blanks
 
     text = re.sub('\s*»',          '\u00a0» ',  text) # Typographic quote
     text = re.sub('«\s*',          ' «\u00a0',  text)
-    text = re.sub('\s*([:?!])\s*', '\u00a0\1 ', text)
+    text = re.sub('\s*([:?!])\s*', '\u00a0\\1 ', text)
     text = re.sub('\s+;\s*',       '\u00a0; ',  text) # Semicolon, prefixed by a blank
 
     return text
