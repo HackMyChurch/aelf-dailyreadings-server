@@ -1,8 +1,8 @@
-FROM alpine:3.6
+FROM alpine:3.11
 MAINTAINER Jean-Tiare Le Bigot <jt@yadutaf.fr>
 
 RUN apk add --no-cache python python-dev py-lxml py-pip gcc g++ hunspell hunspell-dev
-RUN ln -s /usr/lib/libhunspell-1.6.so /usr/lib/libhunspell.so
+RUN ln -s /usr/lib/libhunspell-1.7.so /usr/lib/libhunspell.so
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
