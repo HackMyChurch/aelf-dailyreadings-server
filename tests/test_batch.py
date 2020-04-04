@@ -7,7 +7,7 @@ import mock
 
 from base import TestBase, FakeResponse
 
-EXPECTED_ETAG = 'bd94534591a1e80cffd9eefcda5b1f7aa11a100feb7c391911b3084a9729deb1'
+EXPECTED_ETAG = '1652c0d165003d403197a5eb4414ae2eebf092c38646b572a208957bfac5592b'
 
 class TestBatch(TestBase):
 
@@ -34,7 +34,7 @@ class TestBatch(TestBase):
         # Validate first response
         self.assertEqual(200, data[0]['status'])
         self.assertEqual({
-            "Content-Length": "29691",
+            "Content-Length": "29683",
             "ETag": EXPECTED_ETAG,
             "Content-Type": "application/rss+xml; charset=utf-8"
         }, data[0]['headers'])
