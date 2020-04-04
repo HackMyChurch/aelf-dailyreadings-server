@@ -17,14 +17,14 @@ HTTP_TIMEOUT = 10 # seconds
 
 # French constants
 DETERMINANTS = [
-        'd', 'l', 'l\'', 'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'd\'', 'au', u'à',
+        'd', 'l', 'l\'', 'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'd\'', 'au', 'à',
         'ma', 'ta', 'sa', 'mon', 'ton', 'son', 'notre', 'votre', 'leur,'
         'mais', 'ou', 'et', 'donc', 'sur', 'sans',
-        'ce', 'ces', 'cela', 'cette', 'celui', 'celle', 'celles', 'ceux', u'ça',
+        'ce', 'ces', 'cela', 'cette', 'celui', 'celle', 'celles', 'ceux', 'ça',
         'pour', 'afin', 'contre', 'avec', 'en',
 
         # Most common common names
-        'saint', 'sainte', 'anniversaire', 'ordination', 'sermon', 'homelie', u'homélie',
+        'saint', 'sainte', 'anniversaire', 'ordination', 'sermon', 'homelie', 'homélie',
         'grand', 'grande',
 ];
 
@@ -43,7 +43,7 @@ OFFICE_NAME = {
 }
 
 ID_TO_TITLE = {
-    'benediction': u'Bénédiction',
+    'benediction': 'Bénédiction',
 }
 
 # Region specific settings

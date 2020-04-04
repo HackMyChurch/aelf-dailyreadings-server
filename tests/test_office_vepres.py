@@ -17,8 +17,8 @@ class TestOfficeVepres(TestBase):
 
         # Validate: Once, before the Intercession
         self.assertEqual(16, len(items))
-        self.assertEqual(u"Bénédiction", items[-1][0])
-        self.assertEqual(u"Oraison", items[-2][0])
-        self.assertEqual(u"Notre P&egrave;re", items[-3][0])
-        self.assertEqual(u"Intercession", items[-4][0])
+        self.assertEqual("Bénédiction", items[-1][0])
+        self.assertEqual("Oraison", items[-2][0])
+        self.assertEqual("Notre P&egrave;re", items[-3][0])
+        self.assertEqual("Intercession", items[-4][0])
 

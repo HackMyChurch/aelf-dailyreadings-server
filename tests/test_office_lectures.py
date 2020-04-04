@@ -17,10 +17,10 @@ class TestOfficeLectures(TestBase):
 
         # Validate: Once, before the Oraison
         self.assertEqual(15, len(items))
-        self.assertEqual(u"Oraison", items[-1][0])
-        self.assertEqual(u"Te Deum", items[-2][0])
+        self.assertEqual("Oraison", items[-1][0])
+        self.assertEqual("Te Deum", items[-2][0])
 
-        self.assertIn(u"Devant toi se prosternent les archanges,", items[-2][1])
+        self.assertIn("Devant toi se prosternent les archanges,", items[-2][1])
 
     @mock.patch('lib.input.requests.Session.get')
     def test_get_lectures_other_day(self, m_get):
@@ -34,7 +34,7 @@ class TestOfficeLectures(TestBase):
         # Validate: No Te Deum
         self.assertEqual(14, len(items))
         for item in items:
-            self.assertNotEqual(u"Te Deum", item[0])
+            self.assertNotEqual("Te Deum", item[0])
 
     @mock.patch('lib.input.requests.Session.get')
     def test_get_lectures_47(self, m_get):
@@ -46,14 +46,14 @@ class TestOfficeLectures(TestBase):
         items = self.parseItems(resp.data)
 
         # Validate 'Antiennes'
-        self.assertEqual(u'Hymne', items[1][0])
-        self.assertIn(u'«\xa0Voici la nuit\xa0»', items[1][1])
-        self.assertNotIn(u'Antienne', items[1][1])
-        self.assertEqual(u'Psaume\xa023', items[2][0])
-        self.assertIn(u'Psaume\xa023', items[2][1])
-        self.assertIn(u'Antienne', items[2][1])
+        self.assertEqual('Hymne', items[1][0])
+        self.assertIn('«\xa0Voici la nuit\xa0»', items[1][1])
+        self.assertNotIn('Antienne', items[1][1])
+        self.assertEqual('Psaume\xa023', items[2][0])
+        self.assertIn('Psaume\xa023', items[2][1])
+        self.assertIn('Antienne', items[2][1])
 
         # Validate 'Verset'
-        self.assertEqual(u'Psaume\xa065-II', items[4][0])
-        self.assertIn(u'V/', items[4][1])
+        self.assertEqual('Psaume\xa065-II', items[4][0])
+        self.assertIn('V/', items[4][1])
 

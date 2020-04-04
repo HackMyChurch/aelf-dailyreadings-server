@@ -47,14 +47,14 @@ def get(version, mode, office, date, region):
 
     # Validate office name
     if office not in OFFICES:
-        return return_error(404, u"Cet office (%s) est inconnu..." % office)
+        return return_error(404, "Cet office (%s) est inconnu..." % office)
 
     # Attempt to load
     try:
         data = get_office_for_day_api(office, date, region)
     except AelfHttpError as http_err:
         if http_err.status == 404:
-            return return_error(404, u"Aucune lecture n'a été trouvée pour cette date.")
+            return return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
         return return_error(http_err.status, http_err.message)
     except Exception as e:
         return return_error(500, str(e))
@@ -64,7 +64,7 @@ def get(version, mode, office, date, region):
         for postprocessor in OFFICES[office]['postprocess']:
             data = postprocessor(version, mode, data)
     except Exception as e:
-        return return_error(500, u"Erreur lors de la génération de l'office.")
+        return return_error(500, "Erreur lors de la génération de l'office.")
 
     # Return
     return data
@@ -73,25 +73,25 @@ def return_error(status, message):
     '''
     AELF app does not support codes != 200 (yet), work around this but still keep the intent clear
     '''
-    title = u"<title>Oups... Cette lecture n'est pas dans notre calendrier ({status})</title>"
-    description = u"""
+    title = "<title>Oups... Cette lecture n'est pas dans notre calendrier ({status})</title>"
+    description = """
 <p>{message}</p>
 <p>Saviez-vous que cette application est développée complètement bénévolement&nbsp;? Elle est construite en lien et avec le soutien de l'AELF, mais elle reste un projet indépendant, soutenue par <em>votre</em> prière&nbsp!</p>
 <p>Si vous pensez qu'il s'agit d'une erreur, vous pouvez envoyer un mail à <a href="mailto:support@epitre.co">support@epitre.co</a>.<p>
 """
 
     return {
-        u'source':  u'error',
-        u'name':    u'error',
-        u'status':  status,
-        u'message': message,
-        u'variants': [
+        'source':  'error',
+        'name':    'error',
+        'status':  status,
+        'message': message,
+        'variants': [
             {
-                u'name': u'message',
-                u'lectures': [
+                'name': 'message',
+                'lectures': [
                     {
-                        u'title': title.format(status=status),
-                        u'text':  description.format(status=status, message=message)
+                        'title': title.format(status=status),
+                        'text':  description.format(status=status, message=message)
                     },
                 ],
             }

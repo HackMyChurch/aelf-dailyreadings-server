@@ -67,7 +67,7 @@ def group_oraison_benediction(data):
         lectures = []
         for lecture in variant['lectures']:
             if 'benediction' in lecture['key'] and lectures[-1]['title'].lower() == 'oraison':
-                lectures[-1]['title'] = u"Oraison et bénédiction"
+                lectures[-1]['title'] = "Oraison et bénédiction"
                 lectures[-1]['text'] += lecture['text']
                 continue
             lectures.append(lecture)

@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 # inflexion (*+) --> <sup>
 
 def t2bs(data): return BeautifulSoup(data, 'html5lib')
-def bs2t(data): return unicode(data.body)[6:-7]
+def bs2t(data): return str(data.body)[6:-7]
 def bs(func, data, *args, **kwargs):
     soup = t2bs(data)
     func("test-key", soup, *args, **kwargs)
@@ -99,17 +99,17 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('<p>world</p>', bs(html_fix_paragraph, '<p style="text-decoration: underline;" class="hello">world</p>'))
 
         # Regression test for lecture / 23/06/2017
-        self.assertEqual(u'<p>J\'ai vu l\'eau vive!</p>', bs(html_fix_paragraph, u'<br /><br /><p>J\'ai vu l\'eau vive!</p>'))
+        self.assertEqual('<p>J\'ai vu l\'eau vive!</p>', bs(html_fix_paragraph, '<br /><br /><p>J\'ai vu l\'eau vive!</p>'))
 
         # Regression test for vepre/intercession 12/01/2019
         # Some "br" elems were not wrapped in "p", thus causing the line fixer to crash
-        self.assertEqual(u'<p>begin</p><p><br/>end</p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/>end'))
+        self.assertEqual('<p>begin</p><p><br/>end</p>', bs(html_fix_paragraph, '<p>begin</p>\n<br/>end'))
 
         # Validate complex paragraph reconstruction where paragraphs are in the middle of text
-        self.assertEqual(u'<p>begin</p><p><br/>end</p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/>end'))
-        self.assertEqual(u'<p>begin</p><p><br/><i>end</i></p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/><i>end</i>'))
-        self.assertEqual(u'<p>begin</p><p><br/><i>middle</i></p><p>end</p>', bs(html_fix_paragraph, u'<p>begin</p>\n<br/><i>middle</i><p>end</p>'))
-        self.assertEqual(u'<p><i>begin</i></p><p>end</p>', bs(html_fix_paragraph, u'\n<br/><i>begin</i><p>end</p>'))
+        self.assertEqual('<p>begin</p><p><br/>end</p>', bs(html_fix_paragraph, '<p>begin</p>\n<br/>end'))
+        self.assertEqual('<p>begin</p><p><br/><i>end</i></p>', bs(html_fix_paragraph, '<p>begin</p>\n<br/><i>end</i>'))
+        self.assertEqual('<p>begin</p><p><br/><i>middle</i></p><p>end</p>', bs(html_fix_paragraph, '<p>begin</p>\n<br/><i>middle</i><p>end</p>'))
+        self.assertEqual('<p><i>begin</i></p><p>end</p>', bs(html_fix_paragraph, '\n<br/><i>begin</i><p>end</p>'))
 
     def test_html_fix_lines(self):
         from lib.postprocessor import html_fix_lines
@@ -138,54 +138,54 @@ class TestPostprocessor(unittest.TestCase):
         from lib.postprocessor import fix_common_typography
 
         # Nominal
-        self.assertEqual(u'',      fix_common_typography(u''))
-        self.assertEqual(u'Père',  fix_common_typography(u'Pere'))
-        self.assertEqual(u'père',  fix_common_typography(u'pere'))
-        self.assertEqual(u'degré', fix_common_typography(u'degre'))
-        self.assertEqual(u'cœur',  fix_common_typography(u'coeur'))
-        self.assertEqual(u'cœur',  fix_common_typography(u'coeur'))
+        self.assertEqual('',      fix_common_typography(''))
+        self.assertEqual('Père',  fix_common_typography('Pere'))
+        self.assertEqual('père',  fix_common_typography('pere'))
+        self.assertEqual('degré', fix_common_typography('degre'))
+        self.assertEqual('cœur',  fix_common_typography('coeur'))
+        self.assertEqual('cœur',  fix_common_typography('coeur'))
 
         # Typography
-        self.assertEqual(u'\xa0', fix_common_typography(u'&nbsp;'))
-        self.assertEqual(u'\xa0; ', fix_common_typography(u'    ;  '))
-        self.assertEqual(u'\xa0;', fix_common_typography(u'&nbsp;;'))
-        self.assertEqual(u'\xa0;', fix_common_typography(u'&nbsp; ;'))
-        self.assertEqual(u'Hello world\xa0! ', fix_common_typography(u'Hello world!'))
-        self.assertEqual(u' «\xa0Hello World\xa0» ', fix_common_typography(u'«Hello World»'))
-        self.assertEqual(u' «\xa0Hello World\xa0» ', fix_common_typography(u'&laquo;Hello World&raquo;'))
+        self.assertEqual('\xa0', fix_common_typography('&nbsp;'))
+        self.assertEqual('\xa0; ', fix_common_typography('    ;  '))
+        self.assertEqual('\xa0;', fix_common_typography('&nbsp;;'))
+        self.assertEqual('\xa0;', fix_common_typography('&nbsp; ;'))
+        self.assertEqual('Hello world\xa0! ', fix_common_typography('Hello world!'))
+        self.assertEqual(' «\xa0Hello World\xa0» ', fix_common_typography('«Hello World»'))
+        self.assertEqual(' «\xa0Hello World\xa0» ', fix_common_typography('&laquo;Hello World&raquo;'))
 
     def test_fix_case(self):
         from lib.postprocessor import fix_case
 
-        self.assertEqual(u'Homélie d\'Origène sur le Lévitique', fix_case(u'HOMELIE D\'ORIGÈNE SUR LE LÉVITIQUE'))
-        self.assertEqual(u'Sermon de saint L\xe9on le grand pour l\'anniversaire de son ordination', fix_case(u'SERMON DE S. LÉON LE GRAND POUR L\'ANNIVERSAIRE DE SON ORDINATION'))
-        self.assertEqual(u'Homélie du II° siècle', fix_case(u'HOMELIE DU II° SIECLE'))
-        self.assertEqual(u'Jean-Paul II', fix_case(u'JEAN-PAUL II'))
-        self.assertEqual(u'Lettre encyclique du pape Pie XI pour le III° centenaire de la mort de saint Josaphat', fix_case(u'LETTRE ENCYCLIQUE DU PAPE PIE XI POUR LE III° CENTENAIRE DE LA MORT DE SAINT JOSAPHAT'))
+        self.assertEqual('Homélie d\'Origène sur le Lévitique', fix_case('HOMELIE D\'ORIGÈNE SUR LE LÉVITIQUE'))
+        self.assertEqual('Sermon de saint L\xe9on le grand pour l\'anniversaire de son ordination', fix_case('SERMON DE S. LÉON LE GRAND POUR L\'ANNIVERSAIRE DE SON ORDINATION'))
+        self.assertEqual('Homélie du II° siècle', fix_case('HOMELIE DU II° SIECLE'))
+        self.assertEqual('Jean-Paul II', fix_case('JEAN-PAUL II'))
+        self.assertEqual('Lettre encyclique du pape Pie XI pour le III° centenaire de la mort de saint Josaphat', fix_case('LETTRE ENCYCLIQUE DU PAPE PIE XI POUR LE III° CENTENAIRE DE LA MORT DE SAINT JOSAPHAT'))
 
     def test_fix_abbrev(self):
         from lib.postprocessor import fix_abbrev
 
-        self.assertEqual(u'première', fix_abbrev(u'1ère'))
-        self.assertEqual(u'premier', fix_abbrev(u'1er'))
-        self.assertEqual(u'deuxième', fix_abbrev(u'2ème'))
-        self.assertEqual(u'quatrième', fix_abbrev(u'4ème'))
-        self.assertEqual(u'neuvième', fix_abbrev(u'9ème'))
-        self.assertEqual(u'seizième', fix_abbrev(u'16ème'))
-        self.assertEqual(u'dix-huitième', fix_abbrev(u'18ème'))
-        self.assertEqual(u'vingt-et-unième', fix_abbrev(u'21ème'))
+        self.assertEqual('première', fix_abbrev('1ère'))
+        self.assertEqual('premier', fix_abbrev('1er'))
+        self.assertEqual('deuxième', fix_abbrev('2ème'))
+        self.assertEqual('quatrième', fix_abbrev('4ème'))
+        self.assertEqual('neuvième', fix_abbrev('9ème'))
+        self.assertEqual('seizième', fix_abbrev('16ème'))
+        self.assertEqual('dix-huitième', fix_abbrev('18ème'))
+        self.assertEqual('vingt-et-unième', fix_abbrev('21ème'))
 
     def test_clean_ref(self):
         from lib.postprocessor import clean_ref
 
-        self.assertEqual(u'', clean_ref(u''))
-        self.assertEqual(u'Luc 1,32', clean_ref(u'Luc 1,32'))
-        self.assertEqual(u'1jn 4, 11-21', clean_ref(u'1jn 4, 11-21'))
-        self.assertEqual(u'1M 1, 41-64', clean_ref(u'1M 1, 41-64'))
+        self.assertEqual('', clean_ref(''))
+        self.assertEqual('Luc 1,32', clean_ref('Luc 1,32'))
+        self.assertEqual('1jn 4, 11-21', clean_ref('1jn 4, 11-21'))
+        self.assertEqual('1M 1, 41-64', clean_ref('1M 1, 41-64'))
 
-        self.assertEqual(u'1A', clean_ref(u'1A'))
-        self.assertEqual(u'1 12-13', clean_ref(u'1 12-13'))
+        self.assertEqual('1A', clean_ref('1A'))
+        self.assertEqual('1 12-13', clean_ref('1 12-13'))
 
-        self.assertEqual(u'Ps 1A', clean_ref(u'1A', lecture_type='psaume'))
-        self.assertEqual(u'Ps 1 12-13', clean_ref(u'1 12-13', lecture_type='psaume'))
+        self.assertEqual('Ps 1A', clean_ref('1A', lecture_type='psaume'))
+        self.assertEqual('Ps 1 12-13', clean_ref('1 12-13', lecture_type='psaume'))
 

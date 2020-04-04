@@ -17,8 +17,8 @@ class TestOfficeLaudes(TestBase):
 
         # Validate: that's not an error, we even go a link
         self.assertEqual(1, len(items))
-        self.assertEqual(u"Messe: Le saviez-vous ?", items[0][0])
-        self.assertIn(u'http://www.aelf.org/2017-04-16/romain/messe#messe1_lecture1', items[0][1])
+        self.assertEqual("Messe: Le saviez-vous ?", items[0][0])
+        self.assertIn('http://www.aelf.org/2017-04-16/romain/messe#messe1_lecture1', items[0][1])
 
     @mock.patch('lib.input.requests.Session.get')
     def test_get_2017_07_29_broken_mass(self, m_get):

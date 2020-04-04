@@ -59,11 +59,11 @@ def get_office_for_day_api(office, date, region):
 
     # Start to build our json format from API's format
     out = {
-        u'informations': dict(data.pop('informations')),
-        u'variants': [],
-        u'source': 'api',
-        u'office': office,
-        u'date': date,
+        'informations': dict(data.pop('informations')),
+        'variants': [],
+        'source': 'api',
+        'office': office,
+        'date': date,
     }
 
     # Force 'zone' in 'informations'
@@ -77,7 +77,7 @@ def get_office_for_day_api(office, date, region):
 
     # PASS 1: Normalize data to a list of office variantes. Each variant is a list of offices with a type
     # we use lists to 1/ preserve order 2/ allow for duplicates like "short version"
-    name, variants = data.items().pop()
+    name, variants = list(data.items()).pop()
     if isinstance(variants, list):
         # Mass: multiple variants, lectures list inside, possible collision on types
         counter = 0; # We'll need it to generate variants name in case it's missing
@@ -105,20 +105,20 @@ def get_office_for_day_api(office, date, region):
 
         # In the lectures office, the patristique text is... broken
         patristique = {
-            u'titre': '',
-            u'texte': '',
+            'titre': '',
+            'texte': '',
         }
 
-        for name, lecture in variants.iteritems():
+        for name, lecture in variants.items():
             # 'lecture' may not be a dict yet...
-            if isinstance(lecture, basestring):
+            if isinstance(lecture, str):
                 # Re-assemble patristique text...
                 if name == 'titre_patristique':
                     patristique['titre'] = lecture
                     continue
                 elif name == 'texte_patristique':
                     patristique['texte'] = lecture
-                    name = u'lecture_patristique'
+                    name = 'lecture_patristique'
                     lecture = patristique
                 else:
                     # Broken, general case...
@@ -158,12 +158,12 @@ def get_office_for_day_api(office, date, region):
                 number = name.rsplit('_', 1)[-1]
                 if is_int(number):
                     if number == '1':
-                        titre = u"1ère %s" % titre
+                        titre = "1ère %s" % titre
                     else:
-                        titre = u"%sème %s" % (number, titre)
+                        titre = "%sème %s" % (number, titre)
 
                 if lecture.get('titre'):
-                    titre = u'%s : %s' % (titre, lecture['titre'])
+                    titre = '%s : %s' % (titre, lecture['titre'])
 
                 texte = []
 
@@ -175,18 +175,18 @@ def get_office_for_day_api(office, date, region):
                 contenu     = lecture.get('contenu',           '').strip()
 
                 if intro:
-                    texte.append(u'<p><b><i>%s</i></b></p>' % intro)
+                    texte.append('<p><b><i>%s</i></b></p>' % intro)
 
                 if refrain:
                     if refrain.startswith('<p>'):
                         refrain = refrain[3:-4]
-                    texte.append(u'<p><font color="#CC0000">R/ %s</font></p>' % refrain)
+                    texte.append('<p><font color="#CC0000">R/ %s</font></p>' % refrain)
 
                 if verset:
                     verset = verset.strip()
                     if verset.startswith('<p>'): verset = verset[3:]
                     if verset.endswith('<p>'):   verset = verset[:-4]
-                    texte.append(u'<blockquote><line><strong>Acclamation&nbsp;:</strong></br>%s<small><i>— %s</i></small></line></blockquote>' % (verset, clean_ref(verset_ref)))
+                    texte.append('<blockquote><line><strong>Acclamation&nbsp;:</strong></br>%s<small><i>— %s</i></small></line></blockquote>' % (verset, clean_ref(verset_ref)))
 
                 if contenu:
                     texte.append(contenu)
@@ -194,15 +194,15 @@ def get_office_for_day_api(office, date, region):
                 lecture = {
                     'titre':     titre,
                     'reference': lecture['ref'],
-                    'texte':     u''.join(texte),
+                    'texte':     ''.join(texte),
                 }
 
             # Now, lecture is a dict. Not yet a consistent one, but a dict
             cleaned = {
-                u'title':     lecture.get('titre',     ''),
-                u'reference': lecture.get('reference', ''),
-                u'text':      lecture.get('texte',     ''),
-                u'key':       name,
+                'title':     lecture.get('titre',     ''),
+                'reference': lecture.get('reference', ''),
+                'text':      lecture.get('texte',     ''),
+                'key':       name,
             }
 
             out_variant['lectures'].append(cleaned)

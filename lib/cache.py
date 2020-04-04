@@ -3,7 +3,7 @@ Simple caching module. Each cache entry has an associated checksum to easily
 invalidate cache entries / test cache validity.
 '''
 
-import cPickle as pickle
+import pickle as pickle
 import hashlib
 from collections import namedtuple
 

@@ -9,7 +9,7 @@ from lib.postprocessor import postprocess_office_html_lecture
 from lib.postprocessor import postprocess_office_lecture_text
 
 def postprocess_easter(version, mode, data):
-    text = u"""<p>
+    text = """<p>
     Le jour de Pâques est un jour spécial. C'est le jour de la résurrection
     du Christ. Il n'y a pas d'office des lectures ce jour là.
     </p>"""
@@ -17,13 +17,13 @@ def postprocess_easter(version, mode, data):
     data['source'] = "api"
     data['variants'] = [
         {
-            u'name': u'Dimanche de Pâques',
-            u'lectures': [
+            'name': 'Dimanche de Pâques',
+            'lectures': [
                 {
-                    u'title':     u'Lectures: Le saviez-vous ?',
-                    u'text':      text,
-                    u'reference': '',
-                    u'key':       '',
+                    'title':     'Lectures: Le saviez-vous ?',
+                    'text':      text,
+                    'reference': '',
+                    'key':       '',
                 }
             ]
         }
@@ -39,10 +39,10 @@ def postprocess(version, mode, data):
         return data
 
     date = data['date']
-    te_deum_item = get_lecture_by_type(data, u"office_te_deum")
-    lecture_item = get_lecture_by_type(data, u"office_lecture")
-    repons_item  = get_lecture_by_type(data, u"office_repons_lecture")
-    oraison_item = get_lecture_by_type(data, u"office_oraison")
+    te_deum_item = get_lecture_by_type(data, "office_te_deum")
+    lecture_item = get_lecture_by_type(data, "office_lecture")
+    repons_item  = get_lecture_by_type(data, "office_repons_lecture")
+    oraison_item = get_lecture_by_type(data, "office_oraison")
 
     # Fix empty "Lecture"..., try to load it from epitre.co
     # FIXME: embark these data and NEVER load from AELF, too much broken

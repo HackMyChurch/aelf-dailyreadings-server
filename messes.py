@@ -12,10 +12,10 @@ def should_fallback(version, mode, data):
     '''
     if data['informations'].get('jour_liturgique_nom', '').lower().strip() == "samedi saint":
         return False
-    return len(unicode(data)) < 3000
+    return len(str(data)) < 3000
 
 def postprocess_holly_saturday(version, mode, data):
-    text = u"""<p>
+    text = """<p>
     Le Samedi Saint est un jour spécial. C'est le jour de l'attente de la résurrection
     du Christ. Il n'y a pas de messe ce jour là. Si vous cherchez la Veillée Pascale,
     vous la trouverez dans les lectures de Pâques, c'est la première messe.
@@ -25,17 +25,17 @@ def postprocess_holly_saturday(version, mode, data):
         date = data['date']
         date = date + datetime.timedelta(1)
         base_link = AELF_SITE.format(year=date.year, month=date.month, day=date.day, office='messe', region=data['informations']['zone'])
-        text += u'<div class="app-office-navigation"><a href="%s#messe1_lecture1" class="variant-1">Veillée Pascale</a></div>' % (base_link)
+        text += '<div class="app-office-navigation"><a href="%s#messe1_lecture1" class="variant-1">Veillée Pascale</a></div>' % (base_link)
 
     data['variants'] = [
         {
-            u'name': u'Samedi saint',
-            u'lectures': [
+            'name': 'Samedi saint',
+            'lectures': [
                 {
-                    u'title':     u'Messe: Le saviez-vous ?',
-                    u'text':      text,
-                    u'reference': u'',
-                    u'key':       u'',
+                    'title':     'Messe: Le saviez-vous ?',
+                    'text':      text,
+                    'reference': '',
+                    'key':       '',
                 }
             ]
         }
@@ -69,8 +69,8 @@ def postprocess_links(version, mode, data):
 
     # PASS 1: detect + fix known to be broken cases
     if data['variants'][0]['lectures'][0]['key.orig'] == "entree_messianique":
-        data['variants'][ 0]['name'] = u"Entrée messianique"
-        data['variants'][-1]['name'] = u"Messe du jour"
+        data['variants'][ 0]['name'] = "Entrée messianique"
+        data['variants'][-1]['name'] = "Messe du jour"
 
     # Fix may friend the all-caps...
     for variant in data['variants']:

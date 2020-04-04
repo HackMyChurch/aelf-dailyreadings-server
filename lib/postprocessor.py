@@ -4,7 +4,7 @@ import re
 import hunspell
 import unidecode
 from bs4 import BeautifulSoup, NavigableString, Tag, Comment
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
@@ -73,16 +73,16 @@ def _filter_fete(fete):
     fete = fete.strip()
     fete = fix_abbrev(fete)
 
-    verbe = u"fêtons" if u'saint' in fete.lower() else u"célèbrons"
+    verbe = "fêtons" if 'saint' in fete.lower() else "célèbrons"
     text = ''
 
     # Single word (paque, ascension, noel, ...)
-    if fete and ' ' not in fete and fete.lower() not in [u'ascension', u'pentecôte']:
-        text += u" Nous %s %s" % (verbe, fete)
+    if fete and ' ' not in fete and fete.lower() not in ['ascension', 'pentecôte']:
+        text += " Nous %s %s" % (verbe, fete)
     # Standard fete
-    elif fete and u'férie' not in fete.lower():
+    elif fete and 'férie' not in fete.lower():
         pronoun = get_pronoun_for_sentence(fete)
-        text += u' Nous %s %s%s' % (verbe, pronoun, fete)
+        text += ' Nous %s %s%s' % (verbe, pronoun, fete)
     else:
         text += fete
 
@@ -102,7 +102,7 @@ def _id_to_title(data):
         pass
     else:
         chunks.pop()
-    return (u' '.join(chunks)).capitalize()
+    return (' '.join(chunks)).capitalize()
 
 def _wrap_node_children(soup, parent, name, *args, **kwargs):
     '''
@@ -159,7 +159,7 @@ def _split_node_parent(soup, name, first, last=None, keep_delimiters=False, **kw
     # Recurse
     if current_parent.name != name:
         _split_node_parent(soup, name, new_parent, keep_delimiters=True, **kwargs)
-    for key, value in kwargs.iteritems():
+    for key, value in list(kwargs.items()):
         if key not in current_parent.attrs or current_parent.attrs[key] != value:
             _split_node_parent(soup, name, new_parent, keep_delimiters=True, **kwargs)
 
@@ -227,7 +227,7 @@ def fix_abbrev(sentence):
                        .replace("Ste ", "sainte ")
 
     # Fix number abreviations
-    sentence = re.sub(ur'([0-9]+)([èe](re?|me))', fix_number_abbrev, sentence)
+    sentence = re.sub(r'([0-9]+)([èe](re?|me))', fix_number_abbrev, sentence)
 
     return sentence
 
@@ -322,25 +322,25 @@ def fix_common_typography(text):
     text = h.unescape(text)
 
     # Simple replaces
-    text = text.replace(u'fete', u'fête')\
-               .replace(u'degre', u'degré')\
-               .replace(u'oe', u'œ')\
-               .replace(u'n\\est', u'n\'est')\
+    text = text.replace('fete', 'fête')\
+               .replace('degre', 'degré')\
+               .replace('oe', 'œ')\
+               .replace('n\\est', 'n\'est')\
 
     # Preg replaces
-    text = re.sub(ur'([Pp])ere', ur'\1ère', text)
-    text = re.sub(ur'[Ee]glise', u'Église', text)
+    text = re.sub(r'([Pp])ere', r'\1ère', text)
+    text = re.sub(r'[Ee]glise', 'Église', text)
 
     # Typography
-    text = re.sub(ur'\s*-\s*',      u'-',    text)
-    text = re.sub(ur':\s+(\s+)'  ,  u'',     text)
-    text = re.sub(ur'\s*\(',        u' (',   text)
-    text = re.sub(ur"\s*\u00a0\s*", u'\xa0', text) # Mixed type of blanks
+    text = re.sub(r'\s*-\s*',      '-',    text)
+    text = re.sub(r':\s+(\s+)'  ,  '',     text)
+    text = re.sub(r'\s*\(',        ' (',   text)
+    text = re.sub(r'\s*\u00a0\s*', '\xa0', text) # Mixed type of blanks
 
-    text = re.sub(ur'\s*»',          ur'\u00a0» ',  text) # Typographic quote
-    text = re.sub(ur'«\s*',          ur' «\u00a0',  text)
-    text = re.sub(ur'\s*([:?!])\s*', ur'\u00a0\1 ', text)
-    text = re.sub(ur'\s+;\s*',       ur'\u00a0; ',  text) # Semicolon, prefixed by a blank
+    text = re.sub(r'\s*»',          r'\u00a0» ',  text) # Typographic quote
+    text = re.sub(r'«\s*',          r' «\u00a0',  text)
+    text = re.sub(r'\s*([:?!])\s*', r'\u00a0\1 ', text)
+    text = re.sub(r'\s+;\s*',       r'\u00a0; ',  text) # Semicolon, prefixed by a blank
 
     return text
 
@@ -358,7 +358,7 @@ def get_pronoun_for_sentence(sentence):
     words = [w.lower() for w in sentence.split(" ")]
 
     # Argh, hard coded exception
-    if words[0] in ['saint', 'sainte'] and u"trinité" not in sentence.lower():
+    if words[0] in ['saint', 'sainte'] and "trinité" not in sentence.lower():
         return ''
 
     # Already a determinant or equivalent
@@ -366,36 +366,36 @@ def get_pronoun_for_sentence(sentence):
         return ''
 
     # If it starts by a vowel, that's easy, don't care about M/F
-    if words[0][0] in [u'a', u'e', u'ê', u'é', u'è', u'i', u'o', u'u', u'y']:
+    if words[0][0] in ['a', 'e', 'ê', 'é', 'è', 'i', 'o', 'u', 'y']:
         return "l'"
 
     # Attempt to guess M/F by checking if 1st words ends with 'e'. Default on F
-    masc = [u'sacré-c\u0153ur', u'lundi', u'mardi', u'mercredi', u'jeudi', u'vendredi', u'samedi', u'dimanche']
+    masc = ['sacré-c\\u0153r', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
     if (words[0] in masc) or (len(words) > 1 and words[1] in masc):
-        return u"le "
+        return "le "
 
-    return u"la "
+    return "la "
 
 def postprocess_informations(informations):
     '''
     Generate 'text' key in an information dict from json API
     '''
-    text = u""
+    text = ""
     fete_skip = False
     jour_lit_skip = False
 
     if 'fete' not in informations:
-        informations['fete'] = u''
+        informations['fete'] = ''
 
     # Never print fete if this is the semaine
     if informations.get('jour_liturgique_nom', '').split(' ')[0] == informations.get('semaine', '').split(' ')[0]:
         jour_lit_skip = True
-    if informations.get('jour_liturgique_nom', '') == informations.get('fete', '') and u'férie' not in informations.get('fete', '').lower():
+    if informations.get('jour_liturgique_nom', '') == informations.get('fete', '') and 'férie' not in informations.get('fete', '').lower():
         jour_lit_skip = True
     if informations['fete'] == informations.get('degre', ''):
         fete_skip = True
 
-    if not jour_lit_skip and 'jour_liturgique_nom' in informations and u'férie' not in informations.get('jour_liturgique_nom', '').lower():
+    if not jour_lit_skip and 'jour_liturgique_nom' in informations and 'férie' not in informations.get('jour_liturgique_nom', '').lower():
         text += _filter_fete(informations['jour_liturgique_nom'])
     elif 'jour' in informations:
         text += informations['jour'].strip()
@@ -405,7 +405,7 @@ def postprocess_informations(informations):
     if 'semaine' in informations:
         semaine = informations['semaine']
         if text:
-            text += u', '
+            text += ', '
         text += semaine
 
         numero = re.match('^[0-9]*', semaine).group()
@@ -416,23 +416,23 @@ def postprocess_informations(informations):
 
     if 'annee' in informations:
         if text:
-            text += u" de l'année %s" % informations['annee']
+            text += " de l'année %s" % informations['annee']
         else:
-            text += u"Année %s" % informations['annee']
+            text += "Année %s" % informations['annee']
 
     if text:
         text += "."
 
     if not fete_skip and 'fete' in informations and ('jour' not in informations or informations['jour'] not in informations['fete']):
         fete = _filter_fete(informations['fete'])
-        if fete and not u'férie' in fete.lower():
+        if fete and not 'férie' in fete.lower():
             text += "%s." % fete
 
     if 'couleur' in informations:
-        text += u" La couleur liturgique est le %s." % informations['couleur']
+        text += " La couleur liturgique est le %s." % informations['couleur']
 
     # Final cleanup: 1er, 1ère, 2ème, 2nd, ... --> exposant
-    text = re.sub(ur'([0-9])(er|nd|ère|ème) ', r'\1<sup>\2</sup> ', text)
+    text = re.sub(r'([0-9])(er|nd|ère|ème) ', r'\1<sup>\2</sup> ', text)
     text = text[:1].upper() + text[1:]
 
     # Inject text
@@ -455,9 +455,9 @@ def lectures_common_cleanup(data):
             name = lecture['key']
             if lecture['title']:
                 if name in ["hymne", "pericope", "lecture", "lecture_patristique"]:
-                    if not lecture['title'][0] in [u'«', u"'", u'"']:
-                        lecture['title'] = u"« %s »" % lecture['title']
-                    lecture['title'] = u"%s : %s" % (_id_to_title(name), lecture['title'])
+                    if not lecture['title'][0] in ['«', "'", '"']:
+                        lecture['title'] = "« %s »" % lecture['title']
+                    lecture['title'] = "%s : %s" % (_id_to_title(name), lecture['title'])
             else:
                 lecture['title'] = _id_to_title(name)
 
@@ -477,20 +477,20 @@ def lectures_common_cleanup(data):
                     if '(' in lecture['reference']:
                         lecture['reference'] = lecture['reference'].split('(')[1].split(')')[0]
                 elif lecture['title'] in "Pericope":
-                    lecture['title'] = u"%s : %s" % (lecture['title'], lecture['reference'])
+                    lecture['title'] = "%s : %s" % (lecture['title'], lecture['reference'])
                 elif lecture['title'] == "Psaume" and _is_psalm_ref(raw_ref):
-                    lecture['title'] = u"%s : %s" % (lecture['title'], raw_ref)
+                    lecture['title'] = "%s : %s" % (lecture['title'], raw_ref)
                 else:
-                    lecture['title'] = u"%s (%s)" % (lecture['title'], lecture['reference'])
+                    lecture['title'] = "%s (%s)" % (lecture['title'], lecture['reference'])
 
             if name.split('_', 1)[0] in ['verset']:
-                lecture['title'] = u'verset'
+                lecture['title'] = 'verset'
 
             # FIXME: this hack is plain Ugly and there only to make newer API regress enough to be compatible with deployed applications
             title_sig = lecture['title'].strip().lower()
-            if title_sig.split(u' ')[0] in [u'antienne']:
+            if title_sig.split(' ')[0] in ['antienne']:
                 lecture['title'] = 'antienne'
-            elif title_sig.split(u' ')[0] in [u'repons', u'répons']:
+            elif title_sig.split(' ')[0] in ['repons', 'répons']:
                 lecture['title'] = 'repons'
             elif title_sig.startswith('parole de dieu'):
                 reference = lecture['title'].rsplit(':', 1)
@@ -501,7 +501,7 @@ def lectures_common_cleanup(data):
 
             # Argh, another ugly hack to WA my own app :(
             # Replace any unbreakable space by a regular space
-            lecture['title'] = lecture['title'].replace(u'\xa0', u' ');
+            lecture['title'] = lecture['title'].replace('\xa0', ' ');
 
     # PASS 2: merge meargable items
 
@@ -515,9 +515,9 @@ def postprocess_office_careme(version, mode, data):
     if data['informations'].get('temps_liturgique', '') != 'careme':
         return
 
-    introduction_item = get_lecture_by_type(data, u"introduction")
+    introduction_item = get_lecture_by_type(data, "introduction")
     if introduction_item is not None:
-        introduction_item.lecture['text'] = introduction_item.lecture['text'].replace(u'(Alléluia.)', '')
+        introduction_item.lecture['text'] = introduction_item.lecture['text'].replace('(Alléluia.)', '')
 
 def postprocess_office_keys(version, mode, data):
     '''
@@ -566,7 +566,7 @@ def html_fix_verse(key, soup):
     font_tags = soup.find_all('font') or []
     for tag in font_tags:
         # Remove all attributes, except those in whitelist
-        for attr_name in tag.attrs.keys():
+        for attr_name in list(tag.attrs.keys()):
             if attr_name not in ['color']:
                 del tag[attr_name]
 
@@ -637,7 +637,7 @@ def html_fix_paragraph(key, soup):
     node = soup.find(text=lambda text:isinstance(text, NavigableString))
     while node:
         node_next = node.find_next(text=lambda text:isinstance(text, NavigableString))
-        if not unicode(node).strip():
+        if not str(node).strip():
             node.extract()
             node = node_next
             continue
@@ -808,7 +808,7 @@ def postprocess_office_lecture_text(version, mode, key, text):
     html_fix_verse(key, soup)
     html_fix_paragraph(key, soup)
     html_fix_lines(key, soup)
-    text = unicode(soup.body)[6:-7]
+    text = str(soup.body)[6:-7]
     text = fix_common_typography(text)
     text = fix_rv(text)
 

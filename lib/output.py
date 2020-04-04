@@ -46,7 +46,7 @@ def office_to_rss(version, data):
     add a <variant> with the "OFFICE_NAME" key in the items
     '''
     out = []
-    out.append(u'''<?xml version="1.0" encoding="UTF-8"?>
+    out.append('''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <language>fr</language>
@@ -65,36 +65,36 @@ def office_to_rss(version, data):
 
             if version < 47:
                 if 'antienne' in lecture:
-                    antienne = u"<blockquote class=\"antienne\"><b>Antienne&nbsp;:</b> %s</blockquote>" % (lecture['antienne'])
-                    text = u"%s%s%s" % (antienne, text, antienne)
+                    antienne = "<blockquote class=\"antienne\"><b>Antienne&nbsp;:</b> %s</blockquote>" % (lecture['antienne'])
+                    text = "%s%s%s" % (antienne, text, antienne)
                 if 'verset' in lecture:
-                    text = u"%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
+                    text = "%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
                 if 'repons' in lecture:
-                    text = u"%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
+                    text = "%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
             else:
                 if 'antienne' in lecture:
-                    antienne_1 = u"<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-1\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
-                    gloria_patri = u"<div class=\"gloria_patri\"><span tabindex=\"0\" id=\"%s-gloria_patri\" class=\"line\">Gloire au Père, ...</span></div>" % (key)
-                    antienne_2 = u"<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-2\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
-                    text = u"%s%s%s%s" % (antienne_1, text, gloria_patri, antienne_2)
+                    antienne_1 = "<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-1\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
+                    gloria_patri = "<div class=\"gloria_patri\"><span tabindex=\"0\" id=\"%s-gloria_patri\" class=\"line\">Gloire au Père, ...</span></div>" % (key)
+                    antienne_2 = "<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-2\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
+                    text = "%s%s%s%s" % (antienne_1, text, gloria_patri, antienne_2)
                 if 'verset' in lecture:
-                    text = u"%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
+                    text = "%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
                 if 'repons' in lecture:
-                    text = u"%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
+                    text = "%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
 
                 # Build slide title
                 title = lecture.get('short_title', title)
                 long_title = lecture.get('long_title', '')
 
                 # Prepare reference, if any
-                title_reference = u""
+                title_reference = ""
                 if reference:
-                    title_reference = u"<small><i>— %s</i></small>" % (reference)
+                    title_reference = "<small><i>— %s</i></small>" % (reference)
 
                 # Inject title
                 text = "<h3>%s%s</h3><div style=\"clear: both;\"></div>%s" % (long_title, title_reference, text)
 
-            out.append(u'''
+            out.append('''
             <item>
                 <variant>{office}</variant>
                 <title>{title}</title>
@@ -109,5 +109,5 @@ def office_to_rss(version, data):
                 text      = text,
             ))
 
-    out.append(u'''</channel></rss>''')
-    return u''.join(out)
+    out.append('''</channel></rss>''')
+    return ''.join(out)

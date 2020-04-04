@@ -17,13 +17,13 @@ def postprocess(version, mode, data):
         return data
 
     # Attempt to load oraison item. If we can't, gracefully degrade
-    oraison_item = get_lecture_by_type(data, u"office_oraison")
+    oraison_item = get_lecture_by_type(data, "office_oraison")
     if oraison_item is None:
         return data
 
     # Fix Notre Père
     notre_pere = get_asset('prayers/notre-pere')
-    notre_pere_item = get_lecture_by_type(data, u"office_notre_pere")
+    notre_pere_item = get_lecture_by_type(data, "office_notre_pere")
     notre_pere_lecture = {
         'title':     notre_pere['title'],
         'text':      notre_pere['body'],

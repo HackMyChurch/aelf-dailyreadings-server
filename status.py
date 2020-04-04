@@ -60,7 +60,7 @@ def validate_future_offices():
         date += datetime.timedelta(days=days_ahead)
         date_str = str(date)
         day_status = {}
-        for office_name in OFFICES.keys():
+        for office_name in list(OFFICES.keys()):
             url = "/%s/office/%s/%s.json" % (CURRENT_VERSION, office_name, date_str)
             try:
                 office = do_get_office(CURRENT_VERSION, "prod", office_name, date, "romain")
