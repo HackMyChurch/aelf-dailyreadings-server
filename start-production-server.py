@@ -5,11 +5,9 @@ import paste
 import cherrypy
 from server import app
 
-from paste.exceptions.errormiddleware import ErrorMiddleware
 from paste.translogger import TransLogger
 
 if __name__ == "__main__":
-    app = ErrorMiddleware(app, debug=False)
     app = TransLogger(app, setup_console_handler=True)
 
     cherrypy.tree.graft(app, '')
