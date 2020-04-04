@@ -34,7 +34,7 @@ class TestBatch(TestBase):
         # Validate first response
         self.assertEqual(200, data[0]['status'])
         self.assertEqual({
-            "Content-Length": "29059",
+            "Content-Length": "29691",
             "ETag": EXPECTED_ETAG,
             "Content-Type": "application/rss+xml; charset=utf-8"
         }, data[0]['headers'])
