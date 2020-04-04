@@ -122,7 +122,7 @@ def batch():
         # Build complete response
         responses.append({
             "status": response.status_code,
-            "response": response.data,
+            "response": response.data.decode('utf8'),
             "headers": dict(response.headers),
         })
 

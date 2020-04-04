@@ -25,13 +25,13 @@ class TestRouteCompat(TestBase):
         FakeResponse.status_code = 404
         resp = self.app.get('/28/office/complies/2017-02-20?beta=enabled')
         self.assertEqual(200, resp.status_code)
-        self.assertIn("(404)", resp.data)
+        self.assertIn(b"(404)", resp.data)
 
         # Teapot
         FakeResponse.status_code = 419
         resp = self.app.get('/28/office/complies/2017-02-21?beta=enabled')
         self.assertEqual(200, resp.status_code)
-        self.assertIn("(419)", resp.data)
+        self.assertIn(b"(419)", resp.data)
 
     @mock.patch('server.do_get_office')
     def test_get_meta(self, m_do_get_office):
@@ -41,11 +41,11 @@ class TestRouteCompat(TestBase):
 
         # Test: key to office translation
         for office, key in keys.KEYS.items():
-            self.assertIn("<source>mock</source>", self.app.get('/01/02/2016/'+key).data)
+            self.assertIn(b"<source>mock</source>", self.app.get('/01/02/2016/'+key).data)
             m_do_get_office.assert_called_once_with(0, 'prod', office, datetime.date(2016, 0o2, 0o1), 'romain')
             m_do_get_office.reset_mock()
 
         # Test: version+beta forwarding
-        self.assertIn("<source>mock</source>", self.app.get('/01/02/2016/'+key+'?version=19&beta=1').data)
+        self.assertIn(b"<source>mock</source>", self.app.get('/01/02/2016/'+key+'?version=19&beta=1').data)
         m_do_get_office.assert_called_once_with(19, 'beta', office, datetime.date(2016, 0o2, 0o1), 'romain')
         m_do_get_office.reset_mock()
