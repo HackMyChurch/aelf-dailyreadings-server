@@ -55,7 +55,7 @@ def get(version, mode, office, date, region):
     except AelfHttpError as http_err:
         if http_err.status == 404:
             return return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
-        return return_error(http_err.status, http_err.message)
+        return return_error(http_err.status, str(http_err))
 
     # Apply office specific postprocessor
     for postprocessor in OFFICES[office]['postprocess']:
