@@ -238,5 +238,5 @@ def get_asset(path):
     path = "%s/%s.yaml" % (ASSET_BASE_PATH, path)
 
     with open(path) as f:
-        return yaml.load(f)
+        return yaml.safe_load(f)
 
