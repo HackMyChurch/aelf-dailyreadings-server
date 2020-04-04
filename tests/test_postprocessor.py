@@ -145,7 +145,7 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual(u'cœur',  fix_common_typography(u'coeur'))
         self.assertEqual(u'cœur',  fix_common_typography(u'coeur'))
 
-	# Typography
+        # Typography
         self.assertEqual(u'\xa0', fix_common_typography(u'&nbsp;'))
         self.assertEqual(u'\xa0; ', fix_common_typography(u'    ;  '))
         self.assertEqual(u'\xa0;', fix_common_typography(u'&nbsp;;'))

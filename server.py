@@ -185,7 +185,7 @@ def get_office_json(version, office, date):
 @app.route('/<int:day>/<int:month>/<int:year>/<key>')
 def get_office_legacy(day, month, year, key):
     if key not in KEY_TO_OFFICE:
-	return office_to_rss(return_error(404, u"Aucune lecture n'a été trouvée pour cet office."))
+        return office_to_rss(return_error(404, u"Aucune lecture n'a été trouvée pour cet office."))
     office = KEY_TO_OFFICE[key]
     version = int(request.args.get('version', 0))
     date = datetime.date(year, month, day)
