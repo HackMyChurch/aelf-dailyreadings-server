@@ -10,3 +10,6 @@ hunspell-*
 *.aff
 *.dic
 
+# IDE
+.vscode
+
