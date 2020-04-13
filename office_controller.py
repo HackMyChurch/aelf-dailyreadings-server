@@ -68,11 +68,10 @@ def return_error(status, message):
     '''
     AELF app does not support codes != 200 (yet), work around this but still keep the intent clear
     '''
-    title = "<title>Oups... Cette lecture n'est pas dans notre calendrier ({status})</title>"
+    title = "Oups... Cette lecture n'est pas dans notre calendrier ({status})"
     description = """
 <p>{message}</p>
 <p>Saviez-vous que cette application est développée complètement bénévolement&nbsp;? Elle est construite en lien et avec le soutien de l'AELF, mais elle reste un projet indépendant, soutenue par <em>votre</em> prière&nbsp!</p>
-<p>Si vous pensez qu'il s'agit d'une erreur, vous pouvez envoyer un mail à <a href="mailto:support@epitre.co">support@epitre.co</a>.<p>
 """
 
     return {
