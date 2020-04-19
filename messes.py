@@ -4,16 +4,6 @@ import re
 import datetime
 from utils import fix_case, AELF_SITE
 
-def should_fallback(version, mode, data):
-    '''
-    For most days, we should just do the default check. With 1 slight expection:
-    there is no mass on Holly Saturday. This is OK. We'll just display a message
-    with a link to the vigile.
-    '''
-    if data['informations'].get('jour_liturgique_nom', '').lower().strip() == "samedi saint":
-        return False
-    return len(str(data)) < 3000
-
 def postprocess_holly_saturday(version, mode, data):
     text = """<p>
     Le Samedi Saint est un jour spécial. C'est le jour de l'attente de la résurrection
