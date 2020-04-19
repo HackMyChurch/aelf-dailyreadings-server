@@ -50,16 +50,30 @@ def get(version, mode, office, date, region):
         return return_error(404, "Cet office (%s) est inconnu..." % office)
 
     # Attempt to load
+    error = None
     try:
         data = get_office_for_day_api(office, date, region)
     except AelfHttpError as http_err:
+        # Prepare the error message
         if http_err.status == 404:
-            return return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
-        return return_error(http_err.status, str(http_err))
+            error = return_error(404, "Aucune lecture n'a été trouvée pour cette date.")
+        else:
+            error = return_error(http_err.status, str(http_err))
+
+        # There is a (tiny) chance that this error is expected, check with the informations
+        try:
+            data = get_office_for_day_api("informations", date, region)
+        except Exception:
+            # Immediately return the original error
+            return error
 
     # Apply office specific postprocessor
     for postprocessor in OFFICES[office]['postprocess']:
         data = postprocessor(version, mode, data)
+
+    # If we had an error forward it if the variants are still empty
+    if error is not None and not data.get('variants'):
+        return error
 
     # Return
     return data
