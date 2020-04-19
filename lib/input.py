@@ -75,7 +75,7 @@ def get_office_for_day_api(office, date, region):
     if not data:
         return lectures_common_cleanup(out)
 
-    # PASS 1: Normalize data to a list of office variantes. Each variant is a list of offices with a type
+    # PASS 1: Normalize data to a list of office variants. Each variant is a list of offices with a type
     # we use lists to 1/ preserve order 2/ allow for duplicates like "short version"
     name, variants = list(data.items()).pop()
     if isinstance(variants, list):
@@ -197,13 +197,14 @@ def get_office_for_day_api(office, date, region):
                     'texte':     ''.join(texte),
                 }
 
-            # Now, lecture is a dict. Not yet a consistent one, but a dict
-            cleaned = {
+            # Gather the cleaned fields as a *list* of lecture variants.
+            # (AELF API has a single lecture variant, but we'll add more)
+            cleaned = [{
                 'title':     lecture.get('titre',     ''),
                 'reference': lecture.get('reference', ''),
                 'text':      lecture.get('texte',     ''),
                 'key':       name,
-            }
+            }]
 
             out_variant['lectures'].append(cleaned)
 

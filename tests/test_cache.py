@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 from base import TestBase, FakeResponse
 
-EXPECTED_ETAG = 'a30abb17f0e78ebf27bac89cc9f590eb2b704a957a66600175694b77370eee30'
+EXPECTED_ETAG = '1f08d3bc004f66626046b1bde3deab1813492bb5d3362fcad5d97a7da0d6dc6c'
 
 class TestCache(TestBase):
 

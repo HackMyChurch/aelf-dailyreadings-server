@@ -11,20 +11,22 @@ def _html_to_text(text):
 
 def _group_before(data, title):
     '''
-    Find items with title ``title`` and merge them in the ``title`` fiels of
-    them preceding item.
+    Find items with title ``title`` and merge them in the ``title`` field of
+    all variants of the preceding item.
     '''
-    for variant in data['variants']:
+    for office_variant in data['variants']:
         lectures = []
-        for lecture in variant['lectures']:
+        for lecture_variants in office_variant['lectures']:
+            lecture = lecture_variants[0]
             if lecture['title'].lower() == title:
                 if lecture['text']:
-                    lectures[-1][title] = lecture['text']
+                    for preceding_lecture_variant in lectures[-1]:
+                        preceding_lecture_variant[title] = lecture['text']
                 continue
             else:
-                lectures.append(lecture)
+                lectures.append(lecture_variants)
 
-        variant['lectures'] = lectures
+        office_variant['lectures'] = lectures
 
 def group_repons(data):
     '''
@@ -43,36 +45,39 @@ def group_antienne(data):
     Find 'antienne' items and merge them in the 'antienne' field of the
     following slide.
     '''
-    for variant in data['variants']:
+    for office_variant in data['variants']:
         lectures = []
         antienne = None
-        for lecture in variant['lectures']:
+        for lecture_variants in office_variant['lectures']:
+            lecture = lecture_variants[0]
             if lecture['title'].lower() == 'antienne':
                 antienne = _html_to_text(lecture['text'])
                 continue
 
             if antienne:
-                lecture['antienne'] = antienne
+                for lecture in lecture_variants:
+                    lecture['antienne'] = antienne
                 antienne = None
 
-            lectures.append(lecture)
-        variant['lectures'] = lectures
+            lectures.append(lecture_variants)
+        office_variant['lectures'] = lectures
 
 def group_oraison_benediction(data):
     '''
-    Find 'benediction' items. If the precdeing item is "oraison", make it an
+    Find 'benediction' items. If the preceding item is "oraison", make it an
     oraison and benediction item.
     '''
-    for variant in data['variants']:
+    for office_variant in data['variants']:
         lectures = []
-        for lecture in variant['lectures']:
-            if 'benediction' in lecture['key'] and lectures[-1]['title'].lower() == 'oraison':
-                lectures[-1]['title'] = "Oraison et bénédiction"
-                lectures[-1]['text'] += lecture['text']
+        for lecture_variants in office_variant['lectures']:
+            lecture = lecture_variants[0]
+            if 'benediction' in lecture['key'] and lectures[-1][0]['title'].lower() == 'oraison':
+                lectures[-1][0]['title'] = "Oraison et bénédiction"
+                lectures[-1][0]['text'] += lecture['text']
                 continue
-            lectures.append(lecture)
+            lectures.append(lecture_variants)
 
-        variant['lectures'] = lectures
+        office_variant['lectures'] = lectures
 
 def group_related_items(data):
     '''

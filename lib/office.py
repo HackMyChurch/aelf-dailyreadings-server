@@ -11,41 +11,41 @@ from collections import namedtuple
 # TYPES
 #
 
-LecturePosition = namedtuple('LecturePosition', ['variantIdx', 'lectureIdx', 'lecture'])
+LecturePosition = namedtuple('LecturePosition', ['officeVariantIdx', 'lectureVariantIdx', 'lectureVariants'])
 
 #
 # API
 #
 
-def get_lectures_by_type(data, name):
+def get_lectures_variants_by_type(data, name):
     '''
-    Find all lectures of type ``name``. Return a list of ``(variant_idx, lecture_idx, lecture)``
+    Find all lectures of type ``name``. Return a list of ``(office_variant_idx, lecture_variant_idx, lectureVariants)``
     '''
     out = []
-    for variant_idx, variant in enumerate(data['variants']):
-        for lecture_idx, lecture in enumerate(variant['lectures']):
-            if lecture['key'] == name:
-                out.append(LecturePosition(variant_idx, lecture_idx, lecture))
+    for office_variant_idx, variant in enumerate(data['variants']):
+        for lecture_variant_idx, lectureVariants in enumerate(variant['lectures']):
+            if lectureVariants[0]['key'] == name:
+                out.append(LecturePosition(office_variant_idx, lecture_variant_idx, lectureVariants))
     return out
 
-def get_lecture_by_type(data, name):
+def get_lecture_variants_by_type(data, name):
     '''
     Find first lecture element with type ``name`` or return None
     '''
-    lectures = get_lectures_by_type(data, name)
+    lectures = get_lectures_variants_by_type(data, name)
     if lectures:
         return lectures[0]
     return None
 
-def insert_lecture_before(data, lecture, before):
+def insert_lecture_variants_before(data, lectureVariants, before):
     '''
-    Insert raw ``lecture`` dict before ``before`` LecturePosition object
+    Insert raw ``lectureVariants`` dict before ``before`` LecturePosition object
     '''
-    data['variants'][before.variantIdx]['lectures'].insert(before.lectureIdx, lecture)
+    data['variants'][before.officeVariantIdx]['lectures'].insert(before.lectureVariantIdx, lectureVariants)
 
-def insert_lecture_after(data, lecture, after):
+def insert_lecture_variants_after(data, lectureVariants, after):
     '''
-    Insert raw ``lecture`` dict after ``after`` LecturePosition object
+    Insert raw ``lectureVariants`` dict after ``after`` LecturePosition object
     '''
-    data['variants'][after.variantIdx]['lectures'].insert(after.lectureIdx+1, lecture)
+    data['variants'][after.officeVariantIdx]['lectures'].insert(after.lectureVariantIdx+1, lectureVariants)
 

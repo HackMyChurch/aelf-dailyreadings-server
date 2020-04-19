@@ -20,7 +20,7 @@ def office_to_rss(version, data):
     {
         "informations": {},
         "variants": [
-            {
+            [{
                 "name": OFFICE_NAME,
                 "lectures": [
                     {
@@ -33,11 +33,11 @@ def office_to_rss(version, data):
                         "key":       "",
                     },
                 ],
-            },
-            {
+            }],
+            [{
                 "name": OFFICE_VARIANTE_NAME,
                 "lectures": []
-            }
+            }]
         ]
     }
     ```
@@ -54,10 +54,11 @@ def office_to_rss(version, data):
         <copyright>Copyright AELF - Tout droits réservés</copyright>
 ''' % data.get('source', 'unk'))
 
-    for variant in data.get('variants', []):
-        office   = variant['name']
-        lectures = variant['lectures']
-        for lecture in lectures:
+    for office_variant in data.get('variants', []):
+        office = office_variant['name']
+        for lecture_variants in office_variant['lectures']:
+            lecture = lecture_variants[0]
+
             key = lecture.get('key', '')
             text = lecture.get('text', '')
             title = lecture.get('title', '')

@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
 from .constants import HTML_BLOCK_ELEMENTS
-from .office import get_lecture_by_type, insert_lecture_before, insert_lecture_after
+from .office import get_lecture_variants_by_type, insert_lecture_variants_before, insert_lecture_variants_after
 from .group import group_related_items
 
 #
@@ -449,59 +449,60 @@ def lectures_common_cleanup(data):
     data['informations'] = postprocess_informations(data['informations'])
 
     # PASS 1: post-process lectures items
-    for variant in data['variants']:
-        for lecture in variant['lectures']:
-            # Title cleanup / compat with current applications
-            name = lecture['key']
-            if lecture['title']:
-                if name in ["hymne", "pericope", "lecture", "lecture_patristique"]:
-                    if not lecture['title'][0] in ['«', "'", '"']:
-                        lecture['title'] = "« %s »" % lecture['title']
-                    lecture['title'] = "%s : %s" % (_id_to_title(name), lecture['title'])
-            else:
-                lecture['title'] = _id_to_title(name)
-
-            # Extract the office type from the key
-            key = lecture['key']
-            lecture['type'] = key.split('_')[0]
-
-            # Remove number abbreviations from titles
-            lecture['title'] = fix_abbrev(lecture['title'])
-
-            if lecture['reference']:
-                raw_ref = lecture['reference']
-                lecture['reference'] = clean_ref(raw_ref, lecture['type'])
-
-                if 'cantique' in lecture['reference'].lower():
-                    lecture['title'] = lecture['reference']
-                    if '(' in lecture['reference']:
-                        lecture['reference'] = lecture['reference'].split('(')[1].split(')')[0]
-                elif lecture['title'] in "Pericope":
-                    lecture['title'] = "%s : %s" % (lecture['title'], lecture['reference'])
-                elif lecture['title'] == "Psaume" and _is_psalm_ref(raw_ref):
-                    lecture['title'] = "%s : %s" % (lecture['title'], raw_ref)
+    for office_variant in data['variants']:
+        for lecture_variants in office_variant['lectures']:
+            for lecture in lecture_variants:
+                # Title cleanup / compat with current applications
+                name = lecture['key']
+                if lecture['title']:
+                    if name in ["hymne", "pericope", "lecture", "lecture_patristique"]:
+                        if not lecture['title'][0] in ['«', "'", '"']:
+                            lecture['title'] = "« %s »" % lecture['title']
+                        lecture['title'] = "%s : %s" % (_id_to_title(name), lecture['title'])
                 else:
-                    lecture['title'] = "%s (%s)" % (lecture['title'], lecture['reference'])
+                    lecture['title'] = _id_to_title(name)
 
-            if name.split('_', 1)[0] in ['verset']:
-                lecture['title'] = 'verset'
+                # Extract the office type from the key
+                key = lecture['key']
+                lecture['type'] = key.split('_')[0]
 
-            # FIXME: this hack is plain Ugly and there only to make newer API regress enough to be compatible with deployed applications
-            title_sig = lecture['title'].strip().lower()
-            if title_sig.split(' ')[0] in ['antienne']:
-                lecture['title'] = 'antienne'
-            elif title_sig.split(' ')[0] in ['repons', 'répons']:
-                lecture['title'] = 'repons'
-            elif title_sig.startswith('parole de dieu'):
-                reference = lecture['title'].rsplit(':', 1)
-                if len(reference) > 1:
-                    lecture['title'] = 'Pericope : (%s)' % reference[1]
-                else:
-                    lecture['title'] = 'Pericope'
+                # Remove number abbreviations from titles
+                lecture['title'] = fix_abbrev(lecture['title'])
 
-            # Argh, another ugly hack to WA my own app :(
-            # Replace any unbreakable space by a regular space
-            lecture['title'] = lecture['title'].replace('\xa0', ' ');
+                if lecture['reference']:
+                    raw_ref = lecture['reference']
+                    lecture['reference'] = clean_ref(raw_ref, lecture['type'])
+
+                    if 'cantique' in lecture['reference'].lower():
+                        lecture['title'] = lecture['reference']
+                        if '(' in lecture['reference']:
+                            lecture['reference'] = lecture['reference'].split('(')[1].split(')')[0]
+                    elif lecture['title'] in "Pericope":
+                        lecture['title'] = "%s : %s" % (lecture['title'], lecture['reference'])
+                    elif lecture['title'] == "Psaume" and _is_psalm_ref(raw_ref):
+                        lecture['title'] = "%s : %s" % (lecture['title'], raw_ref)
+                    else:
+                        lecture['title'] = "%s (%s)" % (lecture['title'], lecture['reference'])
+
+                if name.split('_', 1)[0] in ['verset']:
+                    lecture['title'] = 'verset'
+
+                # FIXME: this hack is plain Ugly and there only to make newer API regress enough to be compatible with deployed applications
+                title_sig = lecture['title'].strip().lower()
+                if title_sig.split(' ')[0] in ['antienne']:
+                    lecture['title'] = 'antienne'
+                elif title_sig.split(' ')[0] in ['repons', 'répons']:
+                    lecture['title'] = 'repons'
+                elif title_sig.startswith('parole de dieu'):
+                    reference = lecture['title'].rsplit(':', 1)
+                    if len(reference) > 1:
+                        lecture['title'] = 'Pericope : (%s)' % reference[1]
+                    else:
+                        lecture['title'] = 'Pericope'
+
+                # Argh, another ugly hack to WA my own app :(
+                # Replace any unbreakable space by a regular space
+                lecture['title'] = lecture['title'].replace('\xa0', ' ');
 
     # PASS 2: merge meargable items
 
@@ -515,9 +516,9 @@ def postprocess_office_careme(version, mode, data):
     if data['informations'].get('temps_liturgique', '') != 'careme':
         return
 
-    introduction_item = get_lecture_by_type(data, "introduction")
+    introduction_item = get_lecture_variants_by_type(data, "introduction")
     if introduction_item is not None:
-        introduction_item.lecture['text'] = introduction_item.lecture['text'].replace('(Alléluia.)', '')
+        introduction_item.lectureVariants[0]['text'] = introduction_item.lectureVariants[0]['text'].replace('(Alléluia.)', '')
 
 def postprocess_office_keys(version, mode, data):
     '''
@@ -528,19 +529,20 @@ def postprocess_office_keys(version, mode, data):
     if data['source'] != 'api':
         return data
 
-    for variant in data['variants']:
-        for lecture in variant['lectures']:
-            key = lecture['key']
-            if key.startswith('cantique'):
-                key = "office_cantique"
-            elif key.startswith('psaume') and is_int(key.split('_')[-1]):
-                key = "office_%s" % key.replace('_', '')
-            elif key == 'intercession':
-                # FIXME: in most offices, that's the Oraison that should become the conclusion. But that would break too much to bother
-                key = "office_conclusion"
-            elif not key.startswith('office_'):
-                key = "office_%s" % key
-            lecture['key'] = key
+    for office_variant in data['variants']:
+        for lecture_variants in office_variant['lectures']:
+            for lecture in lecture_variants:
+                key = lecture['key']
+                if key.startswith('cantique'):
+                    key = "office_cantique"
+                elif key.startswith('psaume') and is_int(key.split('_')[-1]):
+                    key = "office_%s" % key.replace('_', '')
+                elif key == 'intercession':
+                    # FIXME: in most offices, that's the Oraison that should become the conclusion. But that would break too much to bother
+                    key = "office_conclusion"
+                elif not key.startswith('office_'):
+                    key = "office_%s" % key
+                lecture['key'] = key
 
     return data
 
@@ -826,9 +828,10 @@ def postprocess_office_html(version, mode, data):
     '''
     Find all office text and normalize html markup.
     '''
-    for variant in data['variants']:
-        for lecture in variant['lectures']:
-            postprocess_office_html_lecture(version, mode, lecture)
+    for office_variant in data['variants']:
+        for lecture_variants in office_variant['lectures']:
+            for lecture in lecture_variants:
+                postprocess_office_html_lecture(version, mode, lecture)
 
     return data
 
@@ -849,21 +852,22 @@ def postprocess_office_title_47(version, mode, data):
     if version < 47:
         return data
 
-    for variant in data['variants']:
-        for lecture in variant['lectures']:
-            # Clean title
-            lecture['title'] = re.sub(VERSE_REFERENCE_MATCH, '', lecture['title'])
-            lecture['title'] = lecture['title'].replace('Pericope', 'Parole de Dieu')
-            lecture['title'] = lecture['title'].replace('CANTIQUE', 'Cantique')
-            if lecture['title'].startswith('Psaume'):
-                lecture['title'] = lecture['title'].replace(': ', '')
+    for office_variant in data['variants']:
+        for lecture_variants in office_variant['lectures']:
+            for lecture in lecture_variants:
+                # Clean title
+                lecture['title'] = re.sub(VERSE_REFERENCE_MATCH, '', lecture['title'])
+                lecture['title'] = lecture['title'].replace('Pericope', 'Parole de Dieu')
+                lecture['title'] = lecture['title'].replace('CANTIQUE', 'Cantique')
+                if lecture['title'].startswith('Psaume'):
+                    lecture['title'] = lecture['title'].replace(': ', '')
 
-            # Prepare short / long variants
-            chunks = lecture['title'].split(':', 1)
-            lecture['short_title'] = chunks[0]
-            lecture['long_title']  = chunks[0]
-            if len(chunks) == 2 and chunks[1].strip() != lecture['reference'].strip():
-                lecture['long_title'] = chunks[1]
+                # Prepare short / long variants
+                chunks = lecture['title'].split(':', 1)
+                lecture['short_title'] = chunks[0]
+                lecture['long_title']  = chunks[0]
+                if len(chunks) == 2 and chunks[1].strip() != lecture['reference'].strip():
+                    lecture['long_title'] = chunks[1]
 
     return data
 

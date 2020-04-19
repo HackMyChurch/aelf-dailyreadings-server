@@ -83,10 +83,10 @@ def return_error(status, message):
             {
                 'name': 'message',
                 'lectures': [
-                    {
+                    [{
                         'title': title.format(status=status),
                         'text':  description.format(status=status, message=message)
-                    },
+                    }],
                 ],
             }
         ],

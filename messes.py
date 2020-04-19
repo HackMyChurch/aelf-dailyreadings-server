@@ -21,12 +21,12 @@ def postprocess_holly_saturday(version, mode, data):
         {
             'name': 'Samedi saint',
             'lectures': [
-                {
+                [{
                     'title':     'Messe: Le saviez-vous ?',
                     'text':      text,
                     'reference': '',
                     'key':       '',
-                }
+                }]
             ]
         }
     ]
@@ -37,13 +37,14 @@ def postprocess_keys(version, mode, data):
     Rewrite keys to match AELF's website convention
     '''
     messe_counter = 0
-    for variant in data['variants']:
+    for office_variant in data['variants']:
         messe_counter += 1
         lecture_counter = 0
-        for lecture in variant['lectures']:
-            lecture_counter += 1
-            lecture['key.orig'] = lecture['key']
-            lecture['key'] = "messe%s_lecture%s" % (messe_counter, lecture_counter)
+        for lecture_variants in office_variant['lectures']:
+            for lecture in lecture_variants:
+                lecture_counter += 1
+                lecture['key.orig'] = lecture['key']
+                lecture['key'] = "messe%s_lecture%s" % (messe_counter, lecture_counter)
 
 def postprocess_links(version, mode, data):
     '''
@@ -58,20 +59,20 @@ def postprocess_links(version, mode, data):
         return data
 
     # PASS 1: detect + fix known to be broken cases
-    if data['variants'][0]['lectures'][0]['key.orig'] == "entree_messianique":
+    if data['variants'][0]['lectures'][0][0]['key.orig'] == "entree_messianique":
         data['variants'][ 0]['name'] = "Entrée messianique"
         data['variants'][-1]['name'] = "Messe du jour"
 
     # Fix may friend the all-caps...
-    for variant in data['variants']:
-        variant['name'] = fix_case(variant['name'])
+    for office_variant in data['variants']:
+        office_variant['name'] = fix_case(office_variant['name'])
 
     # PASS 2: collect the data
     variant_data = [];
-    for variant in data['variants']:
+    for office_variant in data['variants']:
         variant_data.append({
-            'name': variant['name'],
-            'key':  variant['lectures'][0]['key'],
+            'name': office_variant['name'],
+            'key':  office_variant['lectures'][0][0]['key'],
         })
 
     # GENERATE the title slide
@@ -84,12 +85,12 @@ def postprocess_links(version, mode, data):
     # PASS 3: Insert the title slide before each variant
     for variant_counter, variant in enumerate(data['variants']):
         text = links.replace('class="variant-%s"' % variant_counter, 'class="variant-%s active"' % variant_counter)
-        variant['lectures'].insert(0, {
+        variant['lectures'].insert(0, [{
             'title':     'Messes',
             'text':      '<div class="app-office-navigation">%s</div>' % text,
             'reference': '',
             'key':       'navigation',
-        })
+        }])
 
 def postprocess(version, mode, data):
     if data['informations'].get('jour_liturgique_nom', '').lower().strip() == "samedi saint":

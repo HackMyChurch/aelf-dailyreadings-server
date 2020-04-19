@@ -4,7 +4,7 @@ import re
 import copy
 
 from utils import get_asset
-from utils import get_lecture_by_type, insert_lecture_before, insert_lecture_after
+from utils import get_lecture_variants_by_type, insert_lecture_variants_before, insert_lecture_variants_after
 from lib.postprocessor import postprocess_office_html_lecture
 from lib.constants import REGION_NOTRE_PERE_NEW
 
@@ -17,25 +17,25 @@ def postprocess(version, mode, data):
         return data
 
     # Attempt to load oraison item. If we can't, gracefully degrade
-    oraison_item = get_lecture_by_type(data, "office_oraison")
+    oraison_item = get_lecture_variants_by_type(data, "office_oraison")
     if oraison_item is None:
         return data
 
     # Fix Notre Père
     notre_pere = get_asset('prayers/notre-pere')
-    notre_pere_item = get_lecture_by_type(data, "office_notre_pere")
+    notre_pere_item = get_lecture_variants_by_type(data, "office_notre_pere")
     notre_pere_lecture = {
         'title':     notre_pere['title'],
         'text':      notre_pere['body'],
         'reference': '',
-        'key':       'te_deum',
+        'key':       'office_notre_pere',
     }
     postprocess_office_html_lecture(version, mode, notre_pere_lecture)
 
     if notre_pere_item:
-        notre_pere_item.lecture.update(notre_pere_lecture)
+        notre_pere_item.lectureVariants[0].update(notre_pere_lecture)
     else:
-        insert_lecture_before(data, notre_pere_lecture, oraison_item)
+        insert_lecture_variants_before(data, [notre_pere_lecture], oraison_item)
 
     # Append Benediction
     benediction = get_asset('prayers/%s-benediction' % data['office'])
@@ -46,7 +46,7 @@ def postprocess(version, mode, data):
         'key':       'benediction',
     }
     postprocess_office_html_lecture(version, mode, benediction_lecture)
-    insert_lecture_after(data, benediction_lecture, oraison_item)
+    insert_lecture_variants_after(data, [benediction_lecture], oraison_item)
 
     # All done
     return data

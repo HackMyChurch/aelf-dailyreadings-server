@@ -4,7 +4,7 @@ import re
 import datetime
 
 from utils import get_asset, get_lecture_text_from_epitre
-from utils import get_lectures_by_type, get_lecture_by_type, insert_lecture_before
+from utils import get_lectures_variants_by_type, get_lecture_variants_by_type, insert_lecture_variants_before
 from lib.postprocessor import postprocess_office_html_lecture
 from lib.postprocessor import postprocess_office_lecture_text
 
@@ -19,12 +19,12 @@ def postprocess_easter(version, mode, data):
         {
             'name': 'Dimanche de Pâques',
             'lectures': [
-                {
+                [{
                     'title':     'Lectures: Le saviez-vous ?',
                     'text':      text,
                     'reference': '',
                     'key':       '',
-                }
+                }]
             ]
         }
     ]
@@ -39,17 +39,16 @@ def postprocess(version, mode, data):
         return data
 
     date = data['date']
-    te_deum_item = get_lecture_by_type(data, "office_te_deum")
-    lecture_item = get_lecture_by_type(data, "office_lecture")
-    repons_item  = get_lecture_by_type(data, "office_repons_lecture")
-    oraison_item = get_lecture_by_type(data, "office_oraison")
+    te_deum_item = get_lecture_variants_by_type(data, "office_te_deum")
+    lecture_item = get_lecture_variants_by_type(data, "office_lecture")
+    oraison_item = get_lecture_variants_by_type(data, "office_oraison")
 
     # Fix empty "Lecture"..., try to load it from epitre.co
     # FIXME: embark these data and NEVER load from AELF, too much broken
-    if lecture_item and not lecture_item.lecture['text']:
+    if lecture_item and not lecture_item.lectureVariants[0]['text']:
         try:
-            lecture_item.lecture['text'] = get_lecture_text_from_epitre(lecture_item.lecture['reference'])
-            lecture_item.lecture['text'] = postprocess_office_lecture_text(version, mode, lecture_item.lecture['text'])
+            lecture_item.lectureVariants[0]['text'] = get_lecture_text_from_epitre(lecture_item.lectureVariants[0]['reference'])
+            lecture_item.lectureVariants[0]['text'] = postprocess_office_lecture_text(version, mode, lecture_item.lectureVariants[0]['text'])
         except:
             # This is best effort. We don't want the fallback path to bring the whole stuff down !
             pass
@@ -64,11 +63,11 @@ def postprocess(version, mode, data):
             'key':       'te_deum',
         }
         postprocess_office_html_lecture(version, mode, te_deum_lecture)
-        insert_lecture_before(data, te_deum_lecture, oraison_item)
+        insert_lecture_variants_before(data, [te_deum_lecture], oraison_item)
 
     # Fix oraison slide title: there is no benediction
     if oraison_item is not None:
-        oraison_item.lecture['title'] = "Oraison"
+        oraison_item.lectureVariants[0]['title'] = "Oraison"
 
     # All done
     return data
