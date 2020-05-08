@@ -8,6 +8,26 @@ from utils import get_lecture_variants_by_type, insert_lecture_variants_before, 
 from lib.postprocessor import postprocess_office_html_lecture
 from lib.constants import REGION_NOTRE_PERE_NEW
 
+def insert_inviting_pslams_variants(version, mode, data):
+    '''
+    There are 4 possible inviting psalms. Only the most commonly used in
+    returned by AELF's API. Insert the 4 other variants.
+    '''
+    psalm_variants_item = get_lecture_variants_by_type(data, "office_psaume_invitatoire")
+    if psalm_variants_item is None:
+        return
+
+    for psalm_id in ['66', '99', '23']:
+        psalm = get_asset(f'psalms/psalm-{psalm_id}')
+        psalm_item = {
+            'title':     psalm_variants_item.lectureVariants[0]['title'],
+            'text':      psalm['body'],
+            'reference': psalm['reference'],
+            'key':       psalm_variants_item.lectureVariants[0]['key'],
+        }
+        postprocess_office_html_lecture(version, mode, psalm_item)
+        psalm_variants_item.lectureVariants.append(psalm_item)
+
 def postprocess(version, mode, data):
     '''
     Common postprocessing code for laudes and vepres. These are very similar offices
@@ -15,6 +35,9 @@ def postprocess(version, mode, data):
     # Do not enable postprocessing for versions before 20, unless beta mode
     if mode != "beta" and version < 20:
         return data
+
+    # Insert alternative inviting psalm
+    insert_inviting_pslams_variants(version, mode, data)
 
     # Attempt to load oraison item. If we can't, gracefully degrade
     oraison_item = get_lecture_variants_by_type(data, "office_oraison")
