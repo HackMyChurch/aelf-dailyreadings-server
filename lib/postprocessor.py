@@ -864,10 +864,10 @@ def postprocess_office_title_47(version, mode, data):
 
                 # Prepare short / long variants
                 chunks = lecture['title'].split(':', 1)
-                lecture['short_title'] = chunks[0]
-                lecture['long_title']  = chunks[0]
+                lecture['short_title'] = chunks[0].strip()
+                lecture['long_title']  = chunks[0].strip()
                 if len(chunks) == 2 and chunks[1].strip() != lecture['reference'].strip():
-                    lecture['long_title'] = chunks[1]
+                    lecture['long_title'] = chunks[1].strip()
 
     return data
 
