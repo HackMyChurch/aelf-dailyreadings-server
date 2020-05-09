@@ -142,7 +142,7 @@ def group_lecture_variants(data):
                 for lecture in lecture_variants:
                     lecture['variant_title'] = f"{lecture['short_title']} ({lecture['reference']})"
 
-def group_related_items(version, mode, data):
+def group_related_items(data):
     '''
     Group related items so that verse, antienne, repons and similar items are
     attached to their main psalm, cantique, pericope, lecture, ...
@@ -152,8 +152,4 @@ def group_related_items(version, mode, data):
     group_verset(data)
     group_oraison_benediction(data)
 
-    if version >= 68:
-        group_lecture_variants(data)
-
     return data
-

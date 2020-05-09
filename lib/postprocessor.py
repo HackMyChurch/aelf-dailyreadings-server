@@ -10,7 +10,7 @@ from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
 from .constants import HTML_BLOCK_ELEMENTS
 from .office import get_lecture_variants_by_type, insert_lecture_variants_before, insert_lecture_variants_after
-from .group import group_related_items
+from .group import group_related_items, group_lecture_variants
 
 #
 # Utils
@@ -842,7 +842,16 @@ def postprocess_office_group_47(version, mode, data):
     if version < 47:
         return data
 
-    group_related_items(version, mode, data)
+    group_related_items(data)
+
+def postprocess_lecture_variants_group_67(version, mode, data):
+    '''
+    Group lecture variants
+    '''
+    if version < 67:
+        return data
+
+    group_lecture_variants(data)
 
 VERSE_REFERENCE_MATCH=re.compile('\(.*\)')
 def postprocess_office_title_47(version, mode, data):
@@ -884,8 +893,9 @@ def postprocess_office_post(version, mode, data):
     '''
     Run all postprocessing, running after the office specific code
     '''
-    postprocess_office_title_47(version, mode, data)
     postprocess_office_group_47(version, mode, data)
+    postprocess_office_title_47(version, mode, data)
+    postprocess_lecture_variants_group_67(version, mode, data)
     return data
     
 
