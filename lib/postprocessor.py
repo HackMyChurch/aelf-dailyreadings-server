@@ -842,7 +842,7 @@ def postprocess_office_group_47(version, mode, data):
     if version < 47:
         return data
 
-    group_related_items(data)
+    group_related_items(version, mode, data)
 
 VERSE_REFERENCE_MATCH=re.compile('\(.*\)')
 def postprocess_office_title_47(version, mode, data):
@@ -884,8 +884,8 @@ def postprocess_office_post(version, mode, data):
     '''
     Run all postprocessing, running after the office specific code
     '''
-    postprocess_office_group_47(version, mode, data)
     postprocess_office_title_47(version, mode, data)
+    postprocess_office_group_47(version, mode, data)
     return data
     
 

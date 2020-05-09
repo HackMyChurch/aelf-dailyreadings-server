@@ -79,7 +79,24 @@ def group_oraison_benediction(data):
 
         office_variant['lectures'] = lectures
 
-def group_related_items(data):
+def group_lecture_variants(data):
+    '''
+    Merge lectures with identical "key.orig" and offer them as lecture variants.
+    '''
+    # First pass: merge
+    for office_variant in data['variants']:
+        lectures = []
+        prev_key = None
+        for lecture_variants in office_variant['lectures']:
+            key = lecture_variants[0].get('key.orig')
+            if key and key == prev_key:
+                lectures[-1].extend(lecture_variants)
+                continue
+            prev_key = key
+            lectures.append(lecture_variants)
+        office_variant['lectures'] = lectures
+
+def group_related_items(version, mode, data):
     '''
     Group related items so that verse, antienne, repons and similar items are
     attached to their main psalm, cantique, pericope, lecture, ...
@@ -88,5 +105,9 @@ def group_related_items(data):
     group_repons(data)
     group_verset(data)
     group_oraison_benediction(data)
+
+    if version >= 68:
+        group_lecture_variants(data)
+
     return data
 
