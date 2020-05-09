@@ -96,6 +96,52 @@ def group_lecture_variants(data):
             lectures.append(lecture_variants)
         office_variant['lectures'] = lectures
 
+    # Second pass: generate variant titles
+    for office_variant in data['variants']:
+        for lecture_variants in office_variant['lectures']:
+            if len(lecture_variants) < 2:
+                continue
+            elif len(lecture_variants) == 2 and 'LECTURE BREVE' in lecture_variants[0]['text']:
+                lecture_variants[0]['variant_title'] = "Lecture longue"
+                lecture_variants[1]['variant_title'] = "Lecture brève"
+            elif len(lecture_variants) == 2:
+                lecture_0 = lecture_variants[0]
+                lecture_1 = lecture_variants[1]
+                book_chapter_0 = lecture_0['reference'].split(',')[0]
+                book_chapter_1 = lecture_1['reference'].split(',')[0]
+
+                is_psalm                   = (lecture_0['short_title'].strip().lower() == 'psaume')
+                have_distinct_short_titles = (lecture_0['short_title'] != lecture_1['short_title'])
+                have_distinct_long_titles  = (lecture_0['long_title'] != lecture_1['long_title'])
+                have_distinct_chapter      = (book_chapter_0 != book_chapter_1)
+
+                if have_distinct_short_titles:
+                    if have_distinct_chapter:
+                        lecture_0['variant_title'] = f"{lecture_0['short_title']} ({book_chapter_0})"
+                        lecture_1['variant_title'] = f"{lecture_1['short_title']} ({book_chapter_1})"
+                    else:
+                        lecture_0['variant_title'] = f"{lecture_0['short_title']}"
+                        lecture_1['variant_title'] = f"{lecture_1['short_title']}"
+                elif have_distinct_long_titles:
+                    if have_distinct_chapter:
+                        lecture_0['variant_title'] = f"{lecture_0['long_title']} ({book_chapter_0})"
+                        lecture_1['variant_title'] = f"{lecture_1['long_title']} ({book_chapter_1})"
+                    else:
+                        lecture_0['variant_title'] = f"{lecture_0['long_title']}"
+                        lecture_1['variant_title'] = f"{lecture_1['long_title']}"
+                elif is_psalm and have_distinct_chapter:
+                    lecture_0['variant_title'] = f"{lecture_0['short_title']} {book_chapter_0.split(' ')[1]}"
+                    lecture_1['variant_title'] = f"{lecture_1['short_title']} {book_chapter_1.split(' ')[1]}"
+                elif have_distinct_chapter:
+                    lecture_0['variant_title'] = f"{lecture_0['short_title']} ({book_chapter_0})"
+                    lecture_1['variant_title'] = f"{lecture_1['short_title']} ({book_chapter_1})"
+                else:
+                    lecture_0['variant_title'] = f"{lecture_0['short_title']} ({lecture_0['reference']})"
+                    lecture_1['variant_title'] = f"{lecture_1['short_title']} ({lecture_1['reference']})"
+            else:
+                for lecture in lecture_variants:
+                    lecture['variant_title'] = f"{lecture['short_title']} ({lecture['reference']})"
+
 def group_related_items(version, mode, data):
     '''
     Group related items so that verse, antienne, repons and similar items are
