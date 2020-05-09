@@ -154,6 +154,8 @@ def get_office(version, office, date, format):
 
     # Generate response
     if format == 'rss':
+        if version >= 67:
+            office = return_error(404, "The RSS output is no longer supported")
         response = Response(office_to_rss(version, office), mimetype='application/rss+xml')
     elif format == 'json':
         response = jsonify(office_to_json(version, office))
