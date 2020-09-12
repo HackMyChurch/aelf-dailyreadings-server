@@ -142,6 +142,14 @@ def group_lecture_variants(data):
                 for lecture in lecture_variants:
                     lecture['variant_title'] = f"{lecture['short_title']} ({lecture['reference']})"
 
+            # Cleanup remaining "OU BIEN", "LECTURE BREVE", ...
+            for lecture in lecture_variants:
+                soup = BeautifulSoup(lecture['text'], 'html5lib')
+                last_p = soup.find_all('p')[-1]
+                if last_p.text.isupper():
+                    last_p.extract()
+                    lecture['text'] = str(soup)
+
 def group_related_items(data):
     '''
     Group related items so that verse, antienne, repons and similar items are
