@@ -195,6 +195,7 @@ def get_office_for_day_api(office, date, region):
                     'titre':     titre,
                     'reference': lecture['ref'],
                     'texte':     ''.join(texte),
+                    'intro':     intro,
                 }
 
             # Gather the cleaned fields as a *list* of lecture variants.
@@ -202,6 +203,7 @@ def get_office_for_day_api(office, date, region):
             cleaned = [{
                 'title':     lecture.get('titre',     ''),
                 'reference': lecture.get('reference', ''),
+                'intro':     lecture.get('intro',     ''),
                 'text':      lecture.get('texte',     ''),
                 'key':       name,
             }]

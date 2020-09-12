@@ -111,6 +111,7 @@ def group_lecture_variants(data):
                 book_chapter_1 = lecture_1['reference'].split(',')[0]
 
                 is_psalm                   = (lecture_0['short_title'].strip().lower() == 'psaume')
+                have_distinct_intro        = (lecture_0['intro'] != lecture_1['intro'])
                 have_distinct_short_titles = (lecture_0['short_title'] != lecture_1['short_title'])
                 have_distinct_long_titles  = (lecture_0['long_title'] != lecture_1['long_title'])
                 have_distinct_chapter      = (book_chapter_0 != book_chapter_1)
@@ -122,6 +123,9 @@ def group_lecture_variants(data):
                     else:
                         lecture_0['variant_title'] = f"{lecture_0['short_title']}"
                         lecture_1['variant_title'] = f"{lecture_1['short_title']}"
+                elif have_distinct_intro and lecture_0['intro']:
+                    lecture_0['variant_title'] = lecture_0['intro']
+                    lecture_1['variant_title'] = lecture_1['intro']
                 elif have_distinct_long_titles:
                     if have_distinct_chapter:
                         lecture_0['variant_title'] = f"{lecture_0['long_title']} ({book_chapter_0})"

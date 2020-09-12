@@ -7,7 +7,7 @@ import mock
 
 from base import TestBase, FakeResponse
 
-EXPECTED_ETAG = '15edf7202b1354964881e53eeaa77dbe7fa95d17d9820291c845da9fc1604bfe'
+EXPECTED_ETAG = '20320c4ea9545886fc1ce713119362c1c630cfff410040e81a1fe8784955309c'
 
 class TestBatch(TestBase):
 
