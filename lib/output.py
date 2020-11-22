@@ -75,8 +75,13 @@ def office_to_rss(version, data):
             else:
                 if 'antienne' in lecture:
                     antienne_1 = "<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-1\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
-                    gloria_patri = "<div class=\"gloria_patri\"><span tabindex=\"0\" id=\"%s-gloria_patri\" class=\"line\">Gloire au Père, ...</span></div>" % (key)
                     antienne_2 = "<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-2\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
+
+                    # Insert the "Gloire au Père", unless Dn3 which implies it.
+                    gloria_patri = ""
+                    if reference != "Dn 3":
+                        gloria_patri = "<div class=\"gloria_patri\"><span tabindex=\"0\" id=\"%s-gloria_patri\" class=\"line\">Gloire au Père, ...</span></div>" % (key)
+
                     text = "%s%s%s%s" % (antienne_1, text, gloria_patri, antienne_2)
                 if 'verset' in lecture:
                     text = "%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
