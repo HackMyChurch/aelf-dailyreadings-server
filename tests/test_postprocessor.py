@@ -157,6 +157,7 @@ class TestPostprocessor(unittest.TestCase):
     def test_fix_case(self):
         from lib.postprocessor import fix_case
 
+        self.assertEqual('Homélie de saint Bède le vénérable', fix_case('HOMÉLIE DE S. BÈDE LE VÉNÉRABLE'))
         self.assertEqual('Homélie d\'Origène sur le Lévitique', fix_case('HOMELIE D\'ORIGÈNE SUR LE LÉVITIQUE'))
         self.assertEqual('Sermon de saint L\xe9on le grand pour l\'anniversaire de son ordination', fix_case('SERMON DE S. LÉON LE GRAND POUR L\'ANNIVERSAIRE DE SON ORDINATION'))
         self.assertEqual('Homélie du II° siècle', fix_case('HOMELIE DU II° SIECLE'))

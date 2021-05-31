@@ -252,13 +252,14 @@ def _fix_word_case(match):
     if _is_roman_number(word) and next_char != "'":
         return word.upper()
 
-    # Check if the word is correctly spelled
-    if not FR_DICT.spell(word):
-        for suggestion in FR_DICT.suggest(word):
-            # Accept suggestion if only diacritics changed
-            if unidecode.unidecode(word) == unidecode.unidecode(suggestion):
-                word = suggestion
-                break
+    # If there is no diacritics, these might be missing
+    if unidecode.unidecode(word) == word:
+        if not FR_DICT.spell(word):
+            for suggestion in FR_DICT.suggest(word):
+                # Accept suggestion if only diacritics changed
+                if unidecode.unidecode(word) == unidecode.unidecode(suggestion):
+                    word = suggestion
+                    break
 
     # If there is a single letter, lower case
     if len(word) <= 1:
