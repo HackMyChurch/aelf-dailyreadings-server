@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import re
+import html
 import hunspell
 import unidecode
 from bs4 import BeautifulSoup, NavigableString, Tag, Comment
-from html.parser import HTMLParser
 
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
@@ -318,8 +318,7 @@ def fix_common_typography(text):
     Generc search and replace fixes
     '''
     # Decode entities so that we do not accidentally break them
-    h = HTMLParser()
-    text = h.unescape(text)
+    text = html.unescape(text)
 
     # Simple replaces
     text = text.replace('fete', 'fête')\
