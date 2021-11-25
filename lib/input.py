@@ -48,6 +48,10 @@ def _do_get_request(url):
 # API
 #
 
+class NonNoneOrderedDict(OrderedDict):
+    def __init__(self, pairs):
+        super().__init__((p for p in pairs if p[1] is not None))
+
 def get_office_for_day_api(office, date, region):
     '''
     Grab data from api.aelf.org and format it in a consistent way. This api is very creative in
@@ -55,7 +59,8 @@ def get_office_for_day_api(office, date, region):
     consistent as far as the format is concerned, but is not yet post-proceced. You'll probably
     want to merge some readings befor sending.
     '''
-    data = _do_get_request(AELF_JSON.format(office=office, day=date.day, month=date.month, year=date.year, region=region)).json(object_pairs_hook=OrderedDict)
+    data = _do_get_request(AELF_JSON.format(office=office, day=date.day, month=date.month,
+                           year=date.year, region=region)).json(object_pairs_hook=NonNoneOrderedDict)
 
     # Start to build our json format from API's format
     out = {
