@@ -53,8 +53,8 @@ def postprocess(version, mode, data):
             # This is best effort. We don't want the fallback path to bring the whole stuff down !
             pass
 
-    # Fix missing "Te Deum" on Sunday
-    if te_deum_item is None and oraison_item and date.isoweekday() == 7:
+    # Fix missing "Te Deum" on Sunday, unless careme
+    if te_deum_item is None and oraison_item and date.isoweekday() == 7 and data['informations'].get('temps_liturgique', '') != 'careme':
         te_deum = get_asset('prayers/te-deum')
         te_deum_lecture = {
             'title':     te_deum['title'],
