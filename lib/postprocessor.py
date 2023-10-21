@@ -32,21 +32,21 @@ def _is_letter(data):
             return False
     return True
 
-PSALM_MATCH=re.compile('^[0-9]+(-[IV0-9]+)?$')
+PSALM_MATCH=re.compile(r'^[0-9]+(-[IV0-9]+)?$')
 def _is_psalm_ref(data):
     if not data:
         return False
 
     return re.match(PSALM_MATCH, data.replace(' ', ''))
 
-VERSE_REF_MATCH=re.compile('^[0-9]+[A-Z]?(\.[0-9]+)?$')
+VERSE_REF_MATCH=re.compile(r'^[0-9]+[A-Z]?(\.[0-9]+)?$')
 def _is_verse_ref(data):
     if not data:
         return False
 
     return re.match(VERSE_REF_MATCH, data.replace(' ', ''))
 
-ROMAN_NUMBER_MATCH=re.compile('^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$')
+ROMAN_NUMBER_MATCH=re.compile(r'^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$')
 def _is_roman_number(data):
     if not data:
         return False
@@ -276,7 +276,7 @@ def _fix_word_case(match):
     else:
         return word.capitalize()
 
-WORD_MATCH=re.compile('\w+', re.UNICODE)
+WORD_MATCH=re.compile(r'\w+', re.UNICODE)
 def fix_case(sentence):
     '''
     Take a potentially all caps sentence as input and make it readable
@@ -328,19 +328,19 @@ def fix_common_typography(text):
                .replace('n\\est', 'n\'est')\
 
     # Preg replaces
-    text = re.sub('([Pp])ere', '\\1ère', text)
-    text = re.sub('[Ee]glise', 'Église', text)
+    text = re.sub(r'([Pp])ere', '\\1ère', text)
+    text = re.sub(r'[Ee]glise', 'Église', text)
 
     # Typography
-    text = re.sub('\s*-\s*',      '-',    text)
-    text = re.sub(':\s+(\s+)'  ,  '',     text)
-    text = re.sub('\s*\(',        ' (',   text)
-    text = re.sub('\s*\u00a0\s*', '\u00a0', text) # Mixed type of blanks
+    text = re.sub(r'\s*-\s*',      '-',    text)
+    text = re.sub(r':\s+(\s+)'  ,  '',     text)
+    text = re.sub(r'\s*\(',        ' (',   text)
+    text = re.sub(r'\s*\u00a0\s*', '\u00a0', text) # Mixed type of blanks
 
-    text = re.sub('\s*»',          '\u00a0» ',  text) # Typographic quote
-    text = re.sub('«\s*',          ' «\u00a0',  text)
-    text = re.sub('\s*([:?!])\s*', '\u00a0\\1 ', text)
-    text = re.sub('\s+;\s*',       '\u00a0; ',  text) # Semicolon, prefixed by a blank
+    text = re.sub(r'\s*»',          '\u00a0» ',  text) # Typographic quote
+    text = re.sub(r'«\s*',          ' «\u00a0',  text)
+    text = re.sub(r'\s*([:?!])\s*', '\u00a0\\1 ', text)
+    text = re.sub(r'\s+;\s*',       '\u00a0; ',  text) # Semicolon, prefixed by a blank
 
     return text
 
@@ -555,7 +555,7 @@ def html_fix_comments(key, soup):
     Detect and remove any HTML comments. HTML comments may just come from MS WORD copy
     and paste. They may break the processing and also increase the output size.
     '''
-    comments = soup.findAll(text=lambda text:isinstance(text, Comment))
+    comments = soup.findAll(string=lambda text:isinstance(text, Comment))
     [comment.extract() for comment in comments]
 
 def html_fix_verse(key, soup):
@@ -636,9 +636,9 @@ def html_fix_paragraph(key, soup):
             tag.extract()
 
     # Ensure each text element is in a p
-    node = soup.find(text=lambda text:isinstance(text, NavigableString))
+    node = soup.find(string=lambda text:isinstance(text, NavigableString))
     while node:
-        node_next = node.find_next(text=lambda text:isinstance(text, NavigableString))
+        node_next = node.find_next(string=lambda text:isinstance(text, NavigableString))
         if not str(node).strip():
             node.extract()
             node = node_next
@@ -853,7 +853,7 @@ def postprocess_lecture_variants_group_67(version, mode, data):
 
     group_lecture_variants(data)
 
-VERSE_REFERENCE_MATCH=re.compile('\(.*\)')
+VERSE_REFERENCE_MATCH=re.compile(r'\(.*\)')
 def postprocess_office_title_47(version, mode, data):
     '''
     Server side title cleanup for API >= 47
