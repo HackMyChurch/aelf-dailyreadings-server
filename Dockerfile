@@ -1,5 +1,5 @@
-FROM alpine:3.11
-MAINTAINER Jean-Tiare Le Bigot <jt@yadutaf.fr>
+FROM alpine:3.18.4
+MAINTAINER Jean-Tiare Le Bigot <support@epitre.co>
 
 ENV PYTHONUNBUFFERED=1
 

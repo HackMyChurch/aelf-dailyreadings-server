@@ -30,11 +30,11 @@ Tout d'abord, assurez vous de bien avoir ``git`` et ``docker`` sur votre machine
 ```console
 git clone https://github.com/HackMyChurch/aelf-dailyreadings-server.git
 cd aelf-dailyreadings-server
-docker -t build aelf-api .
-docker run -e AELF_DEBUG=1 --name aelf-api -d -p 4000 --restart always aelf-api
+docker build -t aelf-api .
+docker run -e AELF_DEBUG=1 --name aelf-api -p 4000:4000 --rm -it aelf-api
 ``` 
 
-Votre serveur tourne à présent sur le port 4000 de votre machine. Pour voir une belle page d'erreur, vous pouvez à présent visiter http://localhost:4000/
+Votre serveur tourne à présent sur le port 4000 de votre machine. Pour avoir un état de la synchronisation, rendez-vous sur http://0.0.0.0:4000/status.html
 
 ### Faire tourner les tests
 
@@ -42,7 +42,7 @@ Vous pouvez aussi faire tourner les tests automatiques (et, oui, on aime faire l
 
 ```console
 pip install -r requirements-dev.txt
-nosetests
+pytest
 ```
 
 Les tests fonctionnent avec une copie des données. Si vous ajoutez un nouveau test et avez besoin de nouvelles données, vous pouvez les télécharger automatiquement
@@ -54,5 +54,5 @@ AELF_DEBUG=1 nosetests
 
 ## Licence
 
-MIT, 2016 Jean-Tiare Le Bigot <jt@yadutaf.fr>
+MIT, 2023 Jean-Tiare Le Bigot <support@epitre.co>
 

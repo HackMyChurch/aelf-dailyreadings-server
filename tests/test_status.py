@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-os.environ['AELF_STATUS_DAYS_TO_MONITOR'] = '0'
 import server
 import mock
 from datetime import date
