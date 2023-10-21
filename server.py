@@ -8,11 +8,9 @@ import os
 import time
 import json
 import datetime
-import office_controller
 from lib.output import office_to_json, office_to_rss
 from lib.constants import DEFAULT_REGION, CURRENT_VERSION
 from lib.cache import Cache
-from keys import KEY_TO_OFFICE
 from office_controller import get as do_get_office, return_error, OFFICES
 import status
 
@@ -179,19 +177,6 @@ def get_office_rss(version, office, date):
 def get_office_json(version, office, date):
     date = parse_date_or_abort(date)
     return get_office(version, office, date, 'json')
-
-#
-# Legacy API (keep compatible in case fallback is needed)
-#
-
-@app.route('/<int:day>/<int:month>/<int:year>/<key>')
-def get_office_legacy(day, month, year, key):
-    if key not in KEY_TO_OFFICE:
-        return office_to_rss(return_error(404, "Aucune lecture n'a été trouvée pour cet office."))
-    office = KEY_TO_OFFICE[key]
-    version = int(request.args.get('version', 0))
-    date = datetime.date(year, month, day)
-    return get_office(version, office, date, 'rss')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000)

@@ -36,16 +36,6 @@ docker run -e AELF_DEBUG=1 --name aelf-api -d -p 4000 --restart always aelf-api
 
 Votre serveur tourne à présent sur le port 4000 de votre machine. Pour voir une belle page d'erreur, vous pouvez à présent visiter http://localhost:4000/
 
-### Générer les clé AELF
-
-Pour que cela fonctionne, vous aurez besoin de clés AELF. Réjouissez, vous, elle sont gratuites et assez facile à générer. Tout d'abord, rendez-vous sur http://webmaster.aelf.org/ et ouvrez un compte. Une fois cette étape franchie, vous êtes prêts à générer une clé par office. Elle ressembleront à ``00000000-0000-0000-0000-000000000000`` avec des chiffres et les lettres a, b, c, d, e et f. Ensuite:
-
-```console
-cp keys.py.dist keys.py
-```
-
-Puis éditez le nouveau fichier avec vos clés. Et voila :)
-
 ### Faire tourner les tests
 
 Vous pouvez aussi faire tourner les tests automatiques (et, oui, on aime faire les choses bien !)

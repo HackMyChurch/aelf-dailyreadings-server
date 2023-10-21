@@ -2,7 +2,6 @@
 
 import os
 import server
-import keys
 import mock
 import datetime
 from bs4 import BeautifulSoup

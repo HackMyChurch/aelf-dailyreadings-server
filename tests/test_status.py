@@ -3,7 +3,6 @@
 import os
 os.environ['AELF_STATUS_DAYS_TO_MONITOR'] = '0'
 import server
-import keys
 import mock
 from datetime import date
 from bs4 import BeautifulSoup
