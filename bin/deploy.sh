@@ -72,6 +72,7 @@ DOCKER_RUN_ARGS="${DOCKER_RUN_ARGS} --publish published=${DOCKER_PORT},target=40
 DOCKER_RUN_ARGS="${DOCKER_RUN_ARGS} --env DD_PROFILING_ENABLED=true"
 DOCKER_RUN_ARGS="${DOCKER_RUN_ARGS} --env DD_ENV=${APP_ENV}"
 DOCKER_RUN_ARGS="${DOCKER_RUN_ARGS} --env DD_SERVICE=aelf-api"
+DOCKER_RUN_ARGS="${DOCKER_RUN_ARGS} --memory=500m"
 
 function deploy_on() {
     local machine="$1"
