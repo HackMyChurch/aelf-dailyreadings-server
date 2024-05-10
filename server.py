@@ -5,14 +5,12 @@ from flask import Flask, Response, abort, request, jsonify, render_template
 app = Flask(__name__)
 
 import os
-import time
 import json
 import datetime
 from lib.output import office_to_json, office_to_rss
 from lib.constants import DEFAULT_REGION, CURRENT_VERSION
-from lib.cache import Cache
 from keys import KEY_TO_OFFICE
-from office_controller import get as do_get_office, return_error, OFFICES
+from office_controller import get as do_get_office, get_from_network as do_get_office_from_network, return_error, OFFICES
 import status
 
 if os.environ.get('AELF_DEBUG', False):
@@ -23,7 +21,6 @@ if os.environ.get('AELF_DEBUG', False):
 #
 
 status.init()
-cache = Cache()
 
 #
 # Utils
@@ -49,7 +46,7 @@ def get_status(format="json"):
 
     # Attempt to get the mass for today. If we can't, we are in trouble
     try:
-        mass = do_get_office(CURRENT_VERSION, "prod", "messes", datetime.date(*[int(c) for c in (time.strftime("%Y:%m:%d").split(':'))]), 'romain')
+        mass = do_get_office_from_network(CURRENT_VERSION, "prod", "messes", datetime.date.today(), 'romain')
         source = mass.get('source', '')
         if source != 'api':
             status_message = "Mass office should come from API. Got: %s" % (source)
@@ -79,25 +76,12 @@ def get_robots():
 # Office API, common path
 #
 
-def get_office(version, mode, office, date, region):
-    # Attempt to load from cache
-    cache_key = (version, mode, office, date, region)
-    cache_entry = cache.get(cache_key)
-    if cache_entry is not None:
-        office = cache_entry.value
-        etag_local = cache_entry.checksum
-    else:
-        office = do_get_office(version, mode, office, date, region)
-        etag_local = cache.set(cache_key, office)
-
-    return office, etag_local
-
 def get_office_reponse(version, office, date, format):
     # Load common params
     mode = "beta" if request.args.get('beta', 0) else "prod"
     region = request.args.get('region', DEFAULT_REGION)
     etag_remote = request.headers.get('If-None-Match', None)
-    office, etag_local = get_office(version, mode, office, date, region)
+    office, etag_local = do_get_office(version, mode, office, date, region)
 
     # Cached version is the same as the requested version
     if etag_remote == etag_local:
@@ -134,7 +118,7 @@ def get_office_checksums(version, from_date, days):
         date = from_date + datetime.timedelta(days=i)
         days_checksum = {}
         for office in OFFICES:
-            _, checksum = get_office(version, mode, office, date, region)
+            _, checksum = do_get_office(version, mode, office, date, region)
             days_checksum[office] = checksum
         checksums[date.isoformat()] = days_checksum
 
@@ -157,10 +141,10 @@ def get_office_json(version, office, date):
 
 @app.route('/<int:day>/<int:month>/<int:year>/<key>')
 def get_office_legacy(day, month, year, key):
-    if key not in KEY_TO_OFFICE:
-        return office_to_rss(return_error(404, "Aucune lecture n'a été trouvée pour cet office."))
-    office = KEY_TO_OFFICE[key]
     version = int(request.args.get('version', 0))
+    if key not in KEY_TO_OFFICE:
+        return office_to_rss(version, return_error(404, "Aucune lecture n'a été trouvée pour cet office."))
+    office = KEY_TO_OFFICE[key]
     date = datetime.date(year, month, day)
     return get_office_reponse(version, office, date, 'rss')
 

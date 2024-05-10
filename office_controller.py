@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import meta
 import messes
 import laudes_vepres
 import lectures
+from lib.cache import Cache
 from lib.exceptions import AelfHttpError
 from lib.postprocessor import postprocess_office_pre
 from lib.postprocessor import postprocess_office_post
@@ -41,18 +43,20 @@ OFFICES = {
     },
 }
 
-def get(version, mode, office, date, region):
+cache = Cache()
+
+def get_from_network(version, mode, office_name, date, region):
     data = None
     error = None
 
     # Validate office name
-    if office not in OFFICES:
-        return return_error(404, "Cet office (%s) est inconnu..." % office)
+    if office_name not in OFFICES:
+        return return_error(404, "Cet office (%s) est inconnu..." % office_name)
 
     # Attempt to load
     error = None
     try:
-        data = get_office_for_day_api(office, date, region)
+        data = get_office_for_day_api(office_name, date, region)
     except AelfHttpError as http_err:
         # Prepare the error message
         if http_err.status == 404:
@@ -68,7 +72,7 @@ def get(version, mode, office, date, region):
             return error
 
     # Apply office specific postprocessor
-    for postprocessor in OFFICES[office]['postprocess']:
+    for postprocessor in OFFICES[office_name]['postprocess']:
         data = postprocessor(version, mode, data)
 
     # If we had an error forward it if the variants are still empty
@@ -77,6 +81,19 @@ def get(version, mode, office, date, region):
 
     # Return
     return data
+
+def get(version: int, mode: str, office_name: str, date: datetime.date, region: str) -> tuple[dict, str]:
+    # Attempt to load from cache
+    cache_key = (version, mode, office_name, date, region)
+    cache_entry = cache.get(cache_key)
+    if cache_entry is not None:
+        office = cache_entry.value
+        etag_local = cache_entry.checksum
+    else:
+        office = get_from_network(version, mode, office_name, date, region)
+        etag_local = cache.set(cache_key, office)
+
+    return office, etag_local
 
 def return_error(status, message):
     '''

@@ -63,7 +63,7 @@ def validate_future_offices():
         for office_name in list(OFFICES.keys()):
             url = "/%s/office/%s/%s.json" % (CURRENT_VERSION, office_name, date_str)
             try:
-                office = do_get_office(CURRENT_VERSION, "prod", office_name, date, "romain")
+                office, _ = do_get_office(CURRENT_VERSION, "prod", office_name, date, "romain")
                 reason = validate_office(office, days_ahead)
             except Exception as e:
                 reason = (REASON_ERROR, str(e))
