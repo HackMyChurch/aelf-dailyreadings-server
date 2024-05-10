@@ -8,7 +8,6 @@ import os
 import time
 import json
 import datetime
-import office_controller
 from lib.output import office_to_json, office_to_rss
 from lib.constants import DEFAULT_REGION, CURRENT_VERSION
 from lib.cache import Cache
@@ -30,12 +29,12 @@ cache = Cache()
 # Utils
 #
 
-def parse_date_or_abort(date):
+def parse_date_or_abort(date) -> datetime.date:
     try:
         year, month, day = date.split('-')
         return datetime.date(int(year), int(month), int(day))
     except:
-        abort(400)
+        abort(400, "Invalid date")
 
 #
 # Internal API
@@ -80,21 +79,25 @@ def get_robots():
 # Office API, common path
 #
 
-def get_office(version, office, date, format):
-    # Load common params
-    mode = "beta" if request.args.get('beta', 0) else "prod"
-    region = request.args.get('region', DEFAULT_REGION)
-    etag_remote = request.headers.get('If-None-Match', None)
-
+def get_office(version, mode, office, date, region):
     # Attempt to load from cache
     cache_key = (version, mode, office, date, region)
-    cache_entry = cache.get(cache_key, checksum=etag_remote)
+    cache_entry = cache.get(cache_key)
     if cache_entry is not None:
         office = cache_entry.value
         etag_local = cache_entry.checksum
     else:
         office = do_get_office(version, mode, office, date, region)
         etag_local = cache.set(cache_key, office)
+
+    return office, etag_local
+
+def get_office_reponse(version, office, date, format):
+    # Load common params
+    mode = "beta" if request.args.get('beta', 0) else "prod"
+    region = request.args.get('region', DEFAULT_REGION)
+    etag_remote = request.headers.get('If-None-Match', None)
+    office, etag_local = get_office(version, mode, office, date, region)
 
     # Cached version is the same as the requested version
     if etag_remote == etag_local:
@@ -114,19 +117,39 @@ def get_office(version, office, date, format):
     return response
 
 #
-# Modern API (beta)
+# Modern API
 #
+
+@app.route('/<int:version>/office/checksums/<from_date>/<int:days>d')
+def get_office_checksums(version, from_date, days):
+    from_date = parse_date_or_abort(from_date)
+    mode = "beta" if request.args.get('beta', 0) else "prod"
+    region = request.args.get('region', DEFAULT_REGION)
+
+    if days < 1 or days > 7:
+        abort(400, "Invalid duration")
+    
+    checksums = {}
+    for i in range(days):
+        date = from_date + datetime.timedelta(days=i)
+        days_checksum = {}
+        for office in OFFICES:
+            _, checksum = get_office(version, mode, office, date, region)
+            days_checksum[office] = checksum
+        checksums[date.isoformat()] = days_checksum
+
+    return checksums
 
 @app.route('/<int:version>/office/<office>/<date>')
 @app.route('/<int:version>/office/<office>/<date>.rss')
 def get_office_rss(version, office, date):
     date = parse_date_or_abort(date)
-    return get_office(version, office, date, 'rss')
+    return get_office_reponse(version, office, date, 'rss')
 
 @app.route('/<int:version>/office/<office>/<date>.json')
 def get_office_json(version, office, date):
     date = parse_date_or_abort(date)
-    return get_office(version, office, date, 'json')
+    return get_office_reponse(version, office, date, 'json')
 
 #
 # Legacy API (keep compatible in case fallback is needed)
@@ -139,7 +162,7 @@ def get_office_legacy(day, month, year, key):
     office = KEY_TO_OFFICE[key]
     version = int(request.args.get('version', 0))
     date = datetime.date(year, month, day)
-    return get_office(version, office, date, 'rss')
+    return get_office_reponse(version, office, date, 'rss')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000)

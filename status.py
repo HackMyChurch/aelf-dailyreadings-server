@@ -52,7 +52,7 @@ def validate_office(office, days_ahead):
 
 def validate_future_offices():
     '''
-    Loop over upcomming STATUS_DAYS_TO_MONITOR days and OFFICES and make sure they are valid
+    Loop over upcoming STATUS_DAYS_TO_MONITOR days and OFFICES and make sure they are valid
     '''
     for days_ahead in range(STATUS_DAYS_TO_MONITOR):
         _status['message'] = 'Refreshing day %s of %d. Please wait.' % (days_ahead+1, STATUS_DAYS_TO_MONITOR)
