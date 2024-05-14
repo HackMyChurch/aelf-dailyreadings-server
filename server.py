@@ -80,11 +80,11 @@ def get_office_reponse(version, office, date, format):
     # Load common params
     mode = "beta" if request.args.get('beta', 0) else "prod"
     region = request.args.get('region', DEFAULT_REGION)
-    etag_remote = request.headers.get('If-None-Match', None)
-    office, etag_local = do_get_office(version, mode, office, date, region)
+
+    office, etag = do_get_office(version, mode, office, date, region)
 
     # Cached version is the same as the requested version
-    if etag_remote == etag_local:
+    if etag in request.if_none_match:
         return Response(status=304)
 
     # Generate response
@@ -97,7 +97,7 @@ def get_office_reponse(version, office, date, format):
     else:
         raise ValueError("Invalid format %s" % format)
 
-    response.headers['ETag'] = etag_local
+    response.set_etag(etag)
     return response
 
 #
