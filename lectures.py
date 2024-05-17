@@ -54,7 +54,11 @@ def postprocess(version, mode, data):
             pass
 
     # Fix missing "Te Deum" on Sunday, unless careme
-    if te_deum_item is None and oraison_item and date.isoweekday() == 7 and data['informations'].get('temps_liturgique', '') != 'careme':
+    if te_deum_item is not None:
+        te_deum = get_asset('prayers/te-deum')
+        te_deum_item.lectureVariants[0]['text'] = te_deum['body']
+        postprocess_office_html_lecture(version, mode, te_deum_item.lectureVariants[0])
+    elif te_deum_item is None and oraison_item and date.isoweekday() == 7 and data['informations'].get('temps_liturgique', '') != 'careme':
         te_deum = get_asset('prayers/te-deum')
         te_deum_lecture = {
             'title':     te_deum['title'],
