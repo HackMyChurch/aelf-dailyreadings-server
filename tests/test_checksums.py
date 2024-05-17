@@ -16,7 +16,7 @@ class TestChecksums(TestBase):
                 '2024-05-10': {
                     'complies':     '9126bcac0eefe8bed3cd49a886a38000aa1e87410b8342e5dee0661527d78d9f',
                     'informations': '1a29978b58c5cc239d4ab05939209cb7f206a16d09f029a089be2bba9ef8e01d',
-                    'laudes':       'c7892a8ca6044b7f434afb0a8746a6e3ef3b0e637a780cd25812d6088b8d46c4',
+                    'laudes':       '97b42430848f9a2d43c9de7d4f58c5a7c3c6046d2aa25949c7fd09f06c30bf45',
                     'lectures':     'ca56f6078058f85e23c21616d937b3d742e208dbb6e7e4d62548e7dd1b45622c',
                     'messes':       'dcefeb7f58e77da32cd096da89485058f473fff38ec0a0c85cec9fc8b1340431',
                     'none':         'de1eb86e67ca2e297f6248d6bf777779738c6de7196289c3e761ce3a50875adf',
@@ -27,7 +27,7 @@ class TestChecksums(TestBase):
                 '2024-05-11': {
                     'complies':     '708f6a4096e24540519369969e5f3872adf9a3a0a7c7cdf440913f0432c436ba',
                     'informations': 'b0f84358b533fddb7eb5d6466e0d57c5d6adedfda40dc785f4f59ba8f153ad9e',
-                    'laudes':       'bce4c2e01aba7bca6975d4aa2aece6c8a41a47c8656b183ab4096d9dd7b2dbfc',
+                    'laudes':       'b3977dd450c93b21da79100870f4160285f0749c4ad5422ee772ece0f81e100c',
                     'lectures':     '87133703d763fd725aebb7fe70aebe87135cebeea9cc1bae35ccd170b01327ea',
                     'messes':       '8f8a88273ee7f74b39d83519e7057ade1713f054b463b86c3e4b964b1b8d3d6d',
                     'none':         'f36f101eeedfa392b2593a8fbe1f1902a22c4b3e8e9947caa4c32a496da27319',
