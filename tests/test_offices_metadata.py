@@ -79,7 +79,7 @@ class TestChecksums(TestBase):
         m_get.side_effect = self.m_get
 
         # Get mass
-        resp = self.app.get('/76/office/messes/2024-05-10')
+        resp = self.app.get('/76/office/messes/2024-05-10.json')
         self.assertEqual(200, resp.status_code)
 
         # Validate headers

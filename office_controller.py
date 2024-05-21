@@ -39,6 +39,7 @@ OFFICES = {
         'postprocess': [postprocess_office_pre, postprocess_office_post],
     },
     "messes": {
+        # FIXME: is there a valid reason for keeping most of the pre-processors for the Mass ?
         'postprocess': [postprocess_office_html, messes.postprocess, postprocess_office_post],
     },
 }
