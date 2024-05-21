@@ -37,7 +37,7 @@ class TestOfficeLectures(TestBase):
     def test_get_lectures_47(self, m_get):
         m_get.side_effect = self.m_get
 
-        # Get laudes, make sure we have the Notre Pere
+        # Get lectures
         resp = self.app.get('/47/office/lectures/2018-01-28')
         self.assertEqual(200, resp.status_code)
         items = self.parseItems(resp.data)
@@ -53,4 +53,18 @@ class TestOfficeLectures(TestBase):
         # Validate 'Verset'
         self.assertEqual('Psaume\xa065-II', items[4][0])
         self.assertIn('V/', items[4][1])
+    
+    @mock.patch('lib.input.requests.Session.get')
+    def test_get_lectures_copyright(self, m_get):
+        m_get.side_effect = self.m_get
 
+        # Get lectures
+        resp = self.app.get('/76/office/lectures/2024-05-21.json')
+        self.assertEqual(200, resp.status_code)
+        office = resp.json
+
+        # Check the copyright on the hymn
+        lecture_hymn = office["variants"][0]["lectures"][1][0]
+        self.assertEqual("CFC", lecture_hymn['author'])
+        self.assertEqual("CNPL", lecture_hymn['editor'])
+        self.assertEqual("CFC, CNPL", lecture_hymn['reference'])

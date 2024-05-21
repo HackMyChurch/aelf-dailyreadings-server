@@ -9,29 +9,30 @@ class TestChecksums(TestBase):
 
         # Prepare expectations
         expected = {
-            '2024-05-10': {
-                'complies':     '9126bcac0eefe8bed3cd49a886a38000aa1e87410b8342e5dee0661527d78d9f',
-                'informations': '1a29978b58c5cc239d4ab05939209cb7f206a16d09f029a089be2bba9ef8e01d',
-                'laudes':       '97b42430848f9a2d43c9de7d4f58c5a7c3c6046d2aa25949c7fd09f06c30bf45',
-                'lectures':     'ca56f6078058f85e23c21616d937b3d742e208dbb6e7e4d62548e7dd1b45622c',
-                'messes':       'dcefeb7f58e77da32cd096da89485058f473fff38ec0a0c85cec9fc8b1340431',
-                'none':         'de1eb86e67ca2e297f6248d6bf777779738c6de7196289c3e761ce3a50875adf',
-                'sexte':        '0fe63b4686ebca8fcb1e19157d615dd67e798e27f82829239dab88648d456ddb',
-                'tierce':       '6451f6c0c9fc490e79adf20e95fbbe8cba6dd0e7c2c1ec227c1e409b17f04c49',
-                'vepres':       '4805e480c05f1086f369b0bd59a7eada1f4b43e8f4a4ee9a7cbdb243da88a550',
+            "2024-05-10": {
+                "complies": {"checksum": "f2d597017f760488a83c43883e9fb791c4ed5e775c69379a6dd4cfe52e49f370"},
+                "informations": {"checksum": "1a29978b58c5cc239d4ab05939209cb7f206a16d09f029a089be2bba9ef8e01d"},
+                "laudes": {"checksum": "b31d90de829310d8150fefb441c7c18c500b85a7e1d5dbc0ef3b545d29461836"},
+                "lectures": {"checksum": "d6039c96b28c4c09f66cf72bc7e280fe823190f768dc17e7f371e8db2d209150"},
+                "messes": {"checksum": "dcefeb7f58e77da32cd096da89485058f473fff38ec0a0c85cec9fc8b1340431"},
+                "none": {"checksum": "fcc3361fe75d1b7b9958b656d313879b1033409d45d73ea1b272c08e811110d8"},
+                "sexte": {"checksum": "69fdda7b511ce23713e5b2a9dcb4b1b5bb749f5d737feb0cb92f847b19a0d63f"},
+                "tierce": {"checksum": "a7bfa85687abaa2fc6bb7c8dd86eb1653460dce601a79a21cfccb1e16afbdf8f"},
+                "vepres": {"checksum": "90bff018e0e11ec16212f8b91730726db7905a6737a70666dde32337a840df25"}
             },
-            '2024-05-11': {
-                'complies':     '708f6a4096e24540519369969e5f3872adf9a3a0a7c7cdf440913f0432c436ba',
-                'informations': 'b0f84358b533fddb7eb5d6466e0d57c5d6adedfda40dc785f4f59ba8f153ad9e',
-                'laudes':       'b3977dd450c93b21da79100870f4160285f0749c4ad5422ee772ece0f81e100c',
-                'lectures':     '87133703d763fd725aebb7fe70aebe87135cebeea9cc1bae35ccd170b01327ea',
-                'messes':       '8f8a88273ee7f74b39d83519e7057ade1713f054b463b86c3e4b964b1b8d3d6d',
-                'none':         'f36f101eeedfa392b2593a8fbe1f1902a22c4b3e8e9947caa4c32a496da27319',
-                'sexte':        '2b11bea6b5408b684df827fa4915b4e8b4fcd3e1e30b26341f82396d78bcf517',
-                'tierce':       '1d98a248a6e3197423d96dbf7c2b3a8307eb529f77708b72a9bbc9d8694b8835',
-                'vepres':       '556fee1ffee76453fd2a40df96a1920ca00deb782bed33c1360df1296438e1fe',
+            "2024-05-11": {
+                "complies": {"checksum": "7b7a6774f861dff9aca5fe5a92f5923e6047516b04e49d0c2c5452d6fdc1dd6a"},
+                "informations": {"checksum": "b0f84358b533fddb7eb5d6466e0d57c5d6adedfda40dc785f4f59ba8f153ad9e"},
+                "laudes": {"checksum": "1797a1fa1b71c4cd791b2d0d55538f4f6b4b157495c8cfc36e7377e462cd8ba9"},
+                "lectures": {"checksum": "4e7bb68c3c07c48ff9d2552ef034b085c42be1580cd349a7ab7208f861a45a82"},
+                "messes": {"checksum": "8f8a88273ee7f74b39d83519e7057ade1713f054b463b86c3e4b964b1b8d3d6d"},
+                "none": {"checksum": "cd41c999e97613a453f8b3811dab0f10bc7be10ce2efe96370e28dc48d534998"},
+                "sexte": {"checksum": "0e52c71ca214451abbcbfb2eaedd98925d572ae9ac62a34f2130ecf8699be1eb"},
+                "tierce": {"checksum": "aab84089eb33b4df824f8b6d9876be86326e286d2b8598f5b0d682afe5cb34e8"},
+                "vepres": {"checksum": "9f368bfb6eccd6226fa0d2f49c508aec084d0739e1a05b7242cf191c5ce2298e"}
             }
         }
+
 
         # Get checksums
         resp = self.app.get('/76/offices/metadata/2024-05-10/2d')
@@ -53,7 +54,7 @@ class TestChecksums(TestBase):
             for office_name, office_checksum in days_checksums.items():
                 # Expected checksum ?
                 self.assertEqual(
-                    expected[day][office_name],
+                    expected[day][office_name]['checksum'],
                     office_checksum['checksum'],
                 )
 

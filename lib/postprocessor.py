@@ -1,5 +1,6 @@
 import re
 import html
+from click import edit
 import hunspell
 import unidecode
 from bs4 import BeautifulSoup, NavigableString, Tag, Comment
@@ -544,6 +545,25 @@ def postprocess_office_keys(version, mode, data):
 
     return data
 
+def postprocess_office_copyright(version, mode, data):
+    '''
+    Move the author and editor to the reference field, for crediting.
+    '''
+    for office_variant in data['variants']:
+        for lecture_variants in office_variant['lectures']:
+            for lecture in lecture_variants:
+                author = lecture.get('author')
+                editor = lecture.get('editor')
+
+                if author and not editor:
+                    lecture['reference'] = author
+                elif editor and not author:
+                    lecture['reference'] = editor
+                elif editor and author:
+                    lecture['reference'] = f'{author}, {editor}'
+
+    return data
+
 #
 # Text cleaners
 #
@@ -884,6 +904,7 @@ def postprocess_office_pre(version, mode, data):
     '''
     postprocess_office_careme(version, mode, data)
     postprocess_office_keys(version, mode, data)
+    postprocess_office_copyright(version, mode, data)
     postprocess_office_html(version, mode, data)
     return data
 

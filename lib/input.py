@@ -181,22 +181,29 @@ def get_office_for_day_api(office, date, region):
                 if contenu:
                     texte.append(contenu)
 
-                lecture = {
-                    'titre':     titre,
+                lecture_cleaned = {
+                    'title':     titre,
                     'reference': lecture['ref'],
-                    'texte':     ''.join(texte),
                     'intro':     intro,
+                    'text':      ''.join(texte),
+                }
+            else:
+                # Gather the cleaned fields as a *list* of lecture variants.
+                # (AELF API has a single lecture variant, but we'll add more)
+                lecture_cleaned = {
+                    'title':     lecture.get('titre',     ''),
+                    'reference': lecture.get('reference', ''),
+                    'intro':     lecture.get('intro',     ''),
+                    'text':      lecture.get('texte',     ''),
                 }
 
-            # Gather the cleaned fields as a *list* of lecture variants.
-            # (AELF API has a single lecture variant, but we'll add more)
-            cleaned = [{
-                'title':     lecture.get('titre',     ''),
-                'reference': lecture.get('reference', ''),
-                'intro':     lecture.get('intro',     ''),
-                'text':      lecture.get('texte',     ''),
-                'key':       name,
-            }]
+            # Common fields
+            lecture_cleaned['key'] = name
+            for aelf_field_name, app_field_name in [('auteur', 'author'), ('editeur', 'editor')]:
+                if value := lecture.get(aelf_field_name):
+                    lecture_cleaned[app_field_name] = value
+
+            cleaned = [lecture_cleaned]
 
             out_variant['lectures'].append(cleaned)
 
