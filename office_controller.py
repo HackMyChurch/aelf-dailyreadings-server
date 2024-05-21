@@ -82,18 +82,15 @@ def get_from_network(version, mode, office_name, date, region):
     # Return
     return data
 
-def get(version: int, mode: str, office_name: str, date: datetime.date, region: str) -> tuple[dict, str]:
+def get(version: int, mode: str, office_name: str, date: datetime.date, region: str) -> tuple[dict, str, datetime.datetime]:
     # Attempt to load from cache
     cache_key = (version, mode, office_name, date, region)
     cache_entry = cache.get(cache_key)
-    if cache_entry is not None:
-        office = cache_entry.value
-        etag_local = cache_entry.checksum
-    else:
+    if cache_entry is None:
         office = get_from_network(version, mode, office_name, date, region)
-        etag_local = cache.set(cache_key, office)
+        cache_entry = cache.set(cache_key, office)
 
-    return office, etag_local
+    return cache_entry.value, cache_entry.checksum, cache_entry.date
 
 def return_error(status, message):
     '''

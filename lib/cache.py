@@ -3,25 +3,32 @@ Simple caching module. Each cache entry has an associated checksum to easily
 invalidate cache entries / test cache validity.
 '''
 
+from dataclasses import dataclass
+import datetime
 import pickle as pickle
 import hashlib
-from collections import namedtuple
+from typing import Any
 
-CacheEntry = namedtuple('CacheEntry', ['checksum', 'value'])
+@dataclass(frozen=True, slots=True)
+class CacheEntry:
+    checksum: str
+    value: Any
+    date: datetime.datetime
 
 class Cache(object):
     def __init__(self):
         self.__CACHE = {}
 
-    def set(self, key, value):
+    def set(self, key, value) -> CacheEntry:
         '''
         Compute the checksum of value and store it in the cache
         '''
         data = pickle.dumps(value, pickle.HIGHEST_PROTOCOL)
         checksum = hashlib.sha256(data).hexdigest()
-        entry = CacheEntry(value=value, checksum=checksum)
+        entry = CacheEntry(value=value, checksum=checksum, date=datetime.datetime.now(datetime.UTC))
         self.__CACHE[key] = entry
-        return entry.checksum
+
+        return entry
 
     def get(self, key, checksum=None):
         '''
@@ -36,4 +43,3 @@ class Cache(object):
             return None
 
         return entry
-

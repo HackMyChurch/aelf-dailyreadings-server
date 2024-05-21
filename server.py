@@ -81,7 +81,7 @@ def get_office_reponse(version, office, date, format):
     mode = "beta" if request.args.get('beta', 0) else "prod"
     region = request.args.get('region', DEFAULT_REGION)
 
-    office, etag = do_get_office(version, mode, office, date, region)
+    office, etag, generation_date = do_get_office(version, mode, office, date, region)
 
     # Cached version is the same as the requested version
     if etag in request.if_none_match:
@@ -98,13 +98,14 @@ def get_office_reponse(version, office, date, format):
         raise ValueError("Invalid format %s" % format)
 
     response.set_etag(etag)
+    response.last_modified = generation_date
     return response
 
 #
 # Modern API
 #
 
-@app.route('/<int:version>/office/checksums/<from_date>/<int:days>d')
+@app.route('/<int:version>/offices/metadata/<from_date>/<int:days>d')
 def get_office_checksums(version, from_date, days):
     from_date = parse_date_or_abort(from_date)
     mode = "beta" if request.args.get('beta', 0) else "prod"
@@ -118,8 +119,11 @@ def get_office_checksums(version, from_date, days):
         date = from_date + datetime.timedelta(days=i)
         days_checksum = {}
         for office in OFFICES:
-            _, checksum = do_get_office(version, mode, office, date, region)
-            days_checksum[office] = checksum
+            _, checksum, generation_date = do_get_office(version, mode, office, date, region)
+            days_checksum[office] = {
+                'checksum': checksum,
+                'generation-date': generation_date.isoformat(),
+            }
         checksums[date.isoformat()] = days_checksum
 
     return checksums
