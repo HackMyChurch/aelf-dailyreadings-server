@@ -75,7 +75,7 @@ def get_robots():
 # Office API, common path
 #
 
-def get_office_reponse(version, office, date, format):
+def get_office_response(version, office, date, format):
     # Load common params
     mode = "beta" if request.args.get('beta', 0) else "prod"
     region = request.args.get('region', DEFAULT_REGION)
@@ -131,12 +131,12 @@ def get_office_checksums(version, from_date, days):
 @app.route('/<int:version>/office/<office>/<date>.rss')
 def get_office_rss(version, office, date):
     date = parse_date_or_abort(date)
-    return get_office_reponse(version, office, date, 'rss')
+    return get_office_response(version, office, date, 'rss')
 
 @app.route('/<int:version>/office/<office>/<date>.json')
 def get_office_json(version, office, date):
     date = parse_date_or_abort(date)
-    return get_office_reponse(version, office, date, 'json')
+    return get_office_response(version, office, date, 'json')
 
 #
 # Legacy API (keep compatible in case fallback is needed)
@@ -149,7 +149,7 @@ def get_office_legacy(day, month, year, key):
         return office_to_rss(version, return_error(404, "Aucune lecture n'a été trouvée pour cet office."))
     office = KEY_TO_OFFICE[key]
     date = datetime.date(year, month, day)
-    return get_office_reponse(version, office, date, 'rss')
+    return get_office_response(version, office, date, 'rss')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000)

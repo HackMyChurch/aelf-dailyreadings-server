@@ -41,8 +41,8 @@ def get_office_for_day_api(office, date, region):
     '''
     Grab data from api.aelf.org and format it in a consistent way. This api is very creative in
     mixing different conventions in a single file. Output from the function is guaranteed to be
-    consistent as far as the format is concerned, but is not yet post-proceced. You'll probably
-    want to merge some readings befor sending.
+    consistent as far as the format is concerned, but is not yet post-processed. You'll probably
+    want to merge some readings before sending.
     '''
     data = _do_get_request(AELF_JSON.format(office=office, day=date.day, month=date.month,
                            year=date.year, region=region)).json(object_pairs_hook=NonNoneOrderedDict)
@@ -78,7 +78,7 @@ def get_office_for_day_api(office, date, region):
             variants = [{'lectures': l} for l in variants]
 
         for variant in variants:
-            # Yes, it appends (cf Rameaux)
+            # (eg Rameaux)
             if not variant['lectures']:
                 continue
 

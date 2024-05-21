@@ -67,7 +67,7 @@ def clean_ref(ref, lecture_type=None):
     return ref
 
 def _filter_fete(fete):
-    '''fete can be proceesed from 2 places. Share common filtering code'''
+    '''fete can be processed from 2 places. Share common filtering code'''
     fete = fete.strip()
     fete = fix_abbrev(fete)
 
@@ -88,7 +88,7 @@ def _filter_fete(fete):
 
 def _id_to_title(data):
     '''
-    Forge a decent title from and ID as a fallbackd when the API does not provide a title
+    Forge a decent title from and ID as a fallback when the API does not provide a title
     '''
     if data in ID_TO_TITLE:
         return ID_TO_TITLE[data]
@@ -314,7 +314,7 @@ def fix_case(sentence):
 
 def fix_common_typography(text):
     '''
-    Generc search and replace fixes
+    Generic search and replace fixes
     '''
     # Decode entities so that we do not accidentally break them
     text = html.unescape(text)
@@ -344,7 +344,7 @@ def fix_common_typography(text):
 
 def fix_rv(text):
     '''
-    Quick and dirty port of the "rv" formating. Detects R/ and V/ in the offices
+    Quick and dirty port of the "rv" formatting. Detects R/ and V/ in the offices
     and turn it bold. As this is upper case, we can assume that it will not
     collide with tags name, hence bypass the overhead of bs4
     '''
@@ -429,7 +429,7 @@ def postprocess_informations(informations):
     if 'couleur' in informations:
         text += " La couleur liturgique est le %s." % informations['couleur']
 
-    # Final cleanup: 1er, 1ère, 2ème, 2nd, ... --> exposant
+    # Final cleanup: 1er, 1ère, 2ème, 2nd, ... --> exponent
     text = re.sub(r'([0-9])(er|nd|ère|ème) ', r'\1<sup>\2</sup> ', text)
     text = text[:1].upper() + text[1:]
 
@@ -437,7 +437,7 @@ def postprocess_informations(informations):
     informations['text'] = text.strip()
     return informations
 
-# FIXME: this function is only used by the libs and does not follow te same convention as the otthers
+# FIXME: this function is only used by the libs and does not follow te same convention as the others
 def lectures_common_cleanup(data):
     '''
     Walk on the variants and lectures lists and apply common cleanup code. This is where
@@ -509,7 +509,7 @@ def lectures_common_cleanup(data):
 # TODO: move me to a common postprocessor file
 def postprocess_office_careme(version, mode, data):
     '''
-    Remove "Alleluia" from introduction slide if the periode is careme
+    Remove "Alleluia" from introduction slide if the period is "lent"
     '''
     if data['informations'].get('temps_liturgique', '') != 'careme':
         return
@@ -520,9 +520,9 @@ def postprocess_office_careme(version, mode, data):
 
 def postprocess_office_keys(version, mode, data):
     '''
-    Posprocess office keys so that they are as compatible as possible
+    Postprocess office keys so that they are as compatible as possible
     with AELF's website. Special care needs to be taken. Skip this
-    funtion when the source is not the API (ie: comming from the website)
+    function when the source is not the API (ie: coming from the website)
     '''
     if data['source'] != 'api':
         return data
@@ -604,7 +604,7 @@ def html_fix_verse(key, soup):
 
 def html_fix_paragraph(key, soup):
     '''
-    Detect paragraphs from line breaks. There should be no empty paragraphs. 2 Consecutives
+    Detect paragraphs from line breaks. There should be no empty paragraphs. 2 Consecutive
     line breaks indicates a paragraph. There should be no nested paragraphs. Every <br> should
     belong to a paragraph.
     '''
@@ -654,8 +654,8 @@ def html_fix_paragraph(key, soup):
             node = node_next
             continue
 
-        # Find the first element ancestor or elemnt itself who has a 'p' as a
-        # sibling to find the level to wrap. This is imporant to find the
+        # Find the first element ancestor or element itself who has a 'p' as a
+        # sibling to find the level to wrap. This is important to find the
         # appropriate wrap level: maybe this string is wrapped in a bold
         # text for example.
         node_to_wrap = node
@@ -708,7 +708,7 @@ def html_fix_paragraph(key, soup):
         # Get a pointer on next iteration node, while we have valid references
         next_iteration_node = next_node.find_next('br') if next_node else None
 
-        # Build a new paragraph for all preceeding elements, we have the guarantee that the parent is a p
+        # Build a new paragraph for all preceding elements, we have the guarantee that the parent is a p
         if next_br is not node:
             _split_node_parent(soup, 'p', node, next_br)
 
@@ -745,7 +745,7 @@ def html_fix_lines(key, soup):
         # Get a pointer on next iteration node, while we have valid references
         next_iteration_node = node.find_next('br')
 
-        # Build a new paragraph for all preceeding elements, we have the guarantee that the parent is a p
+        # Build a new paragraph for all preceding elements, we have the guarantee that the parent is a p
         _split_node_parent(soup, 'span', node, **CLASS_LINE)
 
         # Move on
