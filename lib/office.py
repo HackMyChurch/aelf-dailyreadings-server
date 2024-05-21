@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 '''
 Generic office / lecture accessors.
 

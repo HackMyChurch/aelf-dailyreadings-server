@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
 import mock
-from bs4 import BeautifulSoup
 
 from base import TestBase
 

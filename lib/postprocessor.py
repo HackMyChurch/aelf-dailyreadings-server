@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import re
 import html
 import hunspell
@@ -898,4 +896,3 @@ def postprocess_office_post(version, mode, data):
     postprocess_lecture_variants_group_67(version, mode, data)
     return data
     
-

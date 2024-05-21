@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-import paste
 import cherrypy
 from server import app
 

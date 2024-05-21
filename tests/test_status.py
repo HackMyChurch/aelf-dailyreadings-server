@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import mock
 
 from base import TestBase, FakeResponse

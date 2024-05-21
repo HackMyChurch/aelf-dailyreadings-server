@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import os
 import unittest
 import server
-import mock
 import json
 from requests import get as request_get
 from bs4 import BeautifulSoup

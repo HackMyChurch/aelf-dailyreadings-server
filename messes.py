@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-import re
 import datetime
 from utils import fix_case, AELF_SITE
 

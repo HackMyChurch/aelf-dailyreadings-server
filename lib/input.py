@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import requests
 from requests.adapters import HTTPAdapter
 
@@ -24,16 +22,6 @@ session.mount('https://', HTTPAdapter(max_retries=3))
 #
 # UTILS
 #
-
-def _extract_title_reference(title):
-    title = title.strip(' \t\n\r')
-    chunks = title.split('(', 1)
-    title = chunks[0]
-    if len(chunks) < 2:
-        return title, ""
-
-    reference = chunks[1].rsplit(')', 1)[0]
-    return title, reference
 
 def _do_get_request(url):
     r = session.get(url, timeout=HTTP_TIMEOUT)

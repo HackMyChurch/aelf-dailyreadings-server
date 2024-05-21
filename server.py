@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 from flask import Flask, Response, abort, request, jsonify, render_template
 app = Flask(__name__)

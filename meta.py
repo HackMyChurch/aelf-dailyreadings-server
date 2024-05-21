@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-
-import re
-
 def postprocess(version, mode, data):
     data['variants'] = [
         {

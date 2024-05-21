@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 KEYS = {
     "informations": "c45fd621-a78f-f8b4-9d4c-8adc5698f3b7",
     "complies":     "71394ca1-c3af-bd34-41d2-cecdb54661d0",

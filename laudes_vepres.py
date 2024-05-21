@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-
-import re
-import copy
-
 from utils import get_asset
 from utils import get_lecture_variants_by_type, insert_lecture_variants_before, insert_lecture_variants_after
 from lib.postprocessor import postprocess_office_html_lecture
