@@ -7,7 +7,6 @@ CURRENT_VERSION = 76
 # Base URL / Paths
 AELF_JSON="https://api.aelf.org/v1/{office}/{year:04d}-{month:02d}-{day:02d}/{region}"
 AELF_SITE="http://www.aelf.org/{year:04d}-{month:02d}-{day:02d}/{region}/{office}"
-EPITRE_CO_JSON="http://epitre.co/api/1.0/ref/fr-lit/{reference}"
 ASSET_BASE_PATH=os.path.join(os.path.abspath(os.path.dirname(__file__)), "../assets")
 DEFAULT_REGION="romain"
 

@@ -1,12 +1,6 @@
-# -*- coding: utf-8 -*-
-
-import re
-import datetime
-
-from utils import get_asset, get_lecture_text_from_epitre
-from utils import get_lectures_variants_by_type, get_lecture_variants_by_type, insert_lecture_variants_before
+from utils import get_asset
+from utils import get_lecture_variants_by_type, insert_lecture_variants_before
 from lib.postprocessor import postprocess_office_html_lecture
-from lib.postprocessor import postprocess_office_lecture_text
 
 def postprocess_easter(version, mode, data):
     text = """<p>
@@ -42,16 +36,6 @@ def postprocess(version, mode, data):
     te_deum_item = get_lecture_variants_by_type(data, "office_te_deum")
     lecture_item = get_lecture_variants_by_type(data, "office_lecture")
     oraison_item = get_lecture_variants_by_type(data, "office_oraison")
-
-    # Fix empty "Lecture"..., try to load it from epitre.co
-    # FIXME: embark these data and NEVER load from AELF, too much broken
-    if lecture_item and not lecture_item.lectureVariants[0]['text']:
-        try:
-            lecture_item.lectureVariants[0]['text'] = get_lecture_text_from_epitre(lecture_item.lectureVariants[0]['reference'])
-            lecture_item.lectureVariants[0]['text'] = postprocess_office_lecture_text(version, mode, lecture_item.lectureVariants[0]['text'])
-        except:
-            # This is best effort. We don't want the fallback path to bring the whole stuff down !
-            pass
 
     # Fix missing "Te Deum" on Sunday, unless careme
     if te_deum_item is not None:

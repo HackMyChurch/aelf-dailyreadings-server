@@ -8,7 +8,7 @@ import yaml
 from collections import OrderedDict
 
 from .exceptions import AelfHttpError
-from .constants import AELF_JSON, EPITRE_CO_JSON, ASSET_BASE_PATH
+from .constants import AELF_JSON, ASSET_BASE_PATH
 from .constants import HEADERS, HTTP_TIMEOUT, OFFICE_NAME
 from .postprocessor import lectures_common_cleanup
 from .postprocessor import is_int, clean_ref, _id_to_title # FIXME
@@ -214,25 +214,6 @@ def get_office_for_day_api(office, date, region):
 
     return lectures_common_cleanup(out)
 
-def get_lecture_text_from_epitre(reference):
-    '''
-    Get the text corresponding to a reference from epitre.co API.
-    Epitre.co is another website managed by @CathoGeek. It is not
-    (yes) OpenSource.
-    '''
-    reference = reference.replace(' ', '')
-    if not reference:
-        return ""
-
-    r = _do_get_request(EPITRE_CO_JSON.format(reference=reference))
-    data = r.json().get('data', {})
-    out = []
-    multiple_chapters = ';' in reference
-    for verse in data.get('verse', []):
-        reference = '%s.%s' % (verse[0], verse[1]) if multiple_chapters else verse[1]
-        out.append('<font color="#FF0000" size="1">%s</font>%s' % (reference, verse[2]))
-
-    return '<br/>'.join(out)
 
 ASSET_CACHE={}
 def get_asset(path):

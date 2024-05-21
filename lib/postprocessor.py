@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup, NavigableString, Tag, Comment
 from .constants import ID_TO_TITLE
 from .constants import DETERMINANTS
 from .constants import HTML_BLOCK_ELEMENTS
-from .office import get_lecture_variants_by_type, insert_lecture_variants_before, insert_lecture_variants_after
+from .office import get_lecture_variants_by_type
 from .group import group_related_items, group_lecture_variants
 
 #
