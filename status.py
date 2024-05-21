@@ -54,6 +54,7 @@ def validate_future_offices():
     '''
     Loop over upcoming STATUS_DAYS_TO_MONITOR days and OFFICES and make sure they are valid
     '''
+    new_status = 200
     for days_ahead in range(STATUS_DAYS_TO_MONITOR):
         _status['message'] = 'Refreshing day %s of %d. Please wait.' % (days_ahead+1, STATUS_DAYS_TO_MONITOR)
         date = datetime.date.today()
@@ -63,20 +64,20 @@ def validate_future_offices():
         for office_name in list(OFFICES.keys()):
             url = "/%s/office/%s/%s.json" % (CURRENT_VERSION, office_name, date_str)
             try:
-                office, _ = do_get_office(CURRENT_VERSION, "prod", office_name, date, "romain")
+                office, _, _ = do_get_office(CURRENT_VERSION, "prod", office_name, date, "romain")
                 reason = validate_office(office, days_ahead)
             except Exception as e:
                 reason = (REASON_ERROR, str(e))
 
             if reason[0] == REASON_ERROR:
-                _status['status'] = 500
+                new_status = 500
 
             day_status[office_name] = reason[0], reason[1], url
         _status['offices'][date_str] = day_status
 
     # All done !
     _status['message'] = ''
-    _status['status'] = 200
+    _status['status'] = new_status
     _status['date'] = str(datetime.datetime.today())
 
 def runner():
