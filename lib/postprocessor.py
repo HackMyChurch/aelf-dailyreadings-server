@@ -871,6 +871,47 @@ def postprocess_lecture_variants_group_67(version, mode, data):
 
     group_lecture_variants(data)
 
+def postprocess_psalm_sections_67(version, mode, data):
+    '''
+    A group of psalms may share a common antienne. When this is the case, AELF API only
+    provides a single antienne. People praying with the application expect the antienne
+    to be displayed at the start of the first psalm of the series and then at the end
+    of the last one, after the doxology.
+
+    This function propagates the antienne to each section and inserts metadata so that
+    the application knows how to render it.
+
+    When this is the case, we assume that a single lecture variant is provided.
+    '''
+    if version < 67:
+        return
+
+    for office_variant in data['variants']:
+        antienne = ""
+        prev_lecture = None
+        for lecture_variants in office_variant['lectures']:
+            lecture = lecture_variants[0]
+
+            if lecture.get('type') != 'psaume':
+                # No longer in a repeat section. Reset.
+                antienne = ""
+                prev_lecture = None
+                continue
+
+            if candidate_antienne := lecture.get('antienne'):
+                # Entering a possible section. Record.
+                antienne = candidate_antienne
+                prev_lecture = lecture
+                continue
+
+            # In a section
+            if antienne:
+                lecture['antienne'] = antienne
+                lecture['section_position'] = 'last'
+                prev_lecture['section_position'] = 'first' if not prev_lecture.get('section_position') else 'intermediate'
+                prev_lecture = lecture
+
+
 VERSE_REFERENCE_MATCH=re.compile(r'\(.*\)')
 def postprocess_office_title_47(version, mode, data):
     '''
@@ -915,5 +956,6 @@ def postprocess_office_post(version, mode, data):
     postprocess_office_group_47(version, mode, data)
     postprocess_office_title_47(version, mode, data)
     postprocess_lecture_variants_group_67(version, mode, data)
+    postprocess_psalm_sections_67(version, mode, data)
     return data
     

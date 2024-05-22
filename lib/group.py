@@ -41,8 +41,7 @@ def group_verset(data):
 
 def group_antienne(data):
     '''
-    Find 'antienne' items and merge them in the 'antienne' field of the
-    following slide.
+    Insert dedicated "antienne" lecture in the immediate following lecture
     '''
     for office_variant in data['variants']:
         lectures = []

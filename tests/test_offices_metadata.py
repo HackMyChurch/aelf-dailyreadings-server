@@ -13,22 +13,22 @@ class TestChecksums(TestBase):
                 "complies": {"checksum": "f2d597017f760488a83c43883e9fb791c4ed5e775c69379a6dd4cfe52e49f370"},
                 "informations": {"checksum": "1a29978b58c5cc239d4ab05939209cb7f206a16d09f029a089be2bba9ef8e01d"},
                 "laudes": {"checksum": "b31d90de829310d8150fefb441c7c18c500b85a7e1d5dbc0ef3b545d29461836"},
-                "lectures": {"checksum": "d6039c96b28c4c09f66cf72bc7e280fe823190f768dc17e7f371e8db2d209150"},
+                "lectures": {"checksum": "00b2429cec47d047a28097791d4bf64bc772c1909339702db6384be014f621d9"},
                 "messes": {"checksum": "dcefeb7f58e77da32cd096da89485058f473fff38ec0a0c85cec9fc8b1340431"},
-                "none": {"checksum": "fcc3361fe75d1b7b9958b656d313879b1033409d45d73ea1b272c08e811110d8"},
-                "sexte": {"checksum": "69fdda7b511ce23713e5b2a9dcb4b1b5bb749f5d737feb0cb92f847b19a0d63f"},
-                "tierce": {"checksum": "a7bfa85687abaa2fc6bb7c8dd86eb1653460dce601a79a21cfccb1e16afbdf8f"},
+                "none": {"checksum": "032c3ea9c9348fe5f318f9058c83a559022e47bef5a5327057805ac63ee064ad"},
+                "sexte": {"checksum": "300c1cc1501cc009c4285221527bf0b3aeaed99135d6dee86fb782af84947e9f"},
+                "tierce": {"checksum": "cc0f6abb73f25d8868bccdd525678db8208b5ef4b3a86bd78ce6f4d264cf0115"},
                 "vepres": {"checksum": "90bff018e0e11ec16212f8b91730726db7905a6737a70666dde32337a840df25"}
             },
             "2024-05-11": {
-                "complies": {"checksum": "7b7a6774f861dff9aca5fe5a92f5923e6047516b04e49d0c2c5452d6fdc1dd6a"},
+                "complies": {"checksum": "9865729b699ac6a83af53da9822e4a6c7642a5144c7e7648f4e782da864eade4"},
                 "informations": {"checksum": "b0f84358b533fddb7eb5d6466e0d57c5d6adedfda40dc785f4f59ba8f153ad9e"},
                 "laudes": {"checksum": "1797a1fa1b71c4cd791b2d0d55538f4f6b4b157495c8cfc36e7377e462cd8ba9"},
-                "lectures": {"checksum": "4e7bb68c3c07c48ff9d2552ef034b085c42be1580cd349a7ab7208f861a45a82"},
+                "lectures": {"checksum": "e86df3882c50796e17422f569dc3ba155801b8de97544d7908eed73d372f5e86"},
                 "messes": {"checksum": "8f8a88273ee7f74b39d83519e7057ade1713f054b463b86c3e4b964b1b8d3d6d"},
-                "none": {"checksum": "cd41c999e97613a453f8b3811dab0f10bc7be10ce2efe96370e28dc48d534998"},
-                "sexte": {"checksum": "0e52c71ca214451abbcbfb2eaedd98925d572ae9ac62a34f2130ecf8699be1eb"},
-                "tierce": {"checksum": "aab84089eb33b4df824f8b6d9876be86326e286d2b8598f5b0d682afe5cb34e8"},
+                "none": {"checksum": "f98a0206a176a18ccb24e517b57ba65da97aa51fe20667f161c80c8248027009"},
+                "sexte": {"checksum": "f1f7a60993ab548ac5d7ccc99827362273d332fa4d1eb0bbf6d87adb370f8f14"},
+                "tierce": {"checksum": "92a9b250a63d21367242d779ed72379bfb491c4bf6a573d011b1809579a645ea"},
                 "vepres": {"checksum": "9f368bfb6eccd6226fa0d2f49c508aec084d0739e1a05b7242cf191c5ce2298e"}
             }
         }

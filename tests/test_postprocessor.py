@@ -188,3 +188,70 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('Ps 1A', clean_ref('1A', lecture_type='psaume'))
         self.assertEqual('Ps 1 12-13', clean_ref('1 12-13', lecture_type='psaume'))
 
+class TestOfficePostprocessor(unittest.TestCase):
+    def test_psalm_sections(self):
+        from lib.postprocessor import postprocess_psalm_sections_67
+
+        data = {
+            'variants': [
+                {
+                    'lectures': [
+                        [{
+                            'type': 'hymne',
+                            'antienne': 'hymn antienne'
+                        }],
+                        [{
+                            'type': 'psaume',
+                            'antienne': 'hymn for all psalms'
+                        }],
+                        [{
+                            'type': 'psaume',
+                            'antienne': '' # Empty antienne, still nominal
+                        }],
+                        [{
+                            'type': 'psaume',
+                            # Missing antienne field: still nominal
+                        }],
+                        [{
+                            'type': 'psaume',
+                            'antienne': 'some new antienne' # must be preserved
+                        }],
+                        [{
+                            # Missing type, must not crash
+                            # Missing antienne field: still nominal
+                        }],
+                        [{
+                            'type': 'psaume',
+                            'antienne': '2 psalms antienne'
+                        }],
+                        [{
+                            'type': 'psaume',
+                        }],
+                    ]
+                }
+            ]
+        }
+
+        postprocess_psalm_sections_67(67, 'prod', data)
+
+        lectures = data['variants'][0]['lectures']
+
+        # Validate antienne field
+        assert lectures[0][0]['antienne'] == 'hymn antienne'
+        assert lectures[1][0]['antienne'] == 'hymn for all psalms'
+        assert lectures[2][0]['antienne'] == 'hymn for all psalms'
+        assert lectures[3][0]['antienne'] == 'hymn for all psalms'
+        assert lectures[4][0]['antienne'] == 'some new antienne'
+        assert 'antienne' not in lectures[5][0]
+        assert lectures[6][0]['antienne'] == '2 psalms antienne'
+        assert lectures[7][0]['antienne'] == '2 psalms antienne'
+
+        # Validate section_position field
+        assert lectures[0][0].get('section_position') is None
+        assert lectures[1][0].get('section_position') == 'first'
+        assert lectures[2][0].get('section_position') == 'intermediate'
+        assert lectures[3][0].get('section_position') == 'last'
+        assert lectures[4][0].get('section_position') is None
+        assert lectures[5][0].get('section_position') is None
+        assert lectures[6][0].get('section_position') == 'first'
+        assert lectures[7][0].get('section_position') == 'last'
