@@ -247,11 +247,11 @@ class TestOfficePostprocessor(unittest.TestCase):
         assert lectures[7][0]['antienne'] == '2 psalms antienne'
 
         # Validate section_position field
-        assert lectures[0][0].get('section_position') is None
-        assert lectures[1][0].get('section_position') == 'first'
-        assert lectures[2][0].get('section_position') == 'intermediate'
-        assert lectures[3][0].get('section_position') == 'last'
-        assert lectures[4][0].get('section_position') is None
-        assert lectures[5][0].get('section_position') is None
-        assert lectures[6][0].get('section_position') == 'first'
-        assert lectures[7][0].get('section_position') == 'last'
+        assert lectures[0][0]['has_antienne'] == 'both' # Hymn
+        assert lectures[1][0]['has_antienne'] == 'initial'
+        assert lectures[2][0]['has_antienne'] == 'none'
+        assert lectures[3][0]['has_antienne'] == 'final'
+        assert lectures[4][0]['has_antienne'] == 'both'
+        assert lectures[5][0]['has_antienne'] == 'none'
+        assert lectures[6][0]['has_antienne'] == 'initial'
+        assert lectures[7][0]['has_antienne'] == 'final'

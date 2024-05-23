@@ -876,7 +876,7 @@ def postprocess_psalm_sections_67(version, mode, data):
     A group of psalms may share a common antienne. When this is the case, AELF API only
     provides a single antienne. People praying with the application expect the antienne
     to be displayed at the start of the first psalm of the series and then at the end
-    of the last one, after the doxology.
+    of the last one.
 
     This function propagates the antienne to each section and inserts metadata so that
     the application knows how to render it.
@@ -891,24 +891,26 @@ def postprocess_psalm_sections_67(version, mode, data):
         prev_lecture = None
         for lecture_variants in office_variant['lectures']:
             lecture = lecture_variants[0]
+            candidate_antienne = lecture.get('antienne')
 
+            # Mark the antienne as initial+final by default, when specified; none otherwise
+            lecture['has_antienne'] = 'both' if candidate_antienne else 'none'
+
+            # Exiting an antienne repeat section ? Reset
             if lecture.get('type') != 'psaume':
-                # No longer in a repeat section. Reset.
                 antienne = ""
                 prev_lecture = None
-                continue
 
-            if candidate_antienne := lecture.get('antienne'):
-                # Entering a possible section. Record.
+            # Entering an antienne repeat section ?
+            elif candidate_antienne:
                 antienne = candidate_antienne
                 prev_lecture = lecture
-                continue
 
-            # In a section
-            if antienne:
+            # Progressing in existing section ?
+            elif antienne:
                 lecture['antienne'] = antienne
-                lecture['section_position'] = 'last'
-                prev_lecture['section_position'] = 'first' if not prev_lecture.get('section_position') else 'intermediate'
+                lecture['has_antienne'] = 'final'
+                prev_lecture['has_antienne'] = 'initial' if prev_lecture['has_antienne'] == 'both' else 'none' # type: ignore
                 prev_lecture = lecture
 
 
