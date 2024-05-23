@@ -1,6 +1,5 @@
 import re
 import html
-from click import edit
 import hunspell
 import unidecode
 from bs4 import BeautifulSoup, NavigableString, Tag, Comment
@@ -871,7 +870,7 @@ def postprocess_lecture_variants_group_67(version, mode, data):
 
     group_lecture_variants(data)
 
-def postprocess_psalm_sections_67(version, mode, data):
+def postprocess_antienne_67(version, mode, data):
     '''
     A group of psalms may share a common antienne. When this is the case, AELF API only
     provides a single antienne. People praying with the application expect the antienne
@@ -912,6 +911,49 @@ def postprocess_psalm_sections_67(version, mode, data):
                 lecture['has_antienne'] = 'final'
                 prev_lecture['has_antienne'] = 'initial' if prev_lecture['has_antienne'] == 'both' else 'none' # type: ignore
                 prev_lecture = lecture
+
+BOOK_CHAPTER_MATCH=re.compile(r'^(\d?\w+\d*)')
+def postprocess_doxology_67(version, mode, data):
+    '''
+    A group of psalms may be intoned as a single continuous psalm. When this is the
+    case, the doxology is only inserted when the psalm itself changes. For instance,
+    when we have the following psalms 118-18, 87-I and 87-II sharing the same antienne,
+    the doxology needs to be inserted after 118-18 and 87-II but not 87-I.
+
+    Another exception is Dn 3. In this cantic, the doxology is implicit.
+    '''
+    if version < 67:
+        return
+
+    for office_variant in data['variants']:
+        prev_lecture = None
+        prev_book_chapter = None
+        for lecture_variants in office_variant['lectures']:
+            lecture = lecture_variants[0]
+            book_chapter = None
+
+            if match := re.search(BOOK_CHAPTER_MATCH, lecture.get('reference', '').lower().replace(' ', '')):
+                book_chapter = match.group()
+
+            if lecture.get('type') != "psaume":
+                # Only psalms and cantics may have an explicit doxology. Both have type "psaume"
+                lecture['has_doxology'] = False
+            elif book_chapter == 'dn3':
+                # Doxology is implicit in Dn 3
+                lecture['has_doxology'] = False
+            else:
+                # Display the doxology
+                lecture['has_doxology'] = True
+
+                # Remove doxology from previous if this is a continuation AND the previous is not antienne both|final
+                if prev_lecture and prev_book_chapter \
+                    and prev_book_chapter == book_chapter \
+                    and prev_lecture.get('has_antienne') not in ['both', 'final']:
+                    prev_lecture['has_doxology'] = False
+
+            # Move to next
+            prev_lecture = lecture
+            prev_book_chapter = book_chapter
 
 
 VERSE_REFERENCE_MATCH=re.compile(r'\(.*\)')
@@ -958,6 +1000,7 @@ def postprocess_office_post(version, mode, data):
     postprocess_office_group_47(version, mode, data)
     postprocess_office_title_47(version, mode, data)
     postprocess_lecture_variants_group_67(version, mode, data)
-    postprocess_psalm_sections_67(version, mode, data)
+    postprocess_antienne_67(version, mode, data)
+    postprocess_doxology_67(version, mode, data)
     return data
     

@@ -189,52 +189,44 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('Ps 1 12-13', clean_ref('1 12-13', lecture_type='psaume'))
 
 class TestOfficePostprocessor(unittest.TestCase):
-    def test_psalm_sections(self):
-        from lib.postprocessor import postprocess_psalm_sections_67
+    def test_antienne_propagation(self):
+        from lib.postprocessor import postprocess_antienne_67
 
-        data = {
-            'variants': [
-                {
-                    'lectures': [
-                        [{
-                            'type': 'hymne',
-                            'antienne': 'hymn antienne'
-                        }],
-                        [{
-                            'type': 'psaume',
-                            'antienne': 'hymn for all psalms'
-                        }],
-                        [{
-                            'type': 'psaume',
-                            'antienne': '' # Empty antienne, still nominal
-                        }],
-                        [{
-                            'type': 'psaume',
-                            # Missing antienne field: still nominal
-                        }],
-                        [{
-                            'type': 'psaume',
-                            'antienne': 'some new antienne' # must be preserved
-                        }],
-                        [{
-                            # Missing type, must not crash
-                            # Missing antienne field: still nominal
-                        }],
-                        [{
-                            'type': 'psaume',
-                            'antienne': '2 psalms antienne'
-                        }],
-                        [{
-                            'type': 'psaume',
-                        }],
-                    ]
-                }
-            ]
-        }
+        lectures = [
+            [{
+                'type': 'hymne',
+                'antienne': 'hymn antienne'
+            }],
+            [{
+                'type': 'psaume',
+                'antienne': 'hymn for all psalms'
+            }],
+            [{
+                'type': 'psaume',
+                'antienne': '' # Empty antienne, still nominal
+            }],
+            [{
+                'type': 'psaume',
+                # Missing antienne field: still nominal
+            }],
+            [{
+                'type': 'psaume',
+                'antienne': 'some new antienne' # must be preserved
+            }],
+            [{
+                # Missing type, must not crash
+                # Missing antienne field: still nominal
+            }],
+            [{
+                'type': 'psaume',
+                'antienne': '2 psalms antienne'
+            }],
+            [{
+                'type': 'psaume',
+            }],
+        ]
 
-        postprocess_psalm_sections_67(67, 'prod', data)
-
-        lectures = data['variants'][0]['lectures']
+        postprocess_antienne_67(67, 'prod', {'variants': [{'lectures': lectures}]})
 
         # Validate antienne field
         assert lectures[0][0]['antienne'] == 'hymn antienne'
@@ -246,7 +238,7 @@ class TestOfficePostprocessor(unittest.TestCase):
         assert lectures[6][0]['antienne'] == '2 psalms antienne'
         assert lectures[7][0]['antienne'] == '2 psalms antienne'
 
-        # Validate section_position field
+        # Validate has_antienne field
         assert lectures[0][0]['has_antienne'] == 'both' # Hymn
         assert lectures[1][0]['has_antienne'] == 'initial'
         assert lectures[2][0]['has_antienne'] == 'none'
@@ -255,3 +247,149 @@ class TestOfficePostprocessor(unittest.TestCase):
         assert lectures[5][0]['has_antienne'] == 'none'
         assert lectures[6][0]['has_antienne'] == 'initial'
         assert lectures[7][0]['has_antienne'] == 'final'
+
+    def test_doxology_rules_exceptions(self):
+        from lib.postprocessor import postprocess_doxology_67
+
+        lectures = [
+            [{
+                'type': 'psaume',
+                'reference': "   DN    3   , 42-12", # No doxology, however mis-spelt this is
+            }],
+        ]
+
+        postprocess_doxology_67(67, 'prod', {'variants': [{'lectures': lectures}]})
+
+        # Validate has_doxology field
+        assert lectures[0][0]['has_doxology'] is False # Dn 3
+
+    def test_doxology_rules_not_psalms(self):
+        from lib.postprocessor import postprocess_doxology_67
+
+        lectures = [
+            [{
+                # Not a psalm, not even a type
+            }],
+            [{
+                'type': 'hymne', # Not a psalm
+            }],
+        ]
+
+        postprocess_doxology_67(67, 'prod', {'variants': [{'lectures': lectures}]})
+
+        # Validate has_doxology field
+        assert lectures[0][0]['has_doxology'] is False # Missing type
+        assert lectures[1][0]['has_doxology'] is False # Not a psalm
+
+    def test_doxology_rules_nominal(self):
+        from lib.postprocessor import postprocess_doxology_67
+
+        # Nominal: 3 distinct consecutive psalms
+        lectures = [
+            [{
+                'type': 'psaume',
+                'reference': "Ps 42",
+            }],
+            [{
+                'type': 'psaume',
+                'reference': "Ps 43",
+            }],
+            [{
+                'type': 'psaume',
+                'reference': "Ps 44",
+            }],
+        ]
+
+        postprocess_doxology_67(67, 'prod', {'variants': [{'lectures': lectures}]})
+
+        # Validate has_doxology field
+        assert lectures[0][0]['has_doxology'] is True
+        assert lectures[1][0]['has_doxology'] is True
+        assert lectures[2][0]['has_doxology'] is True
+
+    def test_doxology_rules_split_3_shared_antienne(self):
+        from lib.postprocessor import postprocess_doxology_67
+
+        # Psalm 101 is split into 3 parts in the lecture's office, with a shared antienne
+        lectures = [
+            [{
+                'type': 'psaume',
+                'reference': "Ps 101-I",
+                'has_antienne': 'initial',
+            }],
+            [{
+                'type': 'psaume',
+                'reference': "Ps 101-II",
+                'has_antienne': 'intermediate',
+            }],
+            [{
+                'type': 'psaume',
+                'reference': "Ps 101-II",
+                'has_antienne': 'final',
+            }],
+        ]
+
+        postprocess_doxology_67(67, 'prod', {'variants': [{'lectures': lectures}]})
+
+        # Validate has_doxology field
+        assert lectures[0][0]['has_doxology'] is False
+        assert lectures[1][0]['has_doxology'] is False
+        assert lectures[2][0]['has_doxology'] is True
+
+    def test_doxology_rules_split_3_dedicated_antienne(self):
+        from lib.postprocessor import postprocess_doxology_67
+
+        # Psalm 101 is split into 3 parts in the lecture's office, with a dedicated antienne
+        lectures = [
+            [{
+                'type': 'psaume',
+                'reference': "Ps 101-I",
+                'has_antienne': 'both',
+            }],
+            [{
+                'type': 'psaume',
+                'reference': "Ps 101-II",
+                'has_antienne': 'both',
+            }],
+            [{
+                'type': 'psaume',
+                'reference': "Ps 101-II",
+                'has_antienne': 'both',
+            }],
+        ]
+
+        postprocess_doxology_67(67, 'prod', {'variants': [{'lectures': lectures}]})
+
+        # Validate has_doxology field
+        assert lectures[0][0]['has_doxology'] is True
+        assert lectures[1][0]['has_doxology'] is True
+        assert lectures[2][0]['has_doxology'] is True
+
+    def test_doxology_rules_split_1_psalm_then_2_shared_antienne(self):
+        from lib.postprocessor import postprocess_doxology_67
+
+        # In the sexte office, we get 118-18, 87-I and 87-2. Depending on period of the year, they may or may not share antienne
+        lectures = [
+            [{
+                'type': 'psaume',
+                'reference': "Ps 118-18",
+                'has_antienne': 'initial',
+            }],
+            [{
+                'type': 'psaume',
+                'reference': "Ps 87-I",
+                'has_antienne': 'intermediate',
+            }],
+            [{
+                'type': 'psaume',
+                'reference': "Ps 87-II",
+                'has_antienne': 'final',
+            }],
+        ]
+
+        postprocess_doxology_67(67, 'prod', {'variants': [{'lectures': lectures}]})
+
+        # Validate has_doxology field
+        assert lectures[0][0]['has_doxology'] is True
+        assert lectures[1][0]['has_doxology'] is False
+        assert lectures[2][0]['has_doxology'] is True
