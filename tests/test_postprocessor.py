@@ -162,17 +162,17 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('Jean-Paul II', fix_case('JEAN-PAUL II'))
         self.assertEqual('Lettre encyclique du pape Pie XI pour le III° centenaire de la mort de saint Josaphat', fix_case('LETTRE ENCYCLIQUE DU PAPE PIE XI POUR LE III° CENTENAIRE DE LA MORT DE SAINT JOSAPHAT'))
 
-    def test_fix_abbrev(self):
-        from lib.postprocessor import fix_abbrev
+    def test_fix_number_abbrev(self):
+        from lib.postprocessor import fix_number_abbrev
 
-        self.assertEqual('première', fix_abbrev('1ère'))
-        self.assertEqual('premier', fix_abbrev('1er'))
-        self.assertEqual('deuxième', fix_abbrev('2ème'))
-        self.assertEqual('quatrième', fix_abbrev('4ème'))
-        self.assertEqual('neuvième', fix_abbrev('9ème'))
-        self.assertEqual('seizième', fix_abbrev('16ème'))
-        self.assertEqual('dix-huitième', fix_abbrev('18ème'))
-        self.assertEqual('vingt-et-unième', fix_abbrev('21ème'))
+        self.assertEqual('première', fix_number_abbrev('1ère'))
+        self.assertEqual('premier', fix_number_abbrev('1er'))
+        self.assertEqual('deuxième', fix_number_abbrev('2ème'))
+        self.assertEqual('quatrième', fix_number_abbrev('4ème'))
+        self.assertEqual('neuvième', fix_number_abbrev('9ème'))
+        self.assertEqual('seizième', fix_number_abbrev('16ème'))
+        self.assertEqual('dix-huitième', fix_number_abbrev('18ème'))
+        self.assertEqual('vingt-et-unième', fix_number_abbrev('21ème'))
 
     def test_clean_ref(self):
         from lib.postprocessor import clean_ref

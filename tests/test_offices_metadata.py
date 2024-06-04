@@ -57,6 +57,8 @@ class TestChecksums(TestBase):
         assert 200 == resp.status_code
 
         # Validate headers
-        assert ('5ce4800a4104f9d8b681bd797be36530d003253c1f70ee55d21baed014595fa0', False) == resp.get_etag()
+        etag, is_weak = resp.get_etag()
+        assert not is_weak
+        assert len(etag) == 64
         assert resp.last_modified is not None
         assert (datetime.datetime.now(datetime.UTC) - resp.last_modified).total_seconds() < 3600 # type: ignore

@@ -2,7 +2,7 @@ import mock
 
 from base import TestBase
 
-EXPECTED_ETAG = 'ceffc3fead459bf87711d65b3d34f0aee123521af54f64fd44aee5782a5bdfd7'
+EXPECTED_ETAG = '00adc5f88631215ef56c19b7036269524165716034cf4b75a98dd8c0747d47b6'
 
 class TestCache(TestBase):
 

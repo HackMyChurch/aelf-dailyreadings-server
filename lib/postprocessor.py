@@ -1,5 +1,6 @@
 import re
 import html
+import datetime
 import hunspell
 import unidecode
 from bs4 import BeautifulSoup, NavigableString, Tag, Comment
@@ -13,6 +14,10 @@ from .group import group_related_items, group_lecture_variants
 #
 # Utils
 #
+
+def _parse_date(date_string) -> datetime.date:
+    year, month, day = date_string.split('-')
+    return datetime.date(int(year), int(month), int(day))
 
 def is_int(data):
     try:
@@ -66,10 +71,17 @@ def clean_ref(ref, lecture_type=None):
 
     return ref
 
+PARENTHESIS_MATCHER=re.compile(r'(\(.*\)|\[.*\])')
+def strip_parenthesis(line: str) -> str:
+    line = re.sub(PARENTHESIS_MATCHER, '', line)
+    line.replace('  ', ' ')
+    return line
+
 def _filter_fete(fete):
     '''fete can be processed from 2 places. Share common filtering code'''
     fete = fete.strip()
     fete = fix_abbrev(fete)
+    fete = fix_number_abbrev(fete)
 
     verbe = "fêtons" if 'saint' in fete.lower() else "célèbrons"
     text = ''
@@ -190,7 +202,7 @@ NUMBER_TO_WORDS = {
     '20': 'vingt',
 }
 
-def fix_number_abbrev(match):
+def _fix_number_abbrev(match):
     number = match.group(1)
     abbrev = match.group(2)
     word = ''
@@ -211,6 +223,8 @@ def fix_number_abbrev(match):
         word = word[:-1]
     elif word[-1] == 'f':
         word = word[:-1]+'v'
+    elif word[-1] == 'q':
+        word = word+'u'
 
     return word + 'i' + abbrev
 
@@ -221,13 +235,14 @@ def fix_abbrev(sentence):
 
     # Fix abbrev itself
     sentence = sentence.replace("S. ",  "saint ")\
+                       .replace("S.",   "saint ")\
                        .replace("St ",  "saint ")\
                        .replace("Ste ", "sainte ")
 
-    # Fix number abreviations
-    sentence = re.sub(r'([0-9]+)([èe](re?|me))', fix_number_abbrev, sentence)
-
     return sentence
+
+def fix_number_abbrev(sentence: str) -> str:
+    return re.sub(r'([0-9]+)([èe](re?|me))', _fix_number_abbrev, sentence)
 
 HTML_TAG_MATCH=re.compile('(<!--.*?-->|<[^>]*>)')
 def strip_html(sentence):
@@ -280,6 +295,7 @@ def fix_case(sentence):
     Take a potentially all caps sentence as input and make it readable
     '''
     sentence = fix_abbrev(sentence)
+    sentence = fix_number_abbrev(sentence)
 
     # Make sure to start with a upper letter
     sentence = sentence[0].upper() + sentence[1:]
@@ -374,7 +390,7 @@ def get_pronoun_for_sentence(sentence):
 
     return "la "
 
-def postprocess_informations(informations):
+def postprocess_informations_legacy(informations):
     '''
     Generate 'text' key in an information dict from json API
     '''
@@ -382,31 +398,34 @@ def postprocess_informations(informations):
     fete_skip = False
     jour_lit_skip = False
 
-    if 'fete' not in informations:
-        informations['fete'] = ''
+    # Cleanup fete
+    informations['fete'] = fix_abbrev(informations.get('fete', ''))
+    informations['fete'] = fix_number_abbrev(informations.get('fete', ''))
 
     # Never print fete if this is the semaine
-    if informations.get('jour_liturgique_nom', '').split(' ')[0] == informations.get('semaine', '').split(' ')[0]:
+    day_name = informations.get('jour') or ''
+    liturgical_day_name = informations.get('jour_liturgique_nom') or ''
+    liturgical_week_name = informations.get('semaine') or ''
+    if liturgical_day_name.split(' ')[0] == liturgical_week_name.split(' ')[0]:
         jour_lit_skip = True
-    if informations.get('jour_liturgique_nom', '') == informations.get('fete', '') and 'férie' not in informations.get('fete', '').lower():
+    if liturgical_day_name == informations.get('fete', '') and 'férie' not in informations.get('fete', '').lower():
         jour_lit_skip = True
     if informations['fete'] == informations.get('degre', ''):
         fete_skip = True
 
-    if not jour_lit_skip and 'jour_liturgique_nom' in informations and 'férie' not in informations.get('jour_liturgique_nom', '').lower():
-        text += _filter_fete(informations['jour_liturgique_nom'])
-    elif 'jour' in informations:
-        text += informations['jour'].strip()
-        if not jour_lit_skip and 'jour_liturgique_nom' in informations:
-            text += ' %s' % _filter_fete(informations['jour_liturgique_nom'])
+    if not jour_lit_skip and 'jour_liturgique_nom' in informations and 'férie' not in liturgical_day_name.lower():
+        text += _filter_fete(liturgical_day_name)
+    elif day_name:
+        text += day_name.strip()
+        if not jour_lit_skip and liturgical_day_name:
+            text += ' %s' % _filter_fete(liturgical_day_name)
 
-    if 'semaine' in informations:
-        semaine = informations['semaine']
+    if liturgical_week_name:
         if text:
             text += ', '
-        text += semaine
+        text += liturgical_week_name
 
-        numero = re.match('^[0-9]*', semaine).group()
+        numero = re.match('^[0-9]*', liturgical_week_name).group()
         numero = ((int(numero)-1) % 4) + 1 if numero else ""
         semaines = {1: 'I', 2: 'II', 3: 'III', 4: 'IV'}
         if numero in semaines:
@@ -421,7 +440,7 @@ def postprocess_informations(informations):
     if text:
         text += "."
 
-    if not fete_skip and 'fete' in informations and ('jour' not in informations or informations['jour'] not in informations['fete']):
+    if not fete_skip and 'fete' in informations and (not day_name or day_name not in informations['fete']):
         fete = _filter_fete(informations['fete'])
         if fete and not 'férie' in fete.lower():
             text += "%s." % fete
@@ -435,6 +454,276 @@ def postprocess_informations(informations):
 
     # Inject text
     informations['text'] = text.strip()
+    return informations
+
+def shorten_liturgical_day(date: datetime.date, liturgical_day_name: str, is_solemnity: bool) -> str:
+    liturgical_day_name_lower = liturgical_day_name.lower()
+
+    # Feast for which we display a short name
+    if 'nativité' in liturgical_day_name_lower and 'marie' in liturgical_day_name_lower:
+        return 'Nativité de\u00a0Marie'
+    elif 'évangéliste' in liturgical_day_name_lower:
+        if 'matthieu' in liturgical_day_name_lower:
+            return 'Saint\u00a0Matthieu'
+        elif 'marc' in liturgical_day_name_lower:
+            return 'Saint\u00a0Marc'
+        elif 'luc' in liturgical_day_name_lower:
+            return 'Saint\u00a0Luc'
+        elif 'jean' in liturgical_day_name_lower:
+            return 'Saint\u00a0Jean'
+    elif (date.day, date.month) == (2, 11):
+        return 'Fidèles\u00a0défunts'
+    elif (date.day, date.month) == (2, 2):
+        return 'Présentation au\u00a0Temple'
+    elif "cendre" in liturgical_day_name_lower and date.isoweekday() == 3:
+        return 'Cendres'
+    elif 'croix glorieuse' in liturgical_day_name_lower:
+        return 'Croix\u00a0Glorieuse'
+    elif 'transfiguration' in liturgical_day_name_lower:
+        return 'Transfiguration'
+    elif 'visitation' in liturgical_day_name_lower:
+        return 'Visitation'
+
+    # After that, only consider solemnities
+    if not is_solemnity:
+        return ''
+
+    if 'dédicace' in liturgical_day_name_lower:
+        return ''
+    elif (date.day, date.month) == (1, 11):
+        return 'Toussaint'
+    elif 'christ' in liturgical_day_name_lower and 'roi' in liturgical_day_name_lower:
+        return 'Christ-Roi'
+    elif (date.day, date.month) == (8, 12):
+        return 'Immaculée\u00a0Conception'
+    elif (date.day, date.month) == (25, 12):
+        return "Noël"
+    elif 'épiphanie' in liturgical_day_name_lower:
+        return 'Épiphanie'
+    elif (date.day, date.month) == (1, 1):
+        return 'Sainte\u00a0Marie, Mère\u00a0de\u00a0Dieu'
+    elif (date.day, date.month) == (19, 3):
+        return 'Saint\u00a0Joseph'
+    elif 'rameaux' in liturgical_day_name_lower:
+        return 'Rameaux'
+    elif 'résurrection' in liturgical_day_name_lower:
+        return 'Pâques'
+    elif 'miséricorde' in liturgical_day_name_lower:
+        return 'Miséricorde'
+    elif 'octave' in liturgical_day_name_lower:
+        return ''
+    elif 'annonciation' in liturgical_day_name_lower:
+        return 'Annonciation'
+    elif 'ascension' in liturgical_day_name_lower:
+        return 'Ascension'
+    elif 'trinité' in liturgical_day_name_lower:
+        return 'Sainte\u00a0Trinité'
+    elif 'sacrement' in liturgical_day_name_lower:
+        return 'Saint\u00a0Sacrement'
+    elif 'cœur' in liturgical_day_name_lower:
+        return 'Sacré-Cœur'
+    elif 'nativité' in liturgical_day_name_lower and 'baptiste' in liturgical_day_name_lower:
+        return 'Saint\u00a0Jean\u00a0Baptiste'
+    elif 'pierre' in liturgical_day_name_lower and 'paul' in liturgical_day_name_lower:
+        return 'Saint\u00a0Pierre et Saint\u00a0Paul'
+    elif 'assomption' in liturgical_day_name_lower:
+        return 'Assomption'
+
+    return liturgical_day_name
+
+def compute_liturgical_year(date: datetime.date, liturgical_year_name: str, is_solemnity: bool) -> str:
+    # First option, attempt to cleanup the input from AELF
+    if liturgical_year_name:
+        liturgical_year_name = liturgical_year_name.lower()
+    if liturgical_year_name:
+        return liturgical_year_name
+
+    # Fallback: compute the cutoff date for this year
+    christmas_date = datetime.date(date.year, 12, 25)
+    last_advent_sunday_date = christmas_date - datetime.timedelta(days=christmas_date.isoweekday())
+    first_sunday_of_next_liturgical_year = last_advent_sunday_date - datetime.timedelta(days=21)
+
+    year = date.year
+    if date >= first_sunday_of_next_liturgical_year:
+        year += 1
+
+    # Sunday or solemnity
+    if is_solemnity or date.isoweekday == 7:
+        return ['c', 'a', 'b'][year % 3]
+    else:
+        return ['paire', 'impaire'][year % 2]
+
+
+FRENCH_DAYS=['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
+def postprocess_informations_modern(informations):
+    # Parse date
+    date = _parse_date(informations['date'])
+
+    # Extract the degree
+    degree = informations.get('degre') or ''
+    fete = informations.get('fete') or ''
+    is_solemnity = 'solennité' in (degree or fete).lower()
+
+    # Extract the liturgical day
+    liturgical_day_name = informations.get('jour_liturgique_nom') or ''
+    liturgical_day_name_short = shorten_liturgical_day(date, liturgical_day_name, is_solemnity)
+    if liturgical_day_name_short:
+        informations['liturgical_day'] = liturgical_day_name_short
+    else:
+        informations['liturgical_day'] = FRENCH_DAYS[date.weekday()]
+
+    # Extract the liturgical year
+    informations['liturgical_year'] = compute_liturgical_year(date, informations.get('annee') or '', is_solemnity)
+
+    # Extract the liturgical time
+    liturgical_period = informations.get('temps_liturgique', '')
+    if not liturgical_period:
+        if 'avent' in degree.lower():
+            liturgical_period = 'avent'
+        if 'noël' in degree.lower():
+            liturgical_period = 'noel'
+    informations['liturgical_period'] = liturgical_period
+
+    # Extract the liturgical week, if possible
+    informations['liturgical_week'] = None
+    informations['psalter_week'] = None
+    week_number = -1
+    if week_description := informations.get('semaine'):
+        week_number_match = re.search(r'^\d+', week_description)
+        if week_number_match is not None:
+            week_number = int(week_number_match.group())
+    elif 'cendres' in liturgical_day_name.lower():
+        week_number = 0
+
+    if week_number >= 0:
+        informations['liturgical_week'] = week_number
+        informations['psalter_week'] = informations['liturgical_week'] % 4 or 4
+
+    # Extract liturgical options
+    informations['liturgy_options'] = []
+
+    # Start by counting the number of options provided by AELF.
+    if informations.get('couleur3'): options_count = 3
+    elif informations.get('couleur2') or 'facultative' in (informations.get('ligne3') or ''): options_count = 2
+    else: options_count = 1
+
+    # Compute default degree and suffix, if any
+    degree_suffix = ''
+    default_degree = ''
+
+    if liturgical_period == 'avent':
+        degree_suffix = ' de l’Avent'
+    elif liturgical_period == 'noel':
+        degree_suffix = ' de Noël'
+    elif liturgical_period == 'careme':
+        degree_suffix = ' du Carême'
+    elif liturgical_period == 'triduum':
+        default_degree = 'Triduum Pascal'
+    elif liturgical_period == 'pascal':
+        degree_suffix = ' du temps Pascal'
+    
+    if not default_degree:
+        default_degree = 'Férie'+degree_suffix
+    if 'férie' in degree.lower():
+        degree = default_degree
+
+    # Get and clean the "lines"
+    line1 = fix_common_typography(strip_parenthesis(fix_abbrev(informations.get('ligne1') or ''))).strip()
+    line2 = fix_common_typography(strip_parenthesis(fix_abbrev(informations.get('ligne2') or ''))).strip()
+    line3 = fix_common_typography(strip_parenthesis(fix_abbrev(informations.get('ligne3') or ''))).strip()
+    fete = fix_common_typography(strip_parenthesis(fix_abbrev(informations.get('fete') or '')))
+
+    if line2 and not line1:
+        line1 = line2
+        line2 = ""
+    if line3 and not line2:
+        line2 = line3
+        line3 = ""
+
+    # Get the first option
+    if options_count == 1:
+        liturgical_name = ''
+        if not degree:
+            if line3 and line3[0] not in '[(':
+                degree = line3
+                liturgical_name = line2
+            elif line2:
+                degree = line2
+                liturgical_name = line1
+            else:
+                degree = default_degree
+
+        if 'férie' in degree.lower():
+            degree = "Férie"+degree_suffix
+
+        if not liturgical_name:
+            if line3 and line3 not in degree and line3 not in fete:
+                liturgical_name = line3
+            elif line2 and line2 not in degree and line2 not in fete:
+                liturgical_name = line2
+            else:
+                liturgical_name = line1
+
+        informations['liturgy_options'].append({
+            'liturgical_color': informations['couleur'],
+            'liturgical_degree': degree,
+            'liturgical_name': liturgical_name,
+        })
+    elif options_count == 2:
+        informations['liturgy_options'].append({
+            'liturgical_color': informations['couleur'],
+            'liturgical_degree': degree or default_degree,
+            'liturgical_name': line1,
+        })
+
+        liturgical_name = line2
+        liturgical_degree = line3
+
+        if liturgical_degree in liturgical_name:
+            liturgical_name = liturgical_name.rsplit('.')[0]
+
+        informations['liturgy_options'].append({
+            'liturgical_color': informations['couleur2'] or informations['couleur'],
+            'liturgical_degree': liturgical_degree,
+            'liturgical_name': liturgical_name,
+        })
+    elif options_count == 3:
+        informations['liturgy_options'].append({
+            'liturgical_color': informations['couleur'],
+            'liturgical_degree': default_degree,
+            'liturgical_name': line1,
+        })
+
+        for line, color in [(line2, informations['couleur2']), (line3, informations['couleur3'])]:
+            name, degree = line.rsplit('.', 2)
+            informations['liturgy_options'].append({
+                'liturgical_color': color,
+                'liturgical_degree': degree.strip(),
+                'liturgical_name': name.strip(),
+            })
+
+    # Fix liturgical color of gaudete & laetare
+    if informations.get('temps_liturgique') == 'careme' and week_number == 4 and date.isoweekday() == 7:
+        informations['liturgy_options'][0]['liturgical_color'] = 'rose'
+    if informations.get('temps_liturgique') == 'avent' and week_number == 3 and date.isoweekday() == 7:
+        informations['liturgy_options'][0]['liturgical_color'] = 'rose'
+
+    # Remove legacy keys not used anywhere
+    if 'couleur'  in informations: del informations['couleur']
+    if 'couleur2' in informations: del informations['couleur2']
+    if 'couleur3' in informations: del informations['couleur3']
+    if 'ligne1'   in informations: del informations['ligne1']
+    if 'ligne2'   in informations: del informations['ligne2']
+    if 'ligne3'   in informations: del informations['ligne3']
+    if 'fete'     in informations: del informations['fete']
+    if 'degre'    in informations: del informations['degre']
+    if 'jour'     in informations: del informations['jour']
+
+    return informations
+
+def postprocess_informations(informations):
+    informations = postprocess_informations_legacy(informations)
+    informations = postprocess_informations_modern(informations)
     return informations
 
 # FIXME: this function is only used by the libs and does not follow te same convention as the others
@@ -466,6 +755,7 @@ def lectures_common_cleanup(data):
 
                 # Remove number abbreviations from titles
                 lecture['title'] = fix_abbrev(lecture['title'])
+                lecture['title'] = fix_number_abbrev(lecture['title'])
 
                 if lecture['reference']:
                     raw_ref = lecture['reference']
