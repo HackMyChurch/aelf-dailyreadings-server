@@ -683,7 +683,7 @@ def postprocess_informations_modern(informations):
             liturgical_name = liturgical_name.rsplit('.')[0]
 
         informations['liturgy_options'].append({
-            'liturgical_color': informations['couleur2'] or informations['couleur'],
+            'liturgical_color': informations.get('couleur2') or informations['couleur'],
             'liturgical_degree': liturgical_degree,
             'liturgical_name': liturgical_name,
         })
