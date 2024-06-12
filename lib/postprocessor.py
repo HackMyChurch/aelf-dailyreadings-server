@@ -640,6 +640,11 @@ def postprocess_informations_modern(informations):
         line2 = line3
         line3 = ""
 
+    # Remove redundant day from "line1" if this is an ordinary day
+    liturgical_week = informations.get('semaine') or ''
+    if liturgical_week and liturgical_week in line1:
+        line1 = liturgical_week
+
     # Get the first option
     if options_count == 1:
         liturgical_name = ''
