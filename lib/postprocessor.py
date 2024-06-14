@@ -1295,7 +1295,10 @@ def postprocess_office_post(version, mode, data):
     postprocess_office_group_47(version, mode, data)
     postprocess_office_title_47(version, mode, data)
     postprocess_lecture_variants_group_67(version, mode, data)
-    postprocess_antienne_67(version, mode, data)
-    postprocess_doxology_67(version, mode, data)
+
+    if data["office"] != "messes":
+        postprocess_antienne_67(version, mode, data)
+        postprocess_doxology_67(version, mode, data)
+
     return data
     
