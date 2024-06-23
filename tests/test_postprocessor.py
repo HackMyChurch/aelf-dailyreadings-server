@@ -193,37 +193,67 @@ class TestOfficePostprocessor(unittest.TestCase):
         from lib.postprocessor import postprocess_antienne_67
 
         lectures = [
-            [{
-                'type': 'hymne',
-                'antienne': 'hymn antienne'
-            }],
-            [{
-                'type': 'psaume',
-                'antienne': 'hymn for all psalms'
-            }],
-            [{
-                'type': 'psaume',
-                'antienne': '' # Empty antienne, still nominal
-            }],
-            [{
-                'type': 'psaume',
-                # Missing antienne field: still nominal
-            }],
-            [{
-                'type': 'psaume',
-                'antienne': 'some new antienne' # must be preserved
-            }],
-            [{
-                # Missing type, must not crash
-                # Missing antienne field: still nominal
-            }],
-            [{
-                'type': 'psaume',
-                'antienne': '2 psalms antienne'
-            }],
-            [{
-                'type': 'psaume',
-            }],
+            [{"type": "hymne", "antienne": "hymn antienne"}],
+            [
+                {
+                    "type": "psaume",
+                    "reference": "Ps 117",
+                    "antienne": "hymn for all psalms",
+                }
+            ],
+            [
+                {
+                    "type": "psaume",
+                    "reference": "Ps 117",
+                    "antienne": "",  # Empty antienne, still nominal
+                }
+            ],
+            [
+                {
+                    "type": "psaume",
+                    "reference": "Ps 117",
+                    # Missing antienne field: still nominal
+                }
+            ],
+            [
+                {
+                    "type": "psaume",
+                    "reference": "Ps 117",
+                    "antienne": "some new antienne",  # must be preserved
+                }
+            ],
+            [
+                {
+                    # Missing type, must not crash
+                    # Missing antienne field: still nominal
+                }
+            ],
+            [
+                {
+                    "type": "psaume",
+                    "reference": "Ps 117",
+                    "antienne": "2 psalms antienne",
+                }
+            ],
+            [
+                {
+                    "type": "psaume",
+                    "reference": "Ps 117",
+                }
+            ],
+            [
+                {
+                    "type": "psaume",
+                    "reference": "Ps 117",
+                    "antienne": "antienne for psalm, not cantic",
+                }
+            ],
+            [
+                {
+                    "type": "psaume",
+                    "reference": "Dn 3",
+                }
+            ],
         ]
 
         postprocess_antienne_67(67, 'prod', {'variants': [{'lectures': lectures}]})
@@ -237,6 +267,8 @@ class TestOfficePostprocessor(unittest.TestCase):
         assert 'antienne' not in lectures[5][0]
         assert lectures[6][0]['antienne'] == '2 psalms antienne'
         assert lectures[7][0]['antienne'] == '2 psalms antienne'
+        assert lectures[8][0]["antienne"] == "antienne for psalm, not cantic"
+        assert 'antienne' not in lectures[9][0]
 
         # Validate has_antienne field
         assert lectures[0][0]['has_antienne'] == 'both' # Hymn
@@ -246,6 +278,8 @@ class TestOfficePostprocessor(unittest.TestCase):
         assert lectures[4][0]['has_antienne'] == 'both'
         assert lectures[5][0]['has_antienne'] == 'none'
         assert lectures[6][0]['has_antienne'] == 'initial'
+        assert lectures[7][0]['has_antienne'] == 'final'
+        assert lectures[7][0]['has_antienne'] == 'final'
         assert lectures[7][0]['has_antienne'] == 'final'
 
     def test_doxology_rules_exceptions(self):

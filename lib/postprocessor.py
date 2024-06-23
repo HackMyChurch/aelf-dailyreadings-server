@@ -56,6 +56,16 @@ def _is_roman_number(data):
 
     return re.match(ROMAN_NUMBER_MATCH, data.upper())
 
+def lecture_is_psalm(lecture) -> bool:
+    if lecture.get('type') != 'psaume':
+        return False
+
+    lecture_ref = lecture.get("reference", "")
+    if not lecture_ref.lower().startswith('ps'):
+        return False
+
+    return True
+
 
 # FIXME: this is very hackish. We'll need to replace this with a real parser
 def clean_ref(ref, lecture_type=None):
@@ -1191,7 +1201,7 @@ def postprocess_antienne_67(version, mode, data):
             lecture['has_antienne'] = 'both' if candidate_antienne else 'none'
 
             # Exiting an antienne repeat section ? Reset
-            if lecture.get('type') != 'psaume':
+            if not lecture_is_psalm(lecture):
                 antienne = ""
                 prev_lecture = None
 
