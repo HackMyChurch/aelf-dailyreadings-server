@@ -132,6 +132,16 @@ class TestPostprocessor(unittest.TestCase):
         self.assertEqual('<p><span class="line" id="test-key-0" tabindex="0">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
         self.assertEqual('<p><span class="line" id="test-key-0" tabindex="0">hello world</span></p>', bs(html_fix_lines, '<p><br/>hello world</p>'))
 
+    def test_html_fix_attributes(self):
+        from lib.postprocessor import html_fix_attributes
+
+        # Noop
+        self.assertEqual("", bs(html_fix_attributes, ""))
+        self.assertEqual("<u>hello</u>", bs(html_fix_attributes, "<u>hello</u>"))
+
+        # Cleanup
+        self.assertEqual("<u>hello</u>", bs(html_fix_attributes, "<u some=attr other=\"value\">hello</u>"))
+
     def test_fix_common_typography(self):
         from lib.postprocessor import fix_common_typography
 

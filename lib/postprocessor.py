@@ -1103,6 +1103,15 @@ def html_fix_lines(key, soup):
         for line in lines:
             line['class'] = 'line line-wrap'
 
+def html_fix_attributes(key, soup):
+    '''
+    Remove all extra-attributes / simplify html
+    '''
+    # Ensure <u> do not have any attributes (breaks underline in the application)
+    for u in soup.find_all("u"):
+        u.attrs = {}
+
+
 #
 # Postprocessors
 #
@@ -1132,6 +1141,7 @@ def postprocess_office_lecture_text(version, mode, key, text):
     html_fix_verse(key, soup)
     html_fix_paragraph(key, soup)
     html_fix_lines(key, soup)
+    html_fix_attributes(key, soup)
     text = str(soup.body)[6:-7]
     text = fix_common_typography(text)
     text = fix_rv(text)
