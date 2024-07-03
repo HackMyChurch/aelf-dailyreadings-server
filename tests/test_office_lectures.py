@@ -8,51 +8,63 @@ class TestOfficeLectures(TestBase):
         m_get.side_effect = self.m_get
 
         # Get lectures, make sure we have the Te Deum on a (not so) random sunday
-        resp = self.app.get('/20/office/lectures/2017-02-19')
+        resp = self.app.get('/76/office/lectures/2017-02-19.json')
         self.assertEqual(200, resp.status_code)
-        items = self.parseItems(resp.data)
+        data = resp.json
+
+        # Extract lectures
+        self.assertEqual(1, len(data["variants"]))
+        lectures = data["variants"][0]["lectures"]
+        self.assertEqual(9, len(lectures))
 
         # Validate: Once, before the Oraison
-        self.assertEqual(15, len(items))
-        self.assertEqual("Oraison", items[-1][0])
-        self.assertEqual("Te Deum", items[-2][0])
+        self.assertEqual("Oraison", lectures[-1][0]["short_title"])
+        self.assertEqual("Te Deum", lectures[-2][0]["short_title"])
 
-        self.assertIn("Devant toi se prosternent les archanges,", items[-2][1])
+        self.assertIn("Devant toi se prosternent les archanges,", lectures[-2][0]["text"])
 
     @mock.patch('lib.input.requests.Session.get')
     def test_get_lectures_other_day(self, m_get):
         m_get.side_effect = self.m_get
 
         # Get lectures, make sure we have the Te Deum on a (not so) random day
-        resp = self.app.get('/20/office/lectures/2017-02-17')
+        resp = self.app.get('/76/office/lectures/2017-02-17.json')
         self.assertEqual(200, resp.status_code)
-        items = self.parseItems(resp.data)
+        data = resp.json
+
+        # Extract lectures
+        self.assertEqual(1, len(data["variants"]))
+        lectures = data["variants"][0]["lectures"]
+        self.assertEqual(8, len(lectures))
 
         # Validate: No Te Deum
-        self.assertEqual(14, len(items))
-        for item in items:
-            self.assertNotEqual("Te Deum", item[0])
+        for lecture in lectures:
+            self.assertNotEqual("Te Deum", lecture[0]["short_title"])
 
     @mock.patch('lib.input.requests.Session.get')
-    def test_get_lectures_47(self, m_get):
+    def test_get_lectures(self, m_get):
         m_get.side_effect = self.m_get
 
         # Get lectures
-        resp = self.app.get('/47/office/lectures/2018-01-28')
+        resp = self.app.get('/76/office/lectures/2018-01-28.json')
         self.assertEqual(200, resp.status_code)
-        items = self.parseItems(resp.data)
+        data = resp.json
+
+        # Extract lectures
+        self.assertEqual(1, len(data["variants"]))
+        lectures = data["variants"][0]["lectures"]
+        self.assertEqual(9, len(lectures))
 
         # Validate 'Antiennes'
-        self.assertEqual('Hymne', items[1][0])
-        self.assertIn('«\xa0Voici la nuit\xa0»', items[1][1])
-        self.assertNotIn('Antienne', items[1][1])
-        self.assertEqual('Psaume\xa023', items[2][0])
-        self.assertIn('Psaume\xa023', items[2][1])
-        self.assertIn('Antienne', items[2][1])
+        self.assertEqual('Hymne', lectures[1][0]["short_title"])
+        self.assertEqual('«\xa0Voici la nuit\xa0»', lectures[1][0]["long_title"])
+        self.assertNotIn('antienne', lectures[1][0])
+        self.assertEqual("Psaume\xa023", lectures[2][0]["long_title"])
+        self.assertIn('antienne', lectures[2][0])
 
         # Validate 'Verset'
-        self.assertEqual('Psaume\xa065-II', items[4][0])
-        self.assertIn('V/', items[4][1])
+        self.assertEqual('Psaume\xa065-II', lectures[4][0]["short_title"])
+        self.assertIn('V/', lectures[4][0]["verset"])
     
     @mock.patch('lib.input.requests.Session.get')
     def test_get_lectures_copyright(self, m_get):

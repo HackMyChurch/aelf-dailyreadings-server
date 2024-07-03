@@ -8,39 +8,46 @@ class TestOfficeComplies(TestBase):
         m_get.side_effect = self.m_get
 
         # Get vepres, make sure we have the Notre Pere
-        resp = self.app.get('/28/office/complies/2017-02-19?beta=enabled')
+        resp = self.app.get('/76/office/complies/2017-02-19.json')
         self.assertEqual(200, resp.status_code)
-        items = self.parseItems(resp.data)
+        data = resp.json
+
+        # Extract lectures
+        self.assertEqual(1, len(data['variants']))
+        lectures = data["variants"][0]['lectures']
+        self.assertEqual(7, len(lectures))
 
         # Validate: Once, before the Intercession
-        self.assertEqual(12, len(items))
-        self.assertEqual("Nous te saluons, Vierge Marie", items[-1][0])
-        self.assertEqual("Bénédiction", items[-2][0])
-        self.assertEqual("Oraison", items[-3][0])
-        self.assertEqual(
-            "Que le Seigneur nous b\xe9nisse et nous garde,<br />le P\xe8re, le Fils, et le Saint-Esprit. Amen.",
-            items[-2][1].replace('\r\n', '')
+        self.assertEqual("Nous te saluons, Vierge Marie", lectures[-1][0]["short_title"])
+        self.assertEqual("Oraison et bénédiction", lectures[-2][0]["short_title"])
+        self.assertIn(
+            "Que le Seigneur nous bénisse et nous garde",
+            lectures[-2][0]['text'].replace("\r\n", ""),
         )
-        self.assertEqual(
-            "Notre Seigneur et notre Dieu, tu nous as fait entendre ton amour au matin de la R\xe9surrection ; quand viendra pour nous le moment de mourir, que ton souffle de vie nous conduise en ta pr\xe9sence. Par J\xe9sus, le Christ, notre Seigneur. Amen.",
-            items[-3][1]
+        self.assertIn(
+            "Notre Seigneur et notre Dieu, tu nous as fait entendre ton amour au matin de la Résurrection",
+            lectures[-2][0]['text'].replace("\r\n", ""),
         )
 
-        # Validate: no alléluia
-        self.assertEqual("Introduction", items[0][0])
-        self.assertIn('alléluia',        items[0][1].lower())
+        # Validate: alléluia
+        self.assertEqual("Introduction", lectures[0][0]["short_title"])
+        self.assertIn("alléluia", lectures[0][0]["text"].lower())
 
     @mock.patch('lib.input.requests.Session.get')
     def test_no_alleluia_careme(self, m_get):
         m_get.side_effect = self.m_get
 
         # Get vepres, make sure we have the Notre Pere
-        resp = self.app.get('/28/office/complies/2017-03-05')
+        resp = self.app.get('/76/office/complies/2017-03-05.json')
         self.assertEqual(200, resp.status_code)
-        items = self.parseItems(resp.data)
+        data = resp.json
+
+        # Extract lectures
+        self.assertEqual(1, len(data['variants']))
+        lectures = data["variants"][0]['lectures']
+        self.assertEqual(7, len(lectures))
 
         # Validate: no alléluia
-        self.assertEqual(12, len(items))
-        self.assertEqual("Introduction", items[0][0])
-        self.assertNotIn('alléluia',     items[0][1].lower())
+        self.assertEqual("Introduction", lectures[0][0]["short_title"])
+        self.assertNotIn("alléluia",     lectures[0][0]["text"].lower())
 

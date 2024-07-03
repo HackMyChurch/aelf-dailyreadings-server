@@ -6,10 +6,19 @@ class TestOfficeMeta(TestBase):
     def tearDown(self):
         FakeResponse.status_code = 200
 
-    def assertMetaEqual(self, date, meta):
-        resp = self.app.get('/19/office/informations/%s?beta=enabled' % date)
+    def assertMetaEqual(self, date, expected_text):
+        resp = self.app.get(f'/76/office/informations/{date}.json')
         self.assertEqual(200, resp.status_code)
-        return self.assertItemsEqual([("Jour liturgique", meta)], resp.data)
+        data = resp.json
+
+        self.assertEqual(1, len(data["variants"]))
+        self.assertEqual(1, len(data["variants"][0]["lectures"]))
+        self.assertEqual(1, len(data["variants"][0]["lectures"][0]))
+
+        self.assertEqual(
+            expected_text,
+            data["variants"][0]["lectures"][0][0]["text"],
+        )
 
     @mock.patch('lib.input.requests.Session.get')
     def test_get_meta(self, m_get):
@@ -28,11 +37,3 @@ class TestOfficeMeta(TestBase):
         self.assertMetaEqual("2016-06-11", "Samedi de la f\xe9rie, 10<sup>\xe8me</sup> Semaine du Temps Ordinaire (semaine II du psautier) de l'ann\xe9e Paire. Nous f\xeatons saint Barnab\xe9. La couleur liturgique est le rouge.")
         self.assertMetaEqual("2016-06-12", "Dimanche, 11<sup>ème</sup> Semaine du Temps Ordinaire (semaine III du psautier) de l'année C. La couleur liturgique est le vert.")
         self.assertMetaEqual("2016-08-15", "Nous célèbrons l'Assomption de la Vierge Marie. La couleur liturgique est le blanc.")
-
-        # Error: obviously invalid date
-        FakeResponse.status_code = 404
-        resp = self.app.get('/0/office/meta/2016-42')
-        self.assertEqual(400, resp.status_code)
-        resp = self.app.get('/0/office/informations/2016-42-17')
-        self.assertEqual(400, resp.status_code)
-

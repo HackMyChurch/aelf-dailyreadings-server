@@ -3,7 +3,6 @@ import unittest
 import server
 import json
 from requests import get as request_get
-from bs4 import BeautifulSoup
 
 class FakeResponse(object):
     status_code = 200
@@ -13,18 +12,6 @@ class FakeResponse(object):
         return json.loads(self.text, **kwargs)
 
 class TestBase(unittest.TestCase):
-    def parseItems(self, data):
-        items = []
-        for item in BeautifulSoup(data, 'xml').find_all('item'):
-            items.append((
-                item.title.text.strip(),
-                item.description.text.strip(),
-            ))
-        return items
-
-    def assertItemsEqual(self, items, data):
-        expected = self.parseItems(data)
-        self.assertEqual(expected, items)
 
     def m_get(self, url, **kwargs):
         '''
@@ -50,7 +37,4 @@ class TestBase(unittest.TestCase):
         return res
 
     def setUp(self):
-        def fakeCallback(*args, **kwargs):
-            return None
-
         self.app = server.app.test_client()

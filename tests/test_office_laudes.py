@@ -8,43 +8,41 @@ class TestOfficeLaudes(TestBase):
         m_get.side_effect = self.m_get
 
         # Get laudes, make sure we have the Notre Pere
-        resp = self.app.get('/20/office/laudes/2016-06-8')
+        resp = self.app.get('/76/office/laudes/2018-01-28.json')
         self.assertEqual(200, resp.status_code)
-        items = self.parseItems(resp.data)
+        data = resp.json
 
-        # Validate: Once, before the Intercession
-        self.assertEqual(18, len(items))
-        self.assertEqual("Bénédiction", items[-1][0])
-        self.assertEqual("Oraison", items[-2][0])
-        self.assertEqual("Notre P&egrave;re", items[-3][0])
-        self.assertEqual("Intercession", items[-4][0])
-
-    @mock.patch('lib.input.requests.Session.get')
-    def test_get_laudes_47(self, m_get):
-        m_get.side_effect = self.m_get
-
-        # Get laudes, make sure we have the Notre Pere
-        resp = self.app.get('/47/office/laudes/2018-01-28')
-        self.assertEqual(200, resp.status_code)
-        items = self.parseItems(resp.data)
+        # Extract lectures
+        self.assertEqual(1, len(data["variants"]))
+        lectures = data["variants"][0]["lectures"]
+        self.assertEqual(11, len(lectures))
 
         # Basic validation
-        self.assertEqual(11, len(items))
-        self.assertEqual("Oraison et bénédiction", items[-1][0])
-        self.assertEqual("Notre Père", items[-2][0])
-        self.assertEqual("Intercession", items[-3][0])
+        self.assertEqual("Oraison et bénédiction", lectures[-1][0]["short_title"])
+        self.assertEqual("Notre Père", lectures[-2][0]["short_title"])
+        self.assertEqual("Intercession", lectures[-3][0]["short_title"])
+
+        # Validate alternative psaume invitatoires
+        self.assertEqual(4, len(lectures[1]))
+        self.assertEqual('Ps 94', lectures[1][0]['reference'])
+        self.assertEqual('Ps 66', lectures[1][1]['reference'])
+        self.assertEqual('Ps 99', lectures[1][2]['reference'])
+        self.assertEqual('Ps 23', lectures[1][3]['reference'])
 
         # Validate 'Antiennes'
-        self.assertEqual('Psaume\xa0117', items[3][0])
-        self.assertIn('Psaume\xa0117', items[3][1])
-        self.assertIn('Antienne', items[3][1])
-        self.assertEqual('Cantique des trois enfants', items[4][0])
-        self.assertIn('Cantique des trois enfants', items[4][1])
-        self.assertIn('Dn 3', items[4][1])
-        self.assertNotIn('Antienne', items[4][1])
+        self.assertEqual('Psaume\xa0117', lectures[3][0]["short_title"])
+        self.assertIn('antienne', lectures[3][0])
+        self.assertEqual('Cantique des trois enfants', lectures[4][0]["short_title"])
+        self.assertIn('Cantique des trois enfants', lectures[4][0]["long_title"])
+        self.assertIn('Dn 3', lectures[4][0]["reference"])
+        self.assertNotIn('antienne', lectures[4][0])
 
         # Validate 'Repons'
-        self.assertEqual('Parole de Dieu', items[6][0])
-        self.assertIn('2 Tm 2, 8.11-13', items[6][1])
-        self.assertIn('Il est notre salut, notre gloire éternelle', items[6][1])
+        self.assertEqual('Parole de Dieu', lectures[6][0]["short_title"])
+        self.assertIn('2 Tm 2, 8.11-13', lectures[6][0]["reference"])
+        self.assertIn('Il est notre salut, notre gloire éternelle', lectures[6][0]["repons"])
+
+        # Validate end
+        self.assertEqual("Notre Père", lectures[-2][0]["short_title"])
+        self.assertEqual("Intercession", lectures[-3][0]["short_title"])
 

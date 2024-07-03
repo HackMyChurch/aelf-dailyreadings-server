@@ -11,16 +11,16 @@ class TestCache(TestBase):
         m_get.side_effect = self.m_get
 
         # Warm up cache
-        resp = self.app.get('/47/office/laudes/2018-01-28')
+        resp = self.app.get('/47/office/laudes/2018-01-28.json')
         self.assertEqual(200, resp.status_code)
         self.assertEqual((EXPECTED_ETAG, False), resp.get_etag())
 
         # Test cache miss
-        resp = self.app.get('/47/office/laudes/2018-01-28', headers={'If-None-Match': '"miss"'})
+        resp = self.app.get("/47/office/laudes/2018-01-28.json", headers={"If-None-Match": '"miss"'})
         self.assertEqual(200, resp.status_code)
         self.assertEqual((EXPECTED_ETAG, False), resp.get_etag())
 
         # Test cache hit
-        resp = self.app.get('/47/office/laudes/2018-01-28', headers={'If-None-Match': f'"{EXPECTED_ETAG}"'})
+        resp = self.app.get("/47/office/laudes/2018-01-28.json", headers={"If-None-Match": f'"{EXPECTED_ETAG}"'},)
         self.assertEqual(304, resp.status_code)
 

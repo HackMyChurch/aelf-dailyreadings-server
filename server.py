@@ -8,8 +8,7 @@ import json
 import datetime
 from lib.output import office_to_json, office_to_rss
 from lib.constants import DEFAULT_REGION, CURRENT_VERSION
-from keys import KEY_TO_OFFICE
-from office_controller import get as do_get_office, get_from_network as do_get_office_from_network, return_error, OFFICES
+from office_controller import get as do_get_office, get_from_network as do_get_office_from_network, OFFICES
 import status
 
 if os.environ.get('AELF_DEBUG', False):
@@ -75,6 +74,39 @@ def get_robots():
 # Office API, common path
 #
 
+
+def get_deprecation_response(version):
+    title = "Erreur"
+    description = """
+<p>Pour continuer à utiliser l'application, merci de la <strong>mettre à jour</strong> depuis le "Play Store".</p>
+"""
+
+    office = {
+        "source": "error",
+        "name": "error",
+        "status": 404,
+        "message": "This version of the application is no longer supported",
+        "variants": [
+            {
+                "name": "message",
+                "lectures": [
+                    [
+                        {
+                            "title": title,
+                            "text": description,
+                        }
+                    ],
+                ],
+            }
+        ],
+    }
+
+    if format == 'rss':
+        return Response(office_to_rss(version, office), mimetype="application/rss+xml")
+    else:
+        return jsonify(office_to_json(version, office))
+
+
 def get_office_response(version, office, date, format):
     # Load common params
     mode = "beta" if request.args.get('beta', 0) else "prod"
@@ -87,11 +119,7 @@ def get_office_response(version, office, date, format):
         return Response(status=304)
 
     # Generate response
-    if format == 'rss':
-        if version >= 67:
-            office = return_error(404, "The RSS output is no longer supported")
-        response = Response(office_to_rss(version, office), mimetype='application/rss+xml')
-    elif format == 'json':
+    if format == 'json':
         response = jsonify(office_to_json(version, office))
     else:
         raise ValueError("Invalid format %s" % format)
@@ -130,8 +158,8 @@ def get_office_checksums(version, from_date, days):
 @app.route('/<int:version>/office/<office>/<date>')
 @app.route('/<int:version>/office/<office>/<date>.rss')
 def get_office_rss(version, office, date):
-    date = parse_date_or_abort(date)
-    return get_office_response(version, office, date, 'rss')
+    return get_deprecation_response(version)
+
 
 @app.route('/<int:version>/office/<office>/<date>.json')
 def get_office_json(version, office, date):
@@ -145,11 +173,7 @@ def get_office_json(version, office, date):
 @app.route('/<int:day>/<int:month>/<int:year>/<key>')
 def get_office_legacy(day, month, year, key):
     version = int(request.args.get('version', 0))
-    if key not in KEY_TO_OFFICE:
-        return office_to_rss(version, return_error(404, "Aucune lecture n'a été trouvée pour cet office."))
-    office = KEY_TO_OFFICE[key]
-    date = datetime.date(year, month, day)
-    return get_office_response(version, office, date, 'rss')
+    return get_deprecation_response(version)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000)
