@@ -75,12 +75,7 @@ def get_robots():
 #
 
 
-def get_deprecation_response(version):
-    title = "Erreur"
-    description = """
-<p>Pour continuer à utiliser l'application, merci de la <strong>mettre à jour</strong> depuis le "Play Store".</p>
-"""
-
+def get_deprecation_response(version, format):
     office = {
         "source": "error",
         "name": "error",
@@ -92,8 +87,11 @@ def get_deprecation_response(version):
                 "lectures": [
                     [
                         {
-                            "title": title,
-                            "text": description,
+                            "title": "Erreur",
+                            "text": """
+                                <p>Cette version n'est plus supportée</p>
+                                <p>Pour continuer à utiliser l'application, merci de la <em>mettre à jour</em> depuis le "Play Store".</p>
+                            """,
                         }
                     ],
                 ],
@@ -158,7 +156,7 @@ def get_office_checksums(version, from_date, days):
 @app.route('/<int:version>/office/<office>/<date>')
 @app.route('/<int:version>/office/<office>/<date>.rss')
 def get_office_rss(version, office, date):
-    return get_deprecation_response(version)
+    return get_deprecation_response(version, 'rss')
 
 
 @app.route('/<int:version>/office/<office>/<date>.json')
@@ -173,7 +171,7 @@ def get_office_json(version, office, date):
 @app.route('/<int:day>/<int:month>/<int:year>/<key>')
 def get_office_legacy(day, month, year, key):
     version = int(request.args.get('version', 0))
-    return get_deprecation_response(version)
+    return get_deprecation_response(version, 'rss')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000)

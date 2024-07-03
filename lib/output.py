@@ -49,7 +49,6 @@ def office_to_rss(version, data):
     <channel>
         <language>fr</language>
         <source>%s</source>
-        <copyright>Copyright AELF - Tout droits réservés</copyright>
 ''' % data.get('source', 'unk'))
 
     for office_variant in data.get('variants', []):
@@ -62,42 +61,6 @@ def office_to_rss(version, data):
             title = lecture.get('title', '')
             reference = lecture.get('reference', '')
 
-            if version < 47:
-                if 'antienne' in lecture:
-                    antienne = "<blockquote class=\"antienne\"><b>Antienne&nbsp;:</b> %s</blockquote>" % (lecture['antienne'])
-                    text = "%s%s%s" % (antienne, text, antienne)
-                if 'verset' in lecture:
-                    text = "%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
-                if 'repons' in lecture:
-                    text = "%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
-            else:
-                if 'antienne' in lecture:
-                    antienne_1 = "<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-1\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
-                    antienne_2 = "<div class=\"antienne\"><span tabindex=\"0\" id=\"%s-antienne-2\" class=\"line\"><span class=\"antienne-title\">Antienne&nbsp;:</span> %s</span></div>" % (key, lecture['antienne'])
-
-                    # Insert the "Gloire au Père", unless Dn3 which implies it.
-                    gloria_patri = ""
-                    if reference != "Dn 3":
-                        gloria_patri = "<div class=\"gloria_patri\"><span tabindex=\"0\" id=\"%s-gloria_patri\" class=\"line\">Gloire au Père, ...</span></div>" % (key)
-
-                    text = "%s%s%s%s" % (antienne_1, text, gloria_patri, antienne_2)
-                if 'verset' in lecture:
-                    text = "%s<blockquote class=\"verset\"%s</blockquote>" % (text, lecture['verset'])
-                if 'repons' in lecture:
-                    text = "%s<blockquote class=\"repons\">%s</blockquote>" % (text, lecture['repons'])
-
-                # Build slide title
-                title = lecture.get('short_title', title)
-                long_title = lecture.get('long_title', '')
-
-                # Prepare reference, if any
-                title_reference = ""
-                if reference:
-                    title_reference = "<small><i>— %s</i></small>" % (reference)
-
-                # Inject title
-                text = "<h3>%s%s</h3><div style=\"clear: both;\"></div>%s" % (long_title, title_reference, text)
-
             out.append('''
             <item>
                 <variant>{office}</variant>
@@ -109,7 +72,7 @@ def office_to_rss(version, data):
                 office    = office,
                 title     = escape(title),
                 reference = escape(reference),
-                key       = escape(lecture.get('key', '')),
+                key       = escape(key),
                 text      = text,
             ))
 
