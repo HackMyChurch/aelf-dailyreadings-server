@@ -710,7 +710,7 @@ def postprocess_informations_modern(informations):
         })
 
         for line, color in [(line2, informations['couleur2']), (line3, informations['couleur3'])]:
-            name, degree = line.rsplit('.', 2)
+            name, degree = line.rstrip('.,; \t').rsplit('.', 1)
             informations['liturgy_options'].append({
                 'liturgical_color': color,
                 'liturgical_degree': degree.strip(),
