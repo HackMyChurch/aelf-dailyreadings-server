@@ -974,7 +974,7 @@ def html_fix_paragraph(key, soup):
             block_parent = block_parent.parent
 
         # Wrapped in a p, all good, move next
-        if block_parent.name == 'p':
+        if block_parent.name in 'p':
             node = node_next
             continue
 
@@ -1101,7 +1101,11 @@ def html_fix_lines(key, soup):
     # There must be at *least* 2 lines and a "good" ratio of char / line
     if line_count > 1 and line_avg_len < 70:
         for line in lines:
+            # Hack: exclude gospel acclamation. It should not be merged in the gospel, but it is :/
+            if any((p.name == "blockquote" for p in line.parents)):
+                continue
             line['class'] = 'line line-wrap'
+    #print(soup)
 
 def html_fix_attributes(key, soup):
     '''

@@ -176,7 +176,8 @@ def get_office_for_day_api(office, date, region):
                     verset = verset.strip()
                     if verset.startswith('<p>'): verset = verset[3:]
                     if verset.endswith('</p>'):   verset = verset[:-4]
-                    texte.append('<blockquote><line><strong>Acclamation&nbsp;:</strong></br>%s<small><i>— %s</i></small></line></blockquote>' % (verset, clean_ref(verset_ref)))
+                    print(verset)
+                    texte.append('<blockquote><span class="line"><strong>Acclamation&nbsp;:</strong></br>%s<small><i>— %s</i></small></span></blockquote>' % (verset, clean_ref(verset_ref)))
 
                 if contenu:
                     texte.append(contenu)
