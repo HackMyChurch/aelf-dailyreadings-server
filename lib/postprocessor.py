@@ -1089,7 +1089,11 @@ def html_fix_lines(key, soup):
         line.attrs['tabindex'] = '0'
 
     # Decide if we should wrap lines
-    lines = soup.find_all('span', class_="line") or []
+    content = soup.find('div', class_='content')
+    if not content:
+        return
+
+    lines = content.find_all('span', class_="line") or []
     line_count = len(lines) or 1
     line_avg_len = 0
     line_len = 0
@@ -1101,11 +1105,7 @@ def html_fix_lines(key, soup):
     # There must be at *least* 2 lines and a "good" ratio of char / line
     if line_count > 1 and line_avg_len < 70:
         for line in lines:
-            # Hack: exclude gospel acclamation. It should not be merged in the gospel, but it is :/
-            if any((p.name == "blockquote" for p in line.parents)):
-                continue
             line['class'] = 'line line-wrap'
-    #print(soup)
 
 def html_fix_attributes(key, soup):
     '''

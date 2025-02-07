@@ -148,9 +148,9 @@ def get_office_for_day_api(office, date, region):
                 number = name.rsplit('_', 1)[-1]
                 if is_int(number):
                     if number == '1':
-                        titre = "1ère %s" % titre
+                        titre = f"1ère {titre}"
                     else:
-                        titre = "%sème %s" % (number, titre)
+                        titre = f"{number}ème {titre}"
 
                 if lecture.get('titre'):
                     titre = '%s : %s' % (titre, lecture['titre'])
@@ -159,28 +159,30 @@ def get_office_for_day_api(office, date, region):
 
                 intro       = lecture.get('intro_lue',         '').strip()
                 refrain     = lecture.get('refrain_psalmique', '').strip()
-                refrain_ref = lecture.get('ref_refrain',       '').strip()
                 verset      = lecture.get('verset_evangile',   '').strip()
                 verset_ref  = lecture.get('ref_verset',        '').strip()
                 contenu     = lecture.get('contenu',           '').strip()
 
                 if intro:
-                    texte.append('<p><b><i>%s</i></b></p>' % intro)
-
-                if refrain:
-                    if refrain.startswith('<p>'):
-                        refrain = refrain[3:-4]
-                    texte.append('<p><font color="#CC0000">R/ %s</font></p>' % refrain)
+                    texte.append(f'<p><b><i>{intro}</i></b></p>')
 
                 if verset:
                     verset = verset.strip()
                     if verset.startswith('<p>'): verset = verset[3:]
-                    if verset.endswith('</p>'):   verset = verset[:-4]
-                    print(verset)
+                    if verset.endswith('</p>'):  verset = verset[:-4]
                     texte.append('<blockquote><span class="line"><strong>Acclamation&nbsp;:</strong></br>%s<small><i>— %s</i></small></span></blockquote>' % (verset, clean_ref(verset_ref)))
+
+                texte.append('<div class="content">')
+
+                if refrain:
+                    if refrain.startswith('<p>'):
+                        refrain = refrain[3:-4]
+                    texte.append(f'<p><font color="#CC0000">R/ {refrain}</font></p>')
 
                 if contenu:
                     texte.append(contenu)
+
+                texte.append('</div>')
 
                 lecture_cleaned = {
                     'title':     titre,
