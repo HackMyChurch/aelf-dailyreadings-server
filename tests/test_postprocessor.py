@@ -120,14 +120,26 @@ class TestPostprocessor(unittest.TestCase):
         # Simple line wrap
         self.assertEqual('<p><span class="line" id="test-key-0" tabindex="0">hello world</span></p>', bs(html_fix_lines, '<p>hello world</p>'))
 
-        # Nested line wrap
-        self.assertEqual('<p><span class="line line-wrap" id="test-key-0" tabindex="0"><strong>hello</strong></span><span class="line line-wrap" id="test-key-1" tabindex="0"><strong>world</strong></span></p>', bs(html_fix_lines, '<p><strong>hello<br/>world</strong></p>'))
+        # Nested line wrap, content
+        self.assertEqual(
+            '<div class="content"><p><span class="line line-wrap" id="test-key-0" tabindex="0"><strong>hello</strong></span><span class="line line-wrap" id="test-key-1" tabindex="0"><strong>world</strong></span></p></div>',
+            bs(
+                html_fix_lines,
+                '<div class="content"><p><strong>hello<br/>world</strong></p></div>',
+            ),
+        )
+
+        # Nested line wrap, NOT content
+        self.assertEqual(
+            '<p><span class="line" id="test-key-0" tabindex="0"><strong>hello</strong></span><span class="line" id="test-key-1" tabindex="0"><strong>world</strong></span></p>',
+            bs(html_fix_lines, "<p><strong>hello<br/>world</strong></p>"),
+        )
 
         # Trim empty line
         self.assertEqual('<p><span class="line" id="test-key-0" tabindex="0">Hello</span></p>', bs(html_fix_lines, '<p><br/>Hello</p>'))
 
         # Line reconstruction
-        self.assertEqual('<p><span class="line line-wrap" id="test-key-0" tabindex="0">hello</span><span class="line line-wrap" id="test-key-1" tabindex="0">world</span></p><p><span class="line line-wrap" id="test-key-2" tabindex="0">hello</span><span class="line line-wrap" id="test-key-3" tabindex="0">world</span></p>', bs(html_fix_lines, '<p>hello<br/>world</p><p>hello<br/>world</p>'))
+        self.assertEqual('<p><span class="line" id="test-key-0" tabindex="0">hello</span><span class="line" id="test-key-1" tabindex="0">world</span></p><p><span class="line" id="test-key-2" tabindex="0">hello</span><span class="line" id="test-key-3" tabindex="0">world</span></p>', bs(html_fix_lines, '<p>hello<br/>world</p><p>hello<br/>world</p>'))
         self.assertEqual('<p><span class="line" id="test-key-0" tabindex="0">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
         self.assertEqual('<p><span class="line" id="test-key-0" tabindex="0">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span></p>', bs(html_fix_lines, '<p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>'))
         self.assertEqual('<p><span class="line" id="test-key-0" tabindex="0">hello world</span></p>', bs(html_fix_lines, '<p><br/>hello world</p>'))
