@@ -30,8 +30,20 @@ Tout d'abord, assurez vous de bien avoir ``git`` et ``docker`` sur votre machine
 ```console
 git clone https://github.com/HackMyChurch/aelf-dailyreadings-server.git
 cd aelf-dailyreadings-server
-docker build -t aelf-api .
-docker run -e AELF_DEBUG=1 --name aelf-api -p 4000:4000 --rm -it aelf-api
+```
+
+Puis installer les dépendances Python:
+
+```console
+python3 -m venv .venv
+source ./.venv/bin/activate
+pip install -r requirements.txt
+```
+
+Et enfin, manuellement lancer le serveur en local:
+
+```console
+AELF_STATUS_DAYS_TO_MONITOR=0 AELF_DEBUG=1 ./server.py
 ``` 
 
 Votre serveur tourne à présent sur le port 4000 de votre machine. Pour avoir un état de la synchronisation, rendez-vous sur http://0.0.0.0:4000/status.html
@@ -54,5 +66,4 @@ AELF_DEBUG=1 nosetests
 
 ## Licence
 
-MIT, 2023 Jean-Tiare Le Bigot <support@epitre.co>
-
+MIT, 2025 Jean-Tiare Le Bigot <support@epitre.co>
