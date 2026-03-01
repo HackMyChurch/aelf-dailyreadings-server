@@ -1,0 +1,11 @@
+- name: Dimanche de Pâques
+  lectures:
+    - - title: "Lectures"
+        text: |
+          <p>
+          La veillée pascale tient lieu d'office des lectures. Ceux qui n'y ont pas participé disent seulement
+          les 3 lectures suivantes de la veillée pascale: Ex 14, Ez 36, Rm 6, avec leur chant responsorial et
+          l'oraison, puis l'Évangile de l'année suivi de l'hymne <em>À toi, Dieu</em> et de l'oraison du jour.
+          </p>
+        reference: ""
+        key: ""

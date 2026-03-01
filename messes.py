@@ -1,44 +1,20 @@
 import datetime
 from utils import fix_case, AELF_SITE
+from lib.input import get_asset
+from lib.helpers import build_button
 
 
 def postprocess_holly_saturday(version, mode, data):
-    text = """<p>
-    Le Samedi Saint est un jour spécial. C'est le jour de l'attente de la résurrection
-    du Christ. Il n'y a pas de messe ce jour là. Si vous cherchez la Veillée Pascale,
-    vous la trouverez dans les lectures de Pâques, c'est la première messe.
-    </p>"""
-
-    if version >= 29:
-        date = data["date"]
-        date = date + datetime.timedelta(1)
-        base_link = AELF_SITE.format(
-            year=date.year,
-            month=date.month,
-            day=date.day,
-            office="messe",
-            region=data["informations"]["zone"],
-        )
-        text += (
-            '<div class="app-office-navigation"><a href="%s#messe1_lecture1" class="variant-1">Veillée Pascale</a></div>'
-            % (base_link)
-        )
-
-    data["variants"] = [
-        {
-            "name": "Samedi saint",
-            "lectures": [
-                [
-                    {
-                        "title": "Messe: Le saviez-vous ?",
-                        "text": text,
-                        "reference": "",
-                        "key": "",
-                    }
-                ]
-            ],
-        }
-    ]
+    data["source"] = "api"
+    data["variants"] = get_asset("office/mass/easter-saturday")
+    data["variants"][0]["lectures"][0][0]["text"] += build_button(
+        title="Veillée Pascale",
+        office="messe",
+        region=data["informations"]["zone"],
+        date=data["date"] + datetime.timedelta(1),
+        variant=1,
+        lecture=1,
+    )
     return data
 
 

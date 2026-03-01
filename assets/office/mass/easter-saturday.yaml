@@ -1,0 +1,11 @@
+- name: Samedi Saint
+  lectures:
+    - - title: "Messe"
+        text: |
+          <p>
+          Le Samedi Saint est un jour spécial. C'est le jour de l'attente de la résurrection
+          du Christ. Il n'y a pas de messe ce jour là. Si vous cherchez la Veillée Pascale,
+          vous la trouverez dans les lectures de Pâques, c'est la première messe.
+          </p>
+        reference: ""
+        key: ""
